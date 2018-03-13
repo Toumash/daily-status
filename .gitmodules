@@ -1,0 +1,3 @@
+[submodule "toggl"]
+	path = toggl
+	url = ./toggl/.git
