@@ -1,11 +1,13 @@
-﻿using System;
-using System.Text;
-using System.Threading;
-
-namespace Toggl.MonthlyStatus
+﻿namespace Toumash.DailyStatus
 {
+    using System;
+    using System.Text;
+    using System.Threading;
+
     /// <summary>
-    /// An ASCII progress bar
+    /// Console progress bar. Code is under the MIT License
+    /// <see cref="https://gist.github.com/DanielSWolf/0ab6a96899cc5377bf54"/>
+    /// Author: github.com/DanielSWolf
     /// </summary>
     public class ProgressBar : IDisposable, IProgress<double>
     {

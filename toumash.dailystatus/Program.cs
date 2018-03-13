@@ -1,4 +1,4 @@
-﻿namespace Toggl.MonthlyStatus
+﻿namespace Toumash.DailyStatus
 {
     using System;
     using System.Reactive.Linq;
@@ -40,25 +40,9 @@
                     }
                 }
             }
-
-            //.ForEachAsync(e =>
-            //{
-            //    Console.WriteLine($"{e.At} + {TimeSpan.FromSeconds(e.Duration.Value)}");
-            //});
-
-
-
-
-
-            //var timeEntriesSum = await togglApi.TimeEntries.GetAll()
-            //    .SelectMany(e => e)
-            //    .Where(e => e.At.Month == DateTime.Now.Month && e.At.Year == DateTime.Now.Year)
-            //    .Where(e => e.Duration != null)
-            //    .Select(e => e.Duration.Value);
-            //Console.WriteLine(TimeSpan.FromSeconds(timeEntriesSum));
         }
 
-        protected static ITogglApi TogglApiWith(Credentials credentials)
+        private static ITogglApi TogglApiWith(Credentials credentials)
             => new TogglApi(ConfigurationFor(credentials));
 
         private static ApiConfiguration ConfigurationFor(Credentials credentials)
