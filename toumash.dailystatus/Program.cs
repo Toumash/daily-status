@@ -27,7 +27,7 @@
                     .Where(e => e.Duration.HasValue)
                     .Sum(e => e.Duration.Value)
                     .Select(e => TimeSpan.FromSeconds(e));
-                Console.Write($"\bSum is:{sum.ToString().PadLeft(15)}");
+                Console.Write($"\rSum is:{sum.ToString().PadRight(50)}");
 
 
                 using (var progress = new ProgressBar())
