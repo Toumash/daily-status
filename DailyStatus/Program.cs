@@ -47,8 +47,8 @@
 
             while (true)
             {
-                Console.Write($"\rSum is:{sum.ToString().PadRight(50)}");
                 var sum = GetWorkingTime(togglApi);
+                Console.Write($"\rSum is:{WorkingTimeToString(sum, 8).PadRight(50)}");
 
                 using (var progress = new ProgressBar())
                 {
@@ -73,6 +73,11 @@
                 .Select(e => TimeSpan.FromSeconds(e)).GetAwaiter().Wait();
 
             return sum;
+        }
+
+        private static string WorkingTimeToString(TimeSpan workTime, int workingHoursPerDay)
+        {
+            return $"{Math.Truncate(workTime.TotalHours / workingHoursPerDay)}.{workTime.Hours % workingHoursPerDay}:{workTime.Minutes}:{workTime.Seconds}";
         }
 
         private static ITogglApi TogglApiWith(Credentials credentials)
