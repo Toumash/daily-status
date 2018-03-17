@@ -47,8 +47,8 @@
 
             while (true)
             {
-                Console.Write($"\rSum is:{sum.ToString().PadRight(50)}");
                 var sum = GetWorkingTime(togglApi);
+                Console.Write($"\rSum is:{sum.ToString().PadRight(50)}");
 
                 using (var progress = new ProgressBar())
                 {
@@ -68,7 +68,7 @@
             var offset = new DateTimeOffset(new DateTime(today.Year, today.Month, 1));
             var sum = togglApi.TimeEntries.GetAllSince(offset)
                 .SelectMany(e => e)
-                .Where(e => e.Duration.HasValue)
+                .Where(e => e.Duration.HasValue && !e.ServerDeletedAt.HasValue)
                 .Sum(e => e.Duration.Value)
                 .Select(e => TimeSpan.FromSeconds(e)).GetAwaiter().Wait();
 
