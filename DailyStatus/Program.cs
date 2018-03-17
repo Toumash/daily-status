@@ -47,7 +47,9 @@
 
             while (true)
             {
-                var sum = togglApi.TimeEntries.GetAll()
+                var today = DateTime.Today;
+                var offset = new DateTimeOffset(new DateTime(today.Year, today.Month, 1));
+                var sum = togglApi.TimeEntries.GetAllSince(offset)
                     .SelectMany(e => e)
                     .Where(e => e.Duration.HasValue)
                     .Sum(e => e.Duration.Value)
