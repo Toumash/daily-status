@@ -53,7 +53,21 @@
             while (true)
             {
                 var sum = GetWorkingTime(togglApi);
-                Console.Write($"\rSum is:{WorkingTimeToString(sum, 8).PadRight(50)}");
+                char sign = '-';
+                
+                if(sum < expected)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    sign = '+';
+                }
+
+                var diff = expected - sum;
+
+                Console.Write($"\rYou worked:\t\t{WorkingTimeToString(sum)}\tDiff: {sign}{WorkingTimeToString(diff.Duration()).PadRight(20)}");
 
                 using (var progress = new ProgressBar())
                 {
