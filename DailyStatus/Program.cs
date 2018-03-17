@@ -11,6 +11,8 @@
 
     public class Program
     {
+        const int NumberOfWorkingHoursPerDay = 8;
+
         public static void Main(string[] args)
         {
             string key = string.Empty;
@@ -45,6 +47,9 @@
                 }
             }
 
+            var expected = ExpectedWorkedDays();
+            Console.WriteLine($"You should worked:\t{WorkingTimeToString(expected)}");
+
             while (true)
             {
                 var sum = GetWorkingTime(togglApi);
@@ -75,9 +80,17 @@
             return sum;
         }
 
-        private static string WorkingTimeToString(TimeSpan workTime, int workingHoursPerDay)
+        private static string WorkingTimeToString(TimeSpan workTime, int workingHoursPerDay = NumberOfWorkingHoursPerDay)
         {
             return $"{Math.Truncate(workTime.TotalHours / workingHoursPerDay)}.{workTime.Hours % workingHoursPerDay}:{workTime.Minutes}:{workTime.Seconds}";
+        }
+
+        private static TimeSpan ExpectedWorkedDays()
+        {
+            var today = DateTime.Today;
+            var first = new DateTime(today.Year, today.Month, 1);
+
+            return TimeSpan.FromHours(first.BusinessDaysUntil(today)*NumberOfWorkingHoursPerDay);
         }
 
         private static ITogglApi TogglApiWith(Credentials credentials)
