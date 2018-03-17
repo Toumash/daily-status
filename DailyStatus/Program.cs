@@ -87,7 +87,7 @@
             var offset = new DateTimeOffset(new DateTime(today.Year, today.Month, 1));
             var sum = togglApi.TimeEntries.GetAllSince(offset)
                 .SelectMany(e => e)
-                .Where(e => e.Duration.HasValue && !e.ServerDeletedAt.HasValue)
+                .Where(e => e.Duration.HasValue && !e.ServerDeletedAt.HasValue && e.Start > offset)
                 .Sum(e => e.Duration.Value)
                 .Select(e => TimeSpan.FromSeconds(e)).GetAwaiter().Wait();
 
