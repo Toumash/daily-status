@@ -47,11 +47,7 @@
 
             while (true)
             {
-                var sum = togglApi.TimeEntries.GetAll()
-                    .SelectMany(e => e)
-                    .Where(e => e.Duration.HasValue)
-                    .Sum(e => e.Duration.Value)
-                    .Select(e => TimeSpan.FromSeconds(e)).GetAwaiter().Wait();
+                var sum = GetWorkingTime(togglApi);
                 Console.Write($"\rSum is:{sum.ToString().PadRight(50)}");
 
                 using (var progress = new ProgressBar())
@@ -64,6 +60,19 @@
                     }
                 }
             }
+        }
+
+        private static TimeSpan GetWorkingTime(ITogglApi togglApi)
+        {
+            var today = DateTime.Today;
+            var offset = new DateTimeOffset(new DateTime(today.Year, today.Month, 1));
+            var sum = togglApi.TimeEntries.GetAllSince(offset)
+                .SelectMany(e => e)
+                .Where(e => e.Duration.HasValue && !e.ServerDeletedAt.HasValue && e.Start > offset)
+                .Sum(e => e.Duration.Value)
+                .Select(e => TimeSpan.FromSeconds(e)).GetAwaiter().Wait();
+
+            return sum;
         }
 
         private static ITogglApi TogglApiWith(Credentials credentials)
