@@ -8,10 +8,12 @@
     using Toggl.Ultrawave;
     using Toggl.Ultrawave.Network;
     using System.Reactive.Linq;
+    using System.Linq;
 
     public class Program
     {
         const int NumberOfWorkingHoursPerDay = 8;
+        const double WorkDayStartHour = 8.0d;
 
         public static void Main(string[] args)
         {
@@ -47,7 +49,7 @@
                 }
             }
             Console.ResetColor();
-            var expected = ExpectedWorkedDays();
+            var expected = ExpectedWorkedDays(TimeSpan.FromHours(WorkDayStartHour));
             Console.WriteLine($"You should worked:\t{WorkingTimeToString(expected)}");
 
             while (true)
@@ -111,12 +113,25 @@
             return $"{Math.Truncate(workTime.TotalHours / workingHoursPerDay)}.{workTime.Hours % workingHoursPerDay}:{workTime.Minutes}:{workTime.Seconds}";
         }
 
-        private static TimeSpan ExpectedWorkedDays()
+        private static TimeSpan ExpectedWorkedDays(TimeSpan workDayStartHour, params DateTime[] holidaysDuringWeek)
         {
             var today = DateTime.Today;
             var first = new DateTime(today.Year, today.Month, 1);
+            var workDayStart = today + workDayStartHour;
+            
+            var worktime = TimeSpan.FromHours(first.BusinessDaysUntil(today, holidaysDuringWeek) * NumberOfWorkingHoursPerDay);
 
-            return TimeSpan.FromHours(first.BusinessDaysUntil(today) * NumberOfWorkingHoursPerDay);
+            if(today.DayOfWeek != DayOfWeek.Saturday || today.DayOfWeek != DayOfWeek.Sunday || !holidaysDuringWeek.Contains(today))
+            {
+                worktime -= TimeSpan.FromHours(NumberOfWorkingHoursPerDay);
+                var diff = (DateTime.Now - workDayStart).TotalHours;
+
+                diff = Math.Max(8d, Math.Min(0d, diff));
+
+                worktime += TimeSpan.FromHours(diff);
+            }
+
+            return worktime;
         }
 
         private static ITogglApi TogglApiWith(Credentials credentials)
