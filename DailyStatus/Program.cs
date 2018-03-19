@@ -11,6 +11,8 @@
 
     public class Program
     {
+        const int NumberOfWorkingHoursPerDay = 8;
+
         public static void Main(string[] args)
         {
             string key = string.Empty;
@@ -45,10 +47,27 @@
                 }
             }
 
+            var expected = ExpectedWorkedDays();
+            Console.WriteLine($"You should worked:\t{WorkingTimeToString(expected)}");
+
             while (true)
             {
                 var sum = GetWorkingTime(togglApi);
-                Console.Write($"\rSum is:{sum.ToString().PadRight(50)}");
+                char sign = '-';
+                
+                if(sum < expected)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    sign = '+';
+                }
+
+                var diff = expected - sum;
+
+                Console.Write($"\rYou worked:\t\t{WorkingTimeToString(sum)}\tDiff: {sign}{WorkingTimeToString(diff.Duration()).PadRight(20)}");
 
                 using (var progress = new ProgressBar())
                 {
@@ -73,6 +92,19 @@
                 .Select(e => TimeSpan.FromSeconds(e)).GetAwaiter().Wait();
 
             return sum;
+        }
+
+        private static string WorkingTimeToString(TimeSpan workTime, int workingHoursPerDay = NumberOfWorkingHoursPerDay)
+        {
+            return $"{Math.Truncate(workTime.TotalHours / workingHoursPerDay)}.{workTime.Hours % workingHoursPerDay}:{workTime.Minutes}:{workTime.Seconds}";
+        }
+
+        private static TimeSpan ExpectedWorkedDays()
+        {
+            var today = DateTime.Today;
+            var first = new DateTime(today.Year, today.Month, 1);
+
+            return TimeSpan.FromHours(first.BusinessDaysUntil(today)*NumberOfWorkingHoursPerDay);
         }
 
         private static ITogglApi TogglApiWith(Credentials credentials)
