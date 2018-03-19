@@ -46,7 +46,7 @@
                     repo.Save("");
                 }
             }
-
+            Console.ResetColor();
             var expected = ExpectedWorkedDays();
             Console.WriteLine($"You should worked:\t{WorkingTimeToString(expected)}");
 
@@ -54,8 +54,8 @@
             {
                 var sum = GetWorkingTime(togglApi);
                 char sign = '-';
-                
-                if(sum < expected)
+
+                if (sum < expected)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                 }
@@ -85,12 +85,24 @@
         {
             var today = DateTime.Today;
             var offset = new DateTimeOffset(new DateTime(today.Year, today.Month, 1));
+
             var sum = togglApi.TimeEntries.GetAllSince(offset)
                 .SelectMany(e => e)
                 .Where(e => e.Duration.HasValue && !e.ServerDeletedAt.HasValue && e.Start > offset)
                 .Sum(e => e.Duration.Value)
                 .Select(e => TimeSpan.FromSeconds(e)).GetAwaiter().Wait();
 
+            var currentTaskElement = togglApi.TimeEntries.GetAllSince(offset)
+                .SelectMany(e => e)
+                .Where(e => !e.Duration.HasValue)
+                .FirstOrDefaultAsync()
+                .GetAwaiter().Wait();
+
+            if (currentTaskElement != null)
+            {
+                var currentTaskDuration = (DateTime.UtcNow - currentTaskElement.Start);
+                sum += currentTaskDuration;
+            }
             return sum;
         }
 
@@ -104,7 +116,7 @@
             var today = DateTime.Today;
             var first = new DateTime(today.Year, today.Month, 1);
 
-            return TimeSpan.FromHours(first.BusinessDaysUntil(today)*NumberOfWorkingHoursPerDay);
+            return TimeSpan.FromHours(first.BusinessDaysUntil(today) * NumberOfWorkingHoursPerDay);
         }
 
         private static ITogglApi TogglApiWith(Credentials credentials)
