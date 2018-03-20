@@ -49,11 +49,10 @@
                 }
             }
             Console.ResetColor();
-            var expected = ExpectedWorkedDays(TimeSpan.FromHours(WorkDayStartHour));
-            Console.WriteLine($"You should worked:\t{WorkingTimeToString(expected)}");
 
             while (true)
             {
+                var expected = ExpectedWorkedDays(TimeSpan.FromHours(WorkDayStartHour));
                 var sum = GetWorkingTime(togglApi);
                 char sign = '-';
 
@@ -69,6 +68,8 @@
 
                 var diff = expected - sum;
 
+                Console.Clear();
+                Console.WriteLine($"You should worked:\t{WorkingTimeToString(expected)}");
                 Console.Write($"\rYou worked:\t\t{WorkingTimeToString(sum)}\tDiff: {sign}{WorkingTimeToString(diff.Duration()).PadRight(20)}");
 
                 using (var progress = new ProgressBar())
