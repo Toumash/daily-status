@@ -126,7 +126,7 @@
                 worktime -= TimeSpan.FromHours(NumberOfWorkingHoursPerDay);
                 var diff = (DateTime.Now - workDayStart).TotalHours;
 
-                diff = Math.Max(8d, Math.Min(0d, diff));
+                diff = Math.Min(8d, Math.Max(0d, diff));
 
                 worktime += TimeSpan.FromHours(diff);
             }
