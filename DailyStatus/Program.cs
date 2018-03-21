@@ -9,6 +9,8 @@
     using Toggl.Ultrawave.Network;
     using System.Reactive.Linq;
     using System.Linq;
+    using System.Xml.Serialization;
+    using System.IO;
 
     public class Program
     {
@@ -18,7 +20,8 @@
             string key = string.Empty;
             bool authorized = false;
             ITogglApi togglApi = null;
-            WorkDay workDay = WorkDay.StandardFullTime;
+            
+            WorkDay workDay = GetWorkDayConfig();
 
             while (!authorized)
             {
@@ -81,6 +84,15 @@
                     }
                 }
             }
+        }
+
+        private static WorkDay GetWorkDayConfig()
+        {
+            var serializer = new XmlSerializer(typeof(WorkDay));
+
+            var fileStream = new FileStream("config.xml", FileMode.Open);
+
+            return (WorkDay)serializer.Deserialize(fileStream);
         }
 
         private static TimeSpan GetWorkingTime(ITogglApi togglApi)
