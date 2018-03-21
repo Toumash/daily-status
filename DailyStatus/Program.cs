@@ -128,7 +128,8 @@
 
         public static string WorkingTimeToString(TimeSpan workTime, int workingHoursPerDay)
         {
-            return $"{Math.Truncate(workTime.TotalHours / workingHoursPerDay)}.{workTime.Hours % workingHoursPerDay}:{workTime.Minutes}:{workTime.Seconds}";
+            return $"{Math.Truncate(workTime.TotalHours / workingHoursPerDay):0}md "
+                + $"{workTime.Hours % workingHoursPerDay}h {workTime.Minutes:00}m {workTime.Seconds:00}s";
         }
 
         public static TimeSpan ExpectedWorkedDays(TimeSpan workDayStartHour, double numberOfWorkingHoursPerDay, params DateTime[] holidaysDuringWeek)
