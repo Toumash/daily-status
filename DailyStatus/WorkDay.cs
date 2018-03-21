@@ -25,7 +25,7 @@ namespace Toumash.DailyStatus
         {
             get
             {
-                return new WorkDay(8, 10d);
+                return new WorkDay(8, 8d);
             }
         }
     }
