@@ -104,5 +104,11 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DailyStatus\DailyStatus.csproj">
+      <Project>{3ac0a652-cd16-424d-b2e6-12d3b221109f}</Project>
+      <Name>DailyStatus</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
