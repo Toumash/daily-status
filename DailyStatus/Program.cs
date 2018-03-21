@@ -14,6 +14,7 @@
 
     public class Program
     {
+        private static AppConfig appConfig = null;
 
         public static void Main(string[] args)
         {
@@ -88,11 +89,16 @@
 
         private static WorkDay GetWorkDayConfig()
         {
-            var serializer = new XmlSerializer(typeof(WorkDay));
+            if(appConfig==null)
+            {
+                var serializer = new XmlSerializer(typeof(AppConfig));
 
-            var fileStream = new FileStream("config.xml", FileMode.Open);
+                var fileStream = new FileStream("config.xml", FileMode.Open);
 
-            return (WorkDay)serializer.Deserialize(fileStream);
+                appConfig = (AppConfig)serializer.Deserialize(fileStream);
+            }
+
+            return appConfig.WorkDayConfig;
         }
 
         private static TimeSpan GetWorkingTime(ITogglApi togglApi)

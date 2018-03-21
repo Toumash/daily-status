@@ -7,8 +7,7 @@ using System.Xml.Serialization;
 
 namespace Toumash.DailyStatus
 {
-    [XmlRootAttribute(Namespace = "DailyStatus", IsNullable = false)]
-    public struct WorkDay
+    public class WorkDay
     {
         public int NumberOfWorkingHoursPerDay { get; set; }
         public double WorkDayStartHour { get; set; }
@@ -18,6 +17,9 @@ namespace Toumash.DailyStatus
             NumberOfWorkingHoursPerDay = numberOfWorkingHoursPerDay;
             WorkDayStartHour = workDayStartHour;
         }
+
+        public WorkDay() : this(StandardFullTime.NumberOfWorkingHoursPerDay, StandardFullTime.WorkDayStartHour)
+        { }
 
         public static WorkDay StandardFullTime
         {

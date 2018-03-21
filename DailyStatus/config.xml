@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<WorkDay xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="DailyStatus">
-  <NumberOfWorkingHoursPerDay>8</NumberOfWorkingHoursPerDay>
-  <WorkDayStartHour>10</WorkDayStartHour>
-</WorkDay>
+<AppConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <WorkDayConfig>
+    <NumberOfWorkingHoursPerDay>8</NumberOfWorkingHoursPerDay>
+    <WorkDayStartHour>10</WorkDayStartHour>
+  </WorkDayConfig>
+</AppConfig>
