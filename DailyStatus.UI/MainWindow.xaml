@@ -1,0 +1,23 @@
+﻿<Window x:Class="DailyStatus.UI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        xmlns:local="clr-namespace:DailyStatus.UI"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="110" Width="230">
+    <Grid>
+        <lvc:AngularGauge FromValue="-16" ToValue="16" 
+                          LabelsStep="4" TicksStep="4" Wedge="180"
+                          TicksForeground="White" Foreground="White" 
+                          FontWeight="Bold" FontSize="10"
+                          SectionsInnerRadius=".6" Value="2" Margin="0,0,0,-30">
+            <lvc:AngularGauge.Sections>
+                <lvc:AngularSection FromValue="-16" ToValue="-4" Fill="Red"/>
+                <lvc:AngularSection FromValue="-4" ToValue="4" Fill="Green"/>
+                <lvc:AngularSection FromValue="4" ToValue="16" Fill="YellowGreen"/>
+            </lvc:AngularGauge.Sections>
+        </lvc:AngularGauge>
+    </Grid>
+</Window>

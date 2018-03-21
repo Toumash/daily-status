@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dlls", "dlls", "{6F4383CC-D
 		dlls\Toggl.Ultrawave.dll = dlls\Toggl.Ultrawave.dll
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DailyStatus.UI", "DailyStatus.UI\DailyStatus.UI.csproj", "{56437626-DCBF-4F9E-8436-17E3AC929027}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,18 @@ Global
 		{E8A8136A-3B8A-407B-9CEF-F4E7B5E7869E}.Release|iPhone.Build.0 = Release|Any CPU
 		{E8A8136A-3B8A-407B-9CEF-F4E7B5E7869E}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{E8A8136A-3B8A-407B-9CEF-F4E7B5E7869E}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{56437626-DCBF-4F9E-8436-17E3AC929027}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56437626-DCBF-4F9E-8436-17E3AC929027}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56437626-DCBF-4F9E-8436-17E3AC929027}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{56437626-DCBF-4F9E-8436-17E3AC929027}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{56437626-DCBF-4F9E-8436-17E3AC929027}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{56437626-DCBF-4F9E-8436-17E3AC929027}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{56437626-DCBF-4F9E-8436-17E3AC929027}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56437626-DCBF-4F9E-8436-17E3AC929027}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56437626-DCBF-4F9E-8436-17E3AC929027}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{56437626-DCBF-4F9E-8436-17E3AC929027}.Release|iPhone.Build.0 = Release|Any CPU
+		{56437626-DCBF-4F9E-8436-17E3AC929027}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{56437626-DCBF-4F9E-8436-17E3AC929027}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
