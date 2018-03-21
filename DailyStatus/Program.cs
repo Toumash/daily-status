@@ -9,17 +9,20 @@
     using Toggl.Ultrawave.Network;
     using System.Reactive.Linq;
     using System.Linq;
+    using System.Xml.Serialization;
+    using System.IO;
 
     public class Program
     {
-        const int NumberOfWorkingHoursPerDay = 8;
-        const double WorkDayStartHour = 8.0d;
+        private static AppConfig appConfig = null;
 
         public static void Main(string[] args)
         {
             string key = string.Empty;
             bool authorized = false;
             ITogglApi togglApi = null;
+            
+            WorkDay workDay = GetWorkDayConfig();
 
             while (!authorized)
             {
@@ -52,7 +55,7 @@
 
             while (true)
             {
-                var expected = ExpectedWorkedDays(TimeSpan.FromHours(WorkDayStartHour));
+                var expected = ExpectedWorkedDays(TimeSpan.FromHours(workDay.WorkDayStartHour), workDay.NumberOfWorkingHoursPerDay);
                 var sum = GetWorkingTime(togglApi);
                 char sign = '-';
 
@@ -69,8 +72,8 @@
                 var diff = expected - sum;
 
                 Console.Clear();
-                Console.WriteLine($"You should worked:\t{WorkingTimeToString(expected)}");
-                Console.Write($"\rYou worked:\t\t{WorkingTimeToString(sum)}\tDiff: {sign}{WorkingTimeToString(diff.Duration()).PadRight(20)}");
+                Console.WriteLine($"You should worked:\t{WorkingTimeToString(expected, workDay.NumberOfWorkingHoursPerDay)}");
+                Console.Write($"\rYou worked:\t\t{WorkingTimeToString(sum, workDay.NumberOfWorkingHoursPerDay)}\tDiff: {sign}{WorkingTimeToString(diff.Duration(), workDay.NumberOfWorkingHoursPerDay).PadRight(20)}");
 
                 using (var progress = new ProgressBar())
                 {
@@ -82,6 +85,20 @@
                     }
                 }
             }
+        }
+
+        private static WorkDay GetWorkDayConfig()
+        {
+            if(appConfig==null)
+            {
+                var serializer = new XmlSerializer(typeof(AppConfig));
+
+                var fileStream = new FileStream("config.xml", FileMode.Open);
+
+                appConfig = (AppConfig)serializer.Deserialize(fileStream);
+            }
+
+            return appConfig.WorkDayConfig;
         }
 
         private static TimeSpan GetWorkingTime(ITogglApi togglApi)
@@ -109,22 +126,22 @@
             return sum;
         }
 
-        private static string WorkingTimeToString(TimeSpan workTime, int workingHoursPerDay = NumberOfWorkingHoursPerDay)
+        private static string WorkingTimeToString(TimeSpan workTime, int workingHoursPerDay)
         {
             return $"{Math.Truncate(workTime.TotalHours / workingHoursPerDay)}.{workTime.Hours % workingHoursPerDay}:{workTime.Minutes}:{workTime.Seconds}";
         }
 
-        private static TimeSpan ExpectedWorkedDays(TimeSpan workDayStartHour, params DateTime[] holidaysDuringWeek)
+        private static TimeSpan ExpectedWorkedDays(TimeSpan workDayStartHour, double numberOfWorkingHoursPerDay, params DateTime[] holidaysDuringWeek)
         {
             var today = DateTime.Today;
             var first = new DateTime(today.Year, today.Month, 1);
             var workDayStart = today + workDayStartHour;
             
-            var worktime = TimeSpan.FromHours(first.BusinessDaysUntil(today, holidaysDuringWeek) * NumberOfWorkingHoursPerDay);
+            var worktime = TimeSpan.FromHours(first.BusinessDaysUntil(today, holidaysDuringWeek) * numberOfWorkingHoursPerDay);
 
             if(today.DayOfWeek != DayOfWeek.Saturday || today.DayOfWeek != DayOfWeek.Sunday || !holidaysDuringWeek.Contains(today))
             {
-                worktime -= TimeSpan.FromHours(NumberOfWorkingHoursPerDay);
+                worktime -= TimeSpan.FromHours(numberOfWorkingHoursPerDay);
                 var diff = (DateTime.Now - workDayStart).TotalHours;
 
                 diff = Math.Min(8d, Math.Max(0d, diff));
