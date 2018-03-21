@@ -5,7 +5,7 @@
     using System.Text;
     using CredentialManagement;
 
-    public class ApiKeyRepository
+    public class WindowsCredentialManager
     {
         private const string PasswordName = "toggl-api-key";
 

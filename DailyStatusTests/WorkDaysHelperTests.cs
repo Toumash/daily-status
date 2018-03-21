@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Toumash.DailyStatus.BLL;
 
 namespace Toumash.DailyStatus.Tests
 {
@@ -16,7 +17,7 @@ namespace Toumash.DailyStatus.Tests
         {
             var monday = new DateTime(2018, 03, 19);
             var sunday = new DateTime(2018, 03, 25);
-            var actual = WorkDaysHelper.BusinessDaysUntil(monday, sunday);
+            var actual = monday.BusinessDaysUntil(sunday);
             Assert.AreEqual(5, actual);
         }
 
@@ -25,7 +26,7 @@ namespace Toumash.DailyStatus.Tests
         {
             var monday = new DateTime(2018, 03, 1);
             var sunday = new DateTime(2018, 03, 21);
-            var actual = WorkDaysHelper.BusinessDaysUntil(monday, sunday);
+            var actual = monday.BusinessDaysUntil(sunday);
             Assert.AreEqual(15, actual);
         }
     }

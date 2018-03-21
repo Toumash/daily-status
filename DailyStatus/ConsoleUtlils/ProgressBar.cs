@@ -1,15 +1,15 @@
-﻿namespace Toumash.DailyStatus
-{
-    using System;
-    using System.Text;
-    using System.Threading;
+﻿using System;
+using System.Text;
+using System.Threading;
 
+namespace Toumash.DailyStatus.ConsoleUtils
+{
     /// <summary>
     /// Console progress bar. Code is under the MIT License
     /// <see cref="https://gist.github.com/DanielSWolf/0ab6a96899cc5377bf54"/>
     /// Author: github.com/DanielSWolf
     /// </summary>
-    public class ProgressBar : IDisposable, IProgress<double>
+    public class ConsoleProgressBar : IDisposable, IProgress<double>
     {
         private const int blockCount = 10;
         private readonly TimeSpan animationInterval = TimeSpan.FromSeconds(1.0 / 8);
@@ -22,7 +22,7 @@
         private bool disposed = false;
         private int animationIndex = 0;
 
-        public ProgressBar()
+        public ConsoleProgressBar()
         {
             timer = new Timer(TimerHandler);
 

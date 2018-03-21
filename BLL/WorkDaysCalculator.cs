@@ -1,24 +1,11 @@
-﻿//Code from class below based on solution from https://stackoverflow.com/questions/1617049/calculate-the-number-of-business-days-between-two-dates
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Toumash.DailyStatus
+namespace Toumash.DailyStatus.BLL
 {
-    public static class WorkDaysHelper
+    public static class WorkDaysCalculator
     {
-        /// <summary>
-        /// Calculates number of business days, taking into account:
-        ///  - weekends (Saturdays and Sundays)
-        ///  - holidays in the middle of the week
-        /// </summary>
-        /// <param name="firstDay">First day in the time interval</param>
-        /// <param name="lastDay">Last day in the time interval</param>
-        /// <param name="holidaysDuringWeek">List of holidays</param>
-        /// <returns>Number of business days during the 'span'</returns>
         public static int BusinessDaysUntil(this DateTime firstDay, DateTime lastDay, params DateTime[] holidaysDuringWeek)
         {
             var countOfWorkDays = GetDateRange(firstDay, lastDay)
