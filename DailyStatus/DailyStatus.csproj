@@ -55,6 +55,14 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="Toggl.Multivac, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\dlls\Toggl.Multivac.dll</HintPath>
+    </Reference>
+    <Reference Include="Toggl.Ultrawave, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\dlls\Toggl.Ultrawave.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiKeyRepository.cs" />
@@ -66,16 +74,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\toggl\Toggl.Multivac\Toggl.Multivac.csproj">
-      <Project>{6AF7BE5E-AF9D-4EA7-AF7F-28D07B8DEF24}</Project>
-      <Name>Toggl.Multivac</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\toggl\Toggl.Ultrawave\Toggl.Ultrawave.csproj">
-      <Project>{5ACEB155-9DD4-4309-BCC9-997A09950393}</Project>
-      <Name>Toggl.Ultrawave</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
