@@ -2,7 +2,7 @@
 using System.Text;
 using System.Threading;
 
-namespace Toumash.DailyStatus.ConsoleUtils
+namespace DailyStatus.ConsoleUtils
 {
     /// <summary>
     /// Console progress bar. Code is under the MIT License

@@ -1,19 +1,16 @@
-﻿namespace Toumash.DailyStatus
+﻿namespace DailyStatus
 {
     using System;
-    using System.Runtime.InteropServices;
-    using System.Security;
     using System.Threading;
-    using System.Threading.Tasks;
     using Toggl.Ultrawave;
     using Toggl.Ultrawave.Network;
     using System.Reactive.Linq;
     using System.Linq;
     using System.Xml.Serialization;
     using System.IO;
-    using Toumash.DailyStatus.BLL;
-    using Toumash.DailyStatus.ConsoleUtils;
-    using global::DailyStatus.Security;
+    using DailyStatus.Security;
+    using DailyStatus.BLL;
+    using DailyStatus.ConsoleUtils;
 
     public class Program
     {
@@ -80,8 +77,8 @@
 
                 using (var progress = new ConsoleProgressBar())
                 {
-                    const int max = 5;
-                    for (int i = 0; i <= 5; i++)
+                    const int max = 2;
+                    for (int i = 0; i <= 2; i++)
                     {
                         progress.Report((double)i / max);
                         Thread.Sleep(1000);

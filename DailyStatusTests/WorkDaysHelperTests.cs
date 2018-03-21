@@ -1,11 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Toumash.DailyStatus;
+﻿using DailyStatus.BLL;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Toumash.DailyStatus.BLL;
 
 namespace Toumash.DailyStatus.Tests
 {

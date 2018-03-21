@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Toumash.DailyStatus.BLL
+namespace DailyStatus.BLL
 {
     public static class WorkDaysCalculator
     {
