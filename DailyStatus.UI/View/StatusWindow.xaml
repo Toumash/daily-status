@@ -5,19 +5,33 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         xmlns:local="clr-namespace:DailyStatus.UI"
+        xmlns:vm="clr-namespace:DailyStatus.UI.ViewModel.DesignTime"
         mc:Ignorable="d"
-        Title="Status" Height="150" Width="250">
+        Title="Status" Height="211.75" Width="337.75"
+        d:DataContext="{d:DesignInstance vm:StatusViewModelDesignTime, IsDesignTimeCreatable=True}"
+        Background="#FF202F63" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True">
     <Grid>
         <lvc:AngularGauge FromValue="-16" ToValue="16" 
-                          LabelsStep="4" TicksStep="4" Wedge="180"
+                          LabelsStep="8" TicksStep="4" Wedge="180"
                           TicksForeground="White" Foreground="White" 
-                          FontWeight="Bold" FontSize="10"
-                          SectionsInnerRadius=".6" Value="2" Margin="0,0,0,-30">
+                          FontWeight="Bold" FontSize="16"
+                          SectionsInnerRadius=".6" Value="{Binding TimeDiff}" 
+                          Margin="-4,10,0,-81" Name="ag_gauge1"
+                          NeedleFill="Gray">
             <lvc:AngularGauge.Sections>
-                <lvc:AngularSection FromValue="-16" ToValue="-4" Fill="Red"/>
-                <lvc:AngularSection FromValue="-4" ToValue="4" Fill="Green"/>
-                <lvc:AngularSection FromValue="4" ToValue="16" Fill="YellowGreen"/>
+                <lvc:AngularSection FromValue="-16" ToValue="-4" Fill="#F74444"/>
+                <lvc:AngularSection FromValue="-4" ToValue="10" Fill="#A8CA27"/>
+                <lvc:AngularSection FromValue="10" ToValue="16" Fill="#FDAD00"/>
             </lvc:AngularGauge.Sections>
         </lvc:AngularGauge>
+        <Button x:Name="btn_close" Content="X"
+                HorizontalAlignment="Left" Margin="280,0,0,0"
+                VerticalAlignment="Top" Width="58" 
+                Height="32" Background="#FF707070" BorderBrush="{x:Null}"
+                Command="{Binding CloseButtonCommand}" Style="{DynamicResource CloseButtonStyle}"/>
+        <TextBlock x:Name="tb_time_diff" Margin="10" 
+                   Text="{Binding TbTimeDiff}" VerticalAlignment="Bottom" 
+                   HorizontalAlignment="Center" Foreground="White" 
+                   FontWeight="Bold" TextWrapping="Wrap"/>
     </Grid>
 </Window>

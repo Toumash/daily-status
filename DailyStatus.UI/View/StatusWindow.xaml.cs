@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DailyStatus.UI.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,15 @@ namespace DailyStatus.UI.View
         public StatusWindow()
         {
             InitializeComponent();
+            DataContext = new StatusViewModel();
+            MouseDown += Window_MouseDown;
         }
+
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                DragMove();
+        }
+
     }
 }
