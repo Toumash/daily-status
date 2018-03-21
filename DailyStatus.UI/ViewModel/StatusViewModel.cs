@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DailyStatus.UI.ViewModel
 {
-    class MainWindowViewModel
+    class StatusViewModel
     {
         public SeriesCollection SeriesCollection { get; set; }
             = new SeriesCollection {
