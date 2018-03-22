@@ -15,6 +15,7 @@
     using DailyStatus.Configuration;
     using DailyStatus.Common.Configuration;
     using DailyStatus.Common.Model;
+    using DailyStatus.Common.Extensions;
 
     public class Program
     {
@@ -78,8 +79,8 @@
                 var diff = expected - sum;
 
                 Console.Clear();
-                Console.WriteLine($"You should worked:\t{WorkingTimeToString(expected, workDay.NumberOfWorkingHoursPerDay)}");
-                Console.Write($"\rYou worked:\t\t{WorkingTimeToString(sum, workDay.NumberOfWorkingHoursPerDay)}\tDiff: {sign}{WorkingTimeToString(diff.Duration(), workDay.NumberOfWorkingHoursPerDay).PadRight(20)}");
+                Console.WriteLine($"You should worked:\t{expected.ToWorkingTimeString(workDay.NumberOfWorkingHoursPerDay)}");
+                Console.Write($"\rYou worked:\t\t{sum.ToWorkingTimeString(workDay.NumberOfWorkingHoursPerDay)}\tDiff: {sign}{diff.Duration().ToWorkingTimeString(workDay.NumberOfWorkingHoursPerDay).PadRight(20)}");
 
                 using (var progress = new ConsoleProgressBar())
                 {
@@ -93,9 +94,6 @@
             }
         }
 
-        public static string WorkingTimeToString(TimeSpan workTime, int workingHoursPerDay)
-        {
-            return $"{Math.Truncate(workTime.TotalHours / workingHoursPerDay)}.{workTime.Hours % workingHoursPerDay}:{workTime.Minutes}:{workTime.Seconds}";
-        }
+
     }
 }

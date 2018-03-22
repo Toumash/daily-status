@@ -3,10 +3,12 @@ using DailyStatus.Common.Configuration;
 using DailyStatus.UI.WpfExtensions;
 using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using DailyStatus.Common.Extensions;
 
 namespace DailyStatus.UI.ViewModel
 {
@@ -20,6 +22,8 @@ namespace DailyStatus.UI.ViewModel
 
         private TimeSpan _diff;
         private Brush _gaugeNeedle = Brushes.Gray;
+        private string _tbExpected = "";
+        private string _tbActual = "";
 
         public TimeSpan Diff
         {
@@ -42,6 +46,26 @@ namespace DailyStatus.UI.ViewModel
             }
         }
 
+        public string TbExpected
+        {
+            get => _tbExpected;
+            set
+            {
+                _tbExpected = value;
+                NotifyPropertyChanged(nameof(TbExpected));
+            }
+        }
+
+        public string TbActual
+        {
+            get => _tbActual;
+            set
+            {
+                _tbActual = value;
+                NotifyPropertyChanged(nameof(TbActual));
+            }
+        }
+
         public double TimeDiff { get => _diff.TotalHours; }
         public string TbTimeDiff { get => $"{_diff.TotalHours:0.#} h"; }
 
@@ -53,6 +77,10 @@ namespace DailyStatus.UI.ViewModel
             {
                 Needle = Brushes.Gray;
                 Diff = TimeSpan.FromHours(2.5d);
+                TbExpected = TimeSpan.FromHours(2.5)
+                    .ToWorkingTimeString(_config.GetWorkDayConfig().NumberOfWorkingHoursPerDay);
+                TbActual = TimeSpan.FromHours(2.5)
+                    .ToWorkingTimeString(_config.GetWorkDayConfig().NumberOfWorkingHoursPerDay);
             }
         }
 
@@ -61,19 +89,35 @@ namespace DailyStatus.UI.ViewModel
             _togglClient = togglClient;
             _config = configuration;
 
-            Needle = Brushes.Transparent;
-            Diff = TimeSpan.FromHours(0);
+            Init();
 
             _timer = new DispatcherTimer
             {
                 Interval = TimeSpan.FromSeconds(REFRESH_INTERNAL_SECONDS)
             };
-            _timer.Tick += async (s, e) =>
-            {
-                Diff = await _togglClient.GetDifference(_config.GetWorkDayConfig());
-                Needle = Brushes.Gray;
-            };
+            _timer.Tick += async (s, e) => await RefreshData();
             _timer.Start();
+        }
+
+        private void Init()
+        {
+            Needle = Brushes.Transparent;
+            Diff = TimeSpan.FromHours(0);
+            TbExpected = TimeSpan.FromHours(0)
+                   .ToWorkingTimeString(_config.GetWorkDayConfig().NumberOfWorkingHoursPerDay);
+            TbActual = TimeSpan.FromHours(0)
+                .ToWorkingTimeString(_config.GetWorkDayConfig().NumberOfWorkingHoursPerDay);
+        }
+
+        private async Task RefreshData()
+        {
+            var expected = _togglClient.GetExpectedWorkingTime(_config.GetWorkDayConfig());
+            var actual = (await _togglClient.GetWorkingTime());
+            // FIXME: remove duplicate data transfer
+            TbExpected = expected.ToWorkingTimeString(_config.GetWorkDayConfig().NumberOfWorkingHoursPerDay);
+            TbActual = actual.ToWorkingTimeString(_config.GetWorkDayConfig().NumberOfWorkingHoursPerDay);
+            Diff = _togglClient.GetDifference(expected: expected, sum: actual);
+            Needle = Brushes.Gray;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -84,6 +84,7 @@
     <Compile Include="Configuration\AppConfig.cs" />
     <Compile Include="Configuration\DailyStatusConfiguration.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
+    <Compile Include="Extensions\HoursFormatter.cs" />
     <Compile Include="Model\WorkDay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TogglProxy.cs" />

@@ -12,14 +12,25 @@ namespace DailyStatus.Common
     {
         ITogglApi _togglApi = null;
 
-        public async Task<TimeSpan> GetDifference(WorkDay dayConfig)
+
+        public TimeSpan GetExpectedWorkingTime(WorkDay dayConfig)
         {
-            var expected = new WorkDaysCalculator()
+            return new WorkDaysCalculator()
                  .ExpectedWorkedDays(TimeSpan.FromHours(dayConfig.WorkDayStartHour),
                                      dayConfig.NumberOfWorkingHoursPerDay);
-            var sum = await GetWorkingTime();
+        }
+
+        public TimeSpan GetDifference(TimeSpan expected, TimeSpan sum)
+        {
             var diff = sum - expected;
             return diff;
+        }
+
+        public async Task<TimeSpan> GetDifference(WorkDay dayConfig)
+        {
+            var expected = GetExpectedWorkingTime(dayConfig);
+            var sum = await GetWorkingTime();
+            return GetDifference(expected, sum);
         }
 
         public async Task<TimeSpan> GetWorkingTime()

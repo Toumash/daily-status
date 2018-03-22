@@ -29,9 +29,17 @@
                 VerticalAlignment="Top" Width="58" 
                 Height="32" Background="#FF707070" BorderBrush="{x:Null}"
                 Command="{Binding CloseButtonCommand}" Style="{DynamicResource CloseButtonStyle}"/>
+        <TextBlock x:Name="tb_expected_time" Margin="10" 
+                   Text="{Binding TbExpected}" VerticalAlignment="Bottom" 
+                   HorizontalAlignment="Left" Foreground="White" 
+                   FontWeight="Bold" TextWrapping="Wrap"/>
         <TextBlock x:Name="tb_time_diff" Margin="10" 
                    Text="{Binding TbTimeDiff}" VerticalAlignment="Bottom" 
                    HorizontalAlignment="Center" Foreground="White" 
+                   FontWeight="Bold" TextWrapping="Wrap"/>
+        <TextBlock x:Name="tb_actual_time" Margin="10" 
+                   Text="{Binding TbActual}" VerticalAlignment="Bottom" 
+                   HorizontalAlignment="Right" Foreground="White" 
                    FontWeight="Bold" TextWrapping="Wrap"/>
     </Grid>
 </Window>
