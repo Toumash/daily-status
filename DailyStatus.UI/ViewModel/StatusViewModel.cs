@@ -36,6 +36,7 @@ namespace DailyStatus.UI.ViewModel
                 NotifyPropertyChanged(nameof(TbTimeDiff));
             }
         }
+
         public Brush Needle
         {
             get { return _gaugeNeedle; }
@@ -78,9 +79,9 @@ namespace DailyStatus.UI.ViewModel
                 Needle = Brushes.Gray;
                 Diff = TimeSpan.FromHours(2.5d);
                 TbExpected = TimeSpan.FromHours(2.5)
-                    .ToWorkingTimeString(_config.GetWorkDayConfig().NumberOfWorkingHoursPerDay);
+                    .ToWorkingTimeString(8);
                 TbActual = TimeSpan.FromHours(2.5)
-                    .ToWorkingTimeString(_config.GetWorkDayConfig().NumberOfWorkingHoursPerDay);
+                    .ToWorkingTimeString(8);
             }
         }
 
@@ -113,7 +114,7 @@ namespace DailyStatus.UI.ViewModel
         {
             var expected = _togglClient.GetExpectedWorkingTime(_config.GetWorkDayConfig());
             var actual = (await _togglClient.GetWorkingTime());
-            // FIXME: remove duplicate data transfer
+
             TbExpected = expected.ToWorkingTimeString(_config.GetWorkDayConfig().NumberOfWorkingHoursPerDay);
             TbActual = actual.ToWorkingTimeString(_config.GetWorkDayConfig().NumberOfWorkingHoursPerDay);
             Diff = _togglClient.GetDifference(expected: expected, sum: actual);
