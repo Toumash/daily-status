@@ -1,17 +1,7 @@
-﻿using DailyStatus.UI.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DailyStatus.Common;
+using DailyStatus.UI.ViewModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace DailyStatus.UI.View
 {
@@ -23,15 +13,17 @@ namespace DailyStatus.UI.View
         public StatusWindow()
         {
             InitializeComponent();
-            DataContext = new StatusViewModel();
-            MouseDown += Window_MouseDown;
-        }
+            // FIXME: Dependency Injection + api key prompt
+            var togglClient = new Common.TogglProxy();
+            togglClient.Configure(new WindowsCredentialManager().Get());
+            DataContext = new StatusViewModel(
+               togglClient, new Common.Configuration.DailyStatusConfiguration());
 
-        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left)
-                DragMove();
+            MouseDown += (s, e) =>
+            {
+                if (e.ChangedButton == MouseButton.Left)
+                    DragMove();
+            };
         }
-
     }
 }

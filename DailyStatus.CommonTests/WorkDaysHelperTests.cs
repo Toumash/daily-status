@@ -1,10 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DailyStatus.Common.Extensions;
 
-namespace DailyStatus.Tests
+namespace DailyStatus.CommonTests
 {
-    [TestClass()]
+    [TestClass]
     public class WorkDaysHelperTests
     {
         [TestMethod()]

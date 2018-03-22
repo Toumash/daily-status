@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
-namespace Toumash.DailyStatus.BLL
+namespace DailyStatus.Common.Extensions
 {
-    public static class WorkDaysCalculator
+    public static class DateTimeExtensions
     {
         public static int BusinessDaysUntil(this DateTime firstDay, DateTime lastDay, params DateTime[] holidaysDuringWeek)
         {

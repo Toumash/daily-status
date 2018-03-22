@@ -1,4 +1,4 @@
-﻿namespace DailyStatus
+﻿namespace DailyStatus.Common.Model
 {
     public class WorkDay
     {
