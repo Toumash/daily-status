@@ -12,7 +12,7 @@ namespace DailyStatus.UI.ViewModel
 {
     public class StatusViewModel : INotifyPropertyChanged
     {
-        private const int REFRESH_INTERNAL_SECONDS = 2;
+        private const int REFRESH_INTERNAL_SECONDS = 1;
 
         TogglProxy _togglClient;
         DailyStatusConfiguration _config;
@@ -70,8 +70,8 @@ namespace DailyStatus.UI.ViewModel
             };
             _timer.Tick += async (s, e) =>
             {
-                Needle = Brushes.Gray;
                 Diff = await _togglClient.GetDifference(_config.GetWorkDayConfig());
+                Needle = Brushes.Gray;
             };
             _timer.Start();
         }

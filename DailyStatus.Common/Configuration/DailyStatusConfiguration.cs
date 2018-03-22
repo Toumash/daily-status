@@ -19,7 +19,6 @@ namespace DailyStatus.Common.Configuration
                     using (var fileStream = new FileStream("config.xml", FileMode.Open))
                     {
                         _config = (AppConfig)serializer.Deserialize(fileStream);
-
                     }
                 }
                 return _config;
