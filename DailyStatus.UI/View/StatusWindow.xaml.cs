@@ -2,6 +2,7 @@
 using DailyStatus.UI.ViewModel;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace DailyStatus.UI.View
 {

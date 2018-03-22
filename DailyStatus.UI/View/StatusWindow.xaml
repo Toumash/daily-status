@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         xmlns:local="clr-namespace:DailyStatus.UI"
-        xmlns:vm="clr-namespace:DailyStatus.UI.ViewModel.DesignTime"
+        xmlns:vm="clr-namespace:DailyStatus.UI.ViewModel"
         mc:Ignorable="d"
         Title="Status" Height="211.75" Width="337.75"
-        d:DataContext="{d:DesignInstance vm:StatusViewModelDesignTime, IsDesignTimeCreatable=True}"
+        d:DataContext="{d:DesignInstance vm:StatusViewModel, IsDesignTimeCreatable=True}"
         Background="#FF202F63" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True">
     <Grid>
         <lvc:AngularGauge FromValue="-16" ToValue="16" 
@@ -17,7 +17,7 @@
                           FontWeight="Bold" FontSize="16"
                           SectionsInnerRadius=".6" Value="{Binding TimeDiff}" 
                           Margin="-4,10,0,-81" Name="ag_gauge1"
-                          NeedleFill="Gray">
+                          NeedleFill="{Binding Needle}">
             <lvc:AngularGauge.Sections>
                 <lvc:AngularSection FromValue="-16" ToValue="-4" Fill="#F74444"/>
                 <lvc:AngularSection FromValue="-4" ToValue="10" Fill="#A8CA27"/>
