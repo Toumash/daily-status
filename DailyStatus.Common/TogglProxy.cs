@@ -2,6 +2,7 @@
 using DailyStatus.Common.Model;
 using System;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Toggl.Ultrawave;
 using Toggl.Ultrawave.Network;
 
@@ -11,32 +12,31 @@ namespace DailyStatus.Common
     {
         ITogglApi _togglApi = null;
 
-        public TimeSpan GetDifference(WorkDay dayConfig)
+        public async Task<TimeSpan> GetDifference(WorkDay dayConfig)
         {
             var expected = new WorkDaysCalculator()
                  .ExpectedWorkedDays(TimeSpan.FromHours(dayConfig.WorkDayStartHour),
                                      dayConfig.NumberOfWorkingHoursPerDay);
-            var sum = GetWorkingTime();
+            var sum = await GetWorkingTime();
             var diff = sum - expected;
             return diff;
         }
 
-        public TimeSpan GetWorkingTime()
+        public async Task<TimeSpan> GetWorkingTime()
         {
             var today = DateTime.Today;
             var offset = new DateTimeOffset(new DateTime(today.Year, today.Month, 1));
 
-            var sum = _togglApi.TimeEntries.GetAllSince(offset)
+            var sum = await _togglApi.TimeEntries.GetAllSince(offset)
                 .SelectMany(e => e)
                 .Where(e => e.Duration.HasValue && !e.ServerDeletedAt.HasValue && e.Start > offset)
                 .Sum(e => e.Duration.Value)
-                .Select(e => TimeSpan.FromSeconds(e)).GetAwaiter().Wait();
+                .Select(e => TimeSpan.FromSeconds(e));
 
-            var currentTaskElement = _togglApi.TimeEntries.GetAllSince(offset)
+            var currentTaskElement = await _togglApi.TimeEntries.GetAllSince(offset)
                 .SelectMany(e => e)
                 .Where(e => !e.Duration.HasValue)
-                .FirstOrDefaultAsync()
-                .GetAwaiter().Wait();
+                .FirstOrDefaultAsync();
 
             if (currentTaskElement != null)
             {

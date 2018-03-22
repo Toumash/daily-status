@@ -65,10 +65,10 @@ namespace DailyStatus.UI.ViewModel
             {
                 Interval = TimeSpan.FromMilliseconds(2 * 1000)
             };
-            LogTimer.Tick += (s, e) =>
+            LogTimer.Tick += async (s, e) =>
             {
                 Needle = Brushes.Gray;
-                Diff = _togglClient.GetDifference(_config.GetWorkDayConfig());
+                Diff = await _togglClient.GetDifference(_config.GetWorkDayConfig());
             };
             LogTimer.Start();
         }
