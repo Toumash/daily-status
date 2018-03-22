@@ -3,7 +3,6 @@ using DailyStatus.Common.Configuration;
 using DailyStatus.UI.WpfExtensions;
 using System;
 using System.ComponentModel;
-using System.Reactive.Subjects;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -13,11 +12,14 @@ namespace DailyStatus.UI.ViewModel
 {
     public class StatusViewModel : INotifyPropertyChanged
     {
+        private const int REFRESH_INTERNAL_SECONDS = 2;
+
         TogglProxy _togglClient;
         DailyStatusConfiguration _config;
-        DispatcherTimer LogTimer;
+        DispatcherTimer _timer;
+
         private TimeSpan _diff;
-        private Brush _needle = Brushes.Gray;
+        private Brush _gaugeNeedle = Brushes.Gray;
 
         public TimeSpan Diff
         {
@@ -32,10 +34,10 @@ namespace DailyStatus.UI.ViewModel
         }
         public Brush Needle
         {
-            get { return _needle; }
+            get { return _gaugeNeedle; }
             set
             {
-                _needle = value;
+                _gaugeNeedle = value;
                 NotifyPropertyChanged(nameof(Needle));
             }
         }
@@ -53,6 +55,7 @@ namespace DailyStatus.UI.ViewModel
                 Diff = TimeSpan.FromHours(2.5d);
             }
         }
+
         public StatusViewModel(TogglProxy togglClient, DailyStatusConfiguration configuration)
         {
             _togglClient = togglClient;
@@ -61,25 +64,22 @@ namespace DailyStatus.UI.ViewModel
             Needle = Brushes.Transparent;
             Diff = TimeSpan.FromHours(0);
 
-            LogTimer = new DispatcherTimer
+            _timer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMilliseconds(2 * 1000)
+                Interval = TimeSpan.FromSeconds(REFRESH_INTERNAL_SECONDS)
             };
-            LogTimer.Tick += async (s, e) =>
+            _timer.Tick += async (s, e) =>
             {
                 Needle = Brushes.Gray;
                 Diff = await _togglClient.GetDifference(_config.GetWorkDayConfig());
             };
-            LogTimer.Start();
+            _timer.Start();
         }
-
-
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

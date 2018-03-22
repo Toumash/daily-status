@@ -7,12 +7,28 @@ namespace DailyStatus.Common.Configuration
 {
     public class DailyStatusConfiguration
     {
+        AppConfig _config = null;
+
+        public AppConfig Config
+        {
+            get
+            {
+                if (_config == null)
+                {
+                    var serializer = new XmlSerializer(typeof(AppConfig));
+                    using (var fileStream = new FileStream("config.xml", FileMode.Open))
+                    {
+                        _config = (AppConfig)serializer.Deserialize(fileStream);
+
+                    }
+                }
+                return _config;
+            }
+        }
+
         public WorkDay GetWorkDayConfig()
         {
-            var serializer = new XmlSerializer(typeof(AppConfig));
-            var fileStream = new FileStream("config.xml", FileMode.Open);
-            var appConfig = (AppConfig)serializer.Deserialize(fileStream);
-            return appConfig.WorkDayConfig;
+            return Config.WorkDayConfig;
         }
     }
 }
