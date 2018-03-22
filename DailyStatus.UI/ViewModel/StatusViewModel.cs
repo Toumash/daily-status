@@ -21,9 +21,10 @@ namespace DailyStatus.UI.ViewModel
         DispatcherTimer _timer;
 
         private TimeSpan _diff;
-        private Brush _gaugeNeedle = Brushes.Gray;
-        private string _tbExpected = "";
-        private string _tbActual = "";
+        private Brush _gaugeNeedle;
+        private string _tbExpected;
+        private string _tbActual;
+        private DateTime? _lastUpdated;
 
         public TimeSpan Diff
         {
@@ -67,6 +68,29 @@ namespace DailyStatus.UI.ViewModel
             }
         }
 
+        public DateTime? LastUpdateTime
+        {
+            get => _lastUpdated;
+            set
+            {
+                _lastUpdated = value;
+                NotifyPropertyChanged(nameof(LastUpdateTime));
+                NotifyPropertyChanged(nameof(LastUpdateTimeString));
+            }
+        }
+
+        public string LastUpdateTimeString
+        {
+            get
+            {
+                if (!_lastUpdated.HasValue)
+                {
+                    return $"n/a";
+                }
+                return $"{_lastUpdated.Value.Hour:00}:{_lastUpdated.Value.Minute:00}:{_lastUpdated.Value.Second:00}";
+            }
+        }
+
         public double TimeDiff { get => _diff.TotalHours; }
         public string TbTimeDiff { get => $"{_diff.TotalHours:0.#} h"; }
 
@@ -82,6 +106,7 @@ namespace DailyStatus.UI.ViewModel
                     .ToWorkingTimeString(8);
                 TbActual = TimeSpan.FromHours(2.5)
                     .ToWorkingTimeString(8);
+                LastUpdateTime = DateTime.Now;
             }
         }
 
@@ -108,6 +133,7 @@ namespace DailyStatus.UI.ViewModel
                    .ToWorkingTimeString(_config.GetWorkDayConfig().NumberOfWorkingHoursPerDay);
             TbActual = TimeSpan.FromHours(0)
                 .ToWorkingTimeString(_config.GetWorkDayConfig().NumberOfWorkingHoursPerDay);
+            LastUpdateTime = null;
         }
 
         private async Task RefreshData()
@@ -119,6 +145,7 @@ namespace DailyStatus.UI.ViewModel
             TbActual = actual.ToWorkingTimeString(_config.GetWorkDayConfig().NumberOfWorkingHoursPerDay);
             Diff = _togglClient.GetDifference(expected: expected, sum: actual);
             Needle = Brushes.Gray;
+            LastUpdateTime = DateTime.Now;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

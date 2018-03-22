@@ -29,6 +29,10 @@
                 VerticalAlignment="Top" Width="58" 
                 Height="32" Background="#FF707070" BorderBrush="{x:Null}"
                 Command="{Binding CloseButtonCommand}" Style="{DynamicResource CloseButtonStyle}"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" 
+                   VerticalAlignment="Top" FontSize="9" 
+                   FontWeight="Normal" Foreground="LightGray"
+                   Margin="5,5,0,0" Text="{Binding LastUpdateTimeString}"/>
         <TextBlock x:Name="tb_expected_time" Margin="10" 
                    Text="{Binding TbExpected}" VerticalAlignment="Bottom" 
                    HorizontalAlignment="Left" Foreground="White" 
