@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:DailyStatus.UI"
              StartupUri="View/StatusWindow.xaml">
     <Application.Resources>
-
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
                 <Setter.Value>

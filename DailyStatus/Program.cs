@@ -63,7 +63,7 @@
                     .ExpectedWorkedDays(TimeSpan.FromHours(workDay.WorkDayStartHour),
                                         workDay.NumberOfWorkingHoursPerDay);
 
-                var sum = togglClient.GetWorkingTime().Result;
+                var sum = togglClient.GetStatus().Result.TimeInMonth;
                 char sign = '-';
 
                 if (sum < expected)

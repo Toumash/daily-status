@@ -125,18 +125,18 @@ namespace DailyStatus.UI.ViewModel
             {
                 _offline = value;
                 NotifyPropertyChanged(nameof(OfflineMode));
-                NotifyPropertyChanged(nameof(OfflineMessageVisibility));
             }
         }
-
-        public Visibility OfflineMessageVisibility
+        private bool _currentlyTracking;
+        public bool IsTimerActive
         {
-            get
+            get => _currentlyTracking;
+            set
             {
-                return OfflineMode ? Visibility.Visible : Visibility.Hidden;
+                _currentlyTracking = value;
+                NotifyPropertyChanged(nameof(IsTimerActive));
             }
         }
-
 
         public ICommand CloseButtonCommand { get; } = new RelayCommand((s) => Environment.Exit(0));
 
@@ -151,6 +151,8 @@ namespace DailyStatus.UI.ViewModel
                 TbActual = TimeSpan.FromHours(2.5)
                     .ToWorkingTimeString(8);
                 LastUpdateTime = DateTime.Now;
+                OfflineMode = false;
+                IsTimerActive = true;
             }
         }
 
@@ -184,12 +186,14 @@ namespace DailyStatus.UI.ViewModel
         {
             try
             {
-                var expected = _togglClient.GetExpectedWorkingTime(_config.GetWorkDayConfig());
-                var actual = (await _togglClient.GetWorkingTime());
+                
+                var actual = (await _togglClient.GetStatus());
+                IsTimerActive = actual.IsTimerActive;
 
+                var expected = _togglClient.GetExpectedWorkingTime(_config.GetWorkDayConfig());
                 TbExpected = expected.ToWorkingTimeString(_config.GetWorkDayConfig().NumberOfWorkingHoursPerDay);
-                TbActual = actual.ToWorkingTimeString(_config.GetWorkDayConfig().NumberOfWorkingHoursPerDay);
-                Diff = _togglClient.GetDifference(expected: expected, sum: actual);
+                TbActual = actual.TimeInMonth.ToWorkingTimeString(_config.GetWorkDayConfig().NumberOfWorkingHoursPerDay);
+                Diff = _togglClient.GetDifference(expected: expected, sum: actual.TimeInMonth);
                 Needle = Brushes.Gray;
                 LastUpdateTime = DateTime.Now;
                 OfflineMode = false;

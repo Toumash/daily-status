@@ -29,11 +29,17 @@ namespace DailyStatus.Common
         public async Task<TimeSpan> GetDifference(WorkDay dayConfig)
         {
             var expected = GetExpectedWorkingTime(dayConfig);
-            var sum = await GetWorkingTime();
-            return GetDifference(expected, sum);
+            var sum = await GetStatus();
+            return GetDifference(expected, sum.TimeInMonth);
+        }
+        public class TogglStatus
+        {
+            public TimeSpan TimeInMonth { get; set; }
+
+            public bool IsTimerActive { get; set; }
         }
 
-        public async Task<TimeSpan> GetWorkingTime()
+        public async Task<TogglStatus> GetStatus()
         {
             try
             {
@@ -55,7 +61,11 @@ namespace DailyStatus.Common
                     var currentTaskDuration = (DateTime.UtcNow - currentTaskElement.Start);
                     sum += currentTaskDuration;
                 }
-                return sum;
+                return new TogglStatus()
+                {
+                    TimeInMonth = sum,
+                    IsTimerActive = currentTaskElement != null
+                };
             }
             catch (Toggl.Ultrawave.Exceptions.OfflineException e)
             {

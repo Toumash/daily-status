@@ -10,6 +10,19 @@
         Title="Status" Height="211.75" Width="337.75"
         d:DataContext="{d:DesignInstance vm:StatusViewModel, IsDesignTimeCreatable=True}"
         Background="#FF202F63" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True">
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Storyboard.TargetName="tb_Playing"
+                                         Storyboard.TargetProperty="Opacity"
+                                         From="0.2" To="1.00" Duration="0:0:1.0"
+                                         AutoReverse="True" RepeatBehavior="Forever"/>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </Window.Triggers>
+
     <Grid>
         <lvc:AngularGauge FromValue="{Binding GaugeMinimalValue}" ToValue="16" 
                           LabelsStep="8" TicksStep="4" Wedge="180"
@@ -24,7 +37,7 @@
                 <lvc:AngularSection FromValue="10" ToValue="16" Fill="#FDAD00"/>
             </lvc:AngularGauge.Sections>
         </lvc:AngularGauge>
-        <Button x:Name="btn_close" Content="X"
+        <Button x:Name="btn_Close" Content="X"
                 HorizontalAlignment="Left" Margin="280,0,0,0"
                 VerticalAlignment="Top" Width="58" 
                 Height="32" Background="#FF707070" BorderBrush="{x:Null}"
@@ -33,24 +46,33 @@
                    VerticalAlignment="Top" FontSize="9" 
                    FontWeight="Normal" Foreground="LightGray"
                    Margin="5,5,0,0" Text="{Binding LastUpdateTimeString}"/>
-        <TextBlock x:Name="tb_expected_time" Margin="10" 
+        <TextBlock x:Name="tb_ExpectedTime" Margin="10" 
                    Text="{Binding TbExpected}" VerticalAlignment="Bottom" 
                    HorizontalAlignment="Left" Foreground="White" 
                    FontWeight="Bold" TextWrapping="Wrap"/>
-        <TextBlock x:Name="tb_time_diff" Margin="10" 
+        <TextBlock x:Name="tb_TimeDifference" Margin="10" 
                    Text="{Binding TbTimeDiff}" VerticalAlignment="Bottom" 
                    HorizontalAlignment="Center" Foreground="White" 
                    FontWeight="Bold" TextWrapping="Wrap"/>
-        <TextBlock x:Name="tb_actual_time" Margin="10" 
+        <TextBlock x:Name="tb_CurrentTime" Margin="10" 
                    Text="{Binding TbActual}" VerticalAlignment="Bottom" 
                    HorizontalAlignment="Right" Foreground="White" 
                    FontWeight="Bold" TextWrapping="Wrap"/>
         <Rectangle Fill="Black" HorizontalAlignment="Center"
                    Height="179" Margin="10,22,0,0" Stroke="Black" 
                    VerticalAlignment="Center" Width="322" 
-                   Opacity="0.5" Visibility="{Binding OfflineMessageVisibility}"/>
+                   Opacity="0.5" Visibility="{Binding OfflineMode, Converter={StaticResource BoolToVis}}"
+                   x:Name="tb_NoInternet"/>
         <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" 
                    Text="No internet connection" VerticalAlignment="Center"
-                   Visibility="{Binding OfflineMessageVisibility}" Foreground="White" FontWeight="Bold" FontSize="18"/>
+                   Visibility="{Binding OfflineMode, Converter={StaticResource BoolToVis}}" Foreground="White" FontWeight="Bold" FontSize="18"/>
+        <TextBlock x:Name="tb_Playing" HorizontalAlignment="Center" 
+                   TextWrapping="Wrap" Text="►" 
+                   VerticalAlignment="Bottom" Foreground="White" 
+                   FontSize="12" FontFamily="Arial" 
+                   Margin="160,0,160,26" Width="18" TextAlignment="Center" 
+                   Visibility="{Binding IsTimerActive, Converter={StaticResource BoolToVis}}"/>
+
+
     </Grid>
 </Window>
