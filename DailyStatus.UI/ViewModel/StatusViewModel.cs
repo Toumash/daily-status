@@ -95,7 +95,7 @@ namespace DailyStatus.UI.ViewModel
         }
 
         public double TimeDiff { get => _diff.TotalHours; }
-        public string TbTimeDiff { get => $"{_diff.TotalHours:0.#} h"; }
+        public string TbTimeDiff { get => $"{_diff.TotalHours:0}:{Math.Abs(_diff.Minutes):00} h"; }
 
         public double GaugeMinimalValue
         {
