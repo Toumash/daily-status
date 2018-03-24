@@ -7,17 +7,18 @@ namespace DailyStatus.Common.BLL
 {
     public class WorkDaysCalculator
     {
-        public TimeSpan ExpectedWorkedDays(DateTime today, TimeSpan workDayStartHour, double numberOfWorkingHoursPerDay, params DateTime[] holidaysDuringWeek)
+        public TimeSpan ExpectedWorkedDays(DateTime todayWithHours, TimeSpan workDayStartHour, double numberOfWorkingHoursPerDay, params DateTime[] holidaysDuringWeek)
         {
+            var today = new DateTime(todayWithHours.Year, todayWithHours.Month, todayWithHours.Day);
             var first = new DateTime(today.Year, today.Month, 1);
             var workDayStart = today + workDayStartHour;
 
             var worktime = TimeSpan.FromHours(first.BusinessDaysUntil(today, holidaysDuringWeek) * numberOfWorkingHoursPerDay);
 
-            if (today.DayOfWeek != DayOfWeek.Saturday || today.DayOfWeek != DayOfWeek.Sunday || !holidaysDuringWeek.Contains(today))
+            if (today.DayOfWeek != DayOfWeek.Saturday && today.DayOfWeek != DayOfWeek.Sunday && !holidaysDuringWeek.Contains(today))
             {
                 worktime -= TimeSpan.FromHours(numberOfWorkingHoursPerDay);
-                var diff = (today - workDayStart).TotalHours;
+                var diff = (todayWithHours - workDayStart).TotalHours;
 
                 diff = Math.Min(8d, Math.Max(0d, diff));
 
