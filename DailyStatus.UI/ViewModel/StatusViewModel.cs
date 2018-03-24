@@ -14,7 +14,9 @@ namespace DailyStatus.UI.ViewModel
 {
     public class StatusViewModel : INotifyPropertyChanged
     {
-        private const int REFRESH_INTERNAL_SECONDS = 1;
+        private const int RefreshIntervalInSeconds = 1;
+        public const int LabelsDistanceHours = 4;
+        public const int MinimalStaticValueForGauge = -8;
 
         TogglProxy _togglClient;
         DailyStatusConfiguration _config;
@@ -99,13 +101,18 @@ namespace DailyStatus.UI.ViewModel
         {
             get
             {
-                if (TimeDiff < -16)
+                if (TimeDiff < MinimalStaticValueForGauge)
                 {
-                    return ((int)(TimeDiff / 10)) * 11;
+                    // One more hour to the scale
+                    var hours = ((int)(TimeDiff / 10)) * 10 - 1;
+                    // finds first number divisable by X
+                    while (hours % LabelsDistanceHours != 0) hours--;
+
+                    return hours;
                 }
                 else
                 {
-                    return -16;
+                    return MinimalStaticValueForGauge;
                 }
             }
         }
@@ -138,7 +145,7 @@ namespace DailyStatus.UI.ViewModel
             if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
             {
                 Needle = Brushes.Gray;
-                Diff = TimeSpan.FromHours(2.5d);
+                Diff = TimeSpan.FromHours(2);
                 TbExpected = TimeSpan.FromHours(2.5)
                     .ToWorkingTimeString(8);
                 TbActual = TimeSpan.FromHours(2.5)
@@ -156,7 +163,7 @@ namespace DailyStatus.UI.ViewModel
 
             _timer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromSeconds(REFRESH_INTERNAL_SECONDS)
+                Interval = TimeSpan.FromSeconds(RefreshIntervalInSeconds)
             };
             _timer.Tick += async (s, e) => await RefreshData();
             _timer.Start();
