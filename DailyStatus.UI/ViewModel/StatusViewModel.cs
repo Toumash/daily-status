@@ -35,6 +35,7 @@ namespace DailyStatus.UI.ViewModel
                 NotifyPropertyChanged(nameof(Diff));
                 NotifyPropertyChanged(nameof(TimeDiff));
                 NotifyPropertyChanged(nameof(TbTimeDiff));
+                NotifyPropertyChanged(nameof(GaugeMinimalValue));
             }
         }
 
@@ -94,6 +95,22 @@ namespace DailyStatus.UI.ViewModel
         public double TimeDiff { get => _diff.TotalHours; }
         public string TbTimeDiff { get => $"{_diff.TotalHours:0.#} h"; }
 
+        public double GaugeMinimalValue
+        {
+            get
+            {
+                if (TimeDiff < -16)
+                {
+                    return ((int)(TimeDiff / 10)) * 11;
+                }
+                else
+                {
+                    return -16;
+                }
+            }
+        }
+
+
         public ICommand CloseButtonCommand { get; } = new RelayCommand((s) => Environment.Exit(0));
 
         public StatusViewModel()
@@ -101,7 +118,7 @@ namespace DailyStatus.UI.ViewModel
             if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
             {
                 Needle = Brushes.Gray;
-                Diff = TimeSpan.FromHours(2.5d);
+                Diff = TimeSpan.FromHours(200);
                 TbExpected = TimeSpan.FromHours(2.5)
                     .ToWorkingTimeString(8);
                 TbActual = TimeSpan.FromHours(2.5)
