@@ -24,7 +24,7 @@ namespace DailyStatus.UI
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            log.Error(e.ExceptionObject as Exception, "Unhandled exception thrown");
+            log.Fatal(e.ExceptionObject as Exception, "Unhandled exception thrown");
         }
     }
 }
