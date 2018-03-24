@@ -110,6 +110,26 @@ namespace DailyStatus.UI.ViewModel
             }
         }
 
+        private bool _offline = false;
+        public bool OfflineMode
+        {
+            get => _offline;
+            set
+            {
+                _offline = value;
+                NotifyPropertyChanged(nameof(OfflineMode));
+                NotifyPropertyChanged(nameof(OfflineMessageVisibility));
+            }
+        }
+
+        public Visibility OfflineMessageVisibility
+        {
+            get
+            {
+                return OfflineMode ? Visibility.Visible : Visibility.Hidden;
+            }
+        }
+
 
         public ICommand CloseButtonCommand { get; } = new RelayCommand((s) => Environment.Exit(0));
 
@@ -118,7 +138,7 @@ namespace DailyStatus.UI.ViewModel
             if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
             {
                 Needle = Brushes.Gray;
-                Diff = TimeSpan.FromHours(200);
+                Diff = TimeSpan.FromHours(2.5d);
                 TbExpected = TimeSpan.FromHours(2.5)
                     .ToWorkingTimeString(8);
                 TbActual = TimeSpan.FromHours(2.5)
@@ -155,14 +175,22 @@ namespace DailyStatus.UI.ViewModel
 
         private async Task RefreshData()
         {
-            var expected = _togglClient.GetExpectedWorkingTime(_config.GetWorkDayConfig());
-            var actual = (await _togglClient.GetWorkingTime());
+            try
+            {
+                var expected = _togglClient.GetExpectedWorkingTime(_config.GetWorkDayConfig());
+                var actual = (await _togglClient.GetWorkingTime());
 
-            TbExpected = expected.ToWorkingTimeString(_config.GetWorkDayConfig().NumberOfWorkingHoursPerDay);
-            TbActual = actual.ToWorkingTimeString(_config.GetWorkDayConfig().NumberOfWorkingHoursPerDay);
-            Diff = _togglClient.GetDifference(expected: expected, sum: actual);
-            Needle = Brushes.Gray;
-            LastUpdateTime = DateTime.Now;
+                TbExpected = expected.ToWorkingTimeString(_config.GetWorkDayConfig().NumberOfWorkingHoursPerDay);
+                TbActual = actual.ToWorkingTimeString(_config.GetWorkDayConfig().NumberOfWorkingHoursPerDay);
+                Diff = _togglClient.GetDifference(expected: expected, sum: actual);
+                Needle = Brushes.Gray;
+                LastUpdateTime = DateTime.Now;
+                OfflineMode = false;
+            }
+            catch (OfflineException ex)
+            {
+                OfflineMode = true;
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

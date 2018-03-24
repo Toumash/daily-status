@@ -35,26 +35,32 @@ namespace DailyStatus.Common
 
         public async Task<TimeSpan> GetWorkingTime()
         {
-            var today = DateTime.Today;
-            var offset = new DateTimeOffset(new DateTime(today.Year, today.Month, 1));
-
-            var sum = await _togglApi.TimeEntries.GetAllSince(offset)
-                .SelectMany(e => e)
-                .Where(e => e.Duration.HasValue && !e.ServerDeletedAt.HasValue && e.Start > offset)
-                .Sum(e => e.Duration.Value)
-                .Select(e => TimeSpan.FromSeconds(e));
-
-            var currentTaskElement = await _togglApi.TimeEntries.GetAllSince(offset)
-                .SelectMany(e => e)
-                .Where(e => !e.Duration.HasValue)
-                .FirstOrDefaultAsync();
-
-            if (currentTaskElement != null)
+            try
             {
-                var currentTaskDuration = (DateTime.UtcNow - currentTaskElement.Start);
-                sum += currentTaskDuration;
+                var today = DateTime.Today;
+                var offset = new DateTimeOffset(new DateTime(today.Year, today.Month, 1));
+                var sum = await _togglApi.TimeEntries.GetAllSince(offset)
+                    .SelectMany(e => e)
+                    .Where(e => e.Duration.HasValue && !e.ServerDeletedAt.HasValue && e.Start > offset)
+                    .Sum(e => e.Duration.Value)
+                    .Select(e => TimeSpan.FromSeconds(e));
+
+                var currentTaskElement = await _togglApi.TimeEntries.GetAllSince(offset)
+                    .SelectMany(e => e)
+                    .Where(e => !e.Duration.HasValue)
+                    .FirstOrDefaultAsync();
+
+                if (currentTaskElement != null)
+                {
+                    var currentTaskDuration = (DateTime.UtcNow - currentTaskElement.Start);
+                    sum += currentTaskDuration;
+                }
+                return sum;
             }
-            return sum;
+            catch (Toggl.Ultrawave.Exceptions.OfflineException e)
+            {
+                throw new OfflineException("No internet connection", e);
+            }
         }
 
         public bool TestConnection()
@@ -65,6 +71,10 @@ namespace DailyStatus.Common
                 return true;
             }
             catch (Toggl.Ultrawave.Exceptions.UnauthorizedException)
+            {
+                return false;
+            }
+            catch (Toggl.Ultrawave.Exceptions.OfflineException)
             {
                 return false;
             }
@@ -81,5 +91,17 @@ namespace DailyStatus.Common
             var credentials = Credentials.WithApiToken(key);
             _togglApi = TogglApiWith(credentials);
         }
+    }
+
+
+    [Serializable]
+    public class OfflineException : Exception
+    {
+        public OfflineException() { }
+        public OfflineException(string message) : base(message) { }
+        public OfflineException(string message, Exception inner) : base(message, inner) { }
+        protected OfflineException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 }

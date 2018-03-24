@@ -45,5 +45,12 @@
                    Text="{Binding TbActual}" VerticalAlignment="Bottom" 
                    HorizontalAlignment="Right" Foreground="White" 
                    FontWeight="Bold" TextWrapping="Wrap"/>
+        <Rectangle Fill="Black" HorizontalAlignment="Center"
+                   Height="179" Margin="10,22,0,0" Stroke="Black" 
+                   VerticalAlignment="Center" Width="322" 
+                   Opacity="0.5" Visibility="{Binding OfflineMessageVisibility}"/>
+        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" 
+                   Text="No internet connection" VerticalAlignment="Center"
+                   Visibility="{Binding OfflineMessageVisibility}" Foreground="White" FontWeight="Bold" FontSize="18"/>
     </Grid>
 </Window>
