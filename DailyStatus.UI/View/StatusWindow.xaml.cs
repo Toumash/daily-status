@@ -14,16 +14,31 @@ namespace DailyStatus.UI.View
         public StatusWindow()
         {
             InitializeComponent();
-            // FIXME: Dependency Injection + api key prompt
-            var togglClient = new Common.TogglProxy();
-            togglClient.Configure(new WindowsCredentialManager().Get());
-            DataContext = new StatusViewModel(
-               togglClient, new Common.Configuration.DailyStatusConfiguration());
 
             MouseDown += (s, e) =>
             {
                 if (e.ChangedButton == MouseButton.Left)
                     DragMove();
+            };
+            Loaded += (s, e) =>
+            {
+                var apiToken = new WindowsCredentialManager().Get();
+                if (string.IsNullOrEmpty(apiToken))
+                {
+                    var apiTokenPrompt = new ApiTokenPrompt
+                    {
+                        Owner = this
+                    };
+                    apiTokenPrompt.ShowDialog();
+                    apiToken = apiTokenPrompt.ApiToken;
+                    new WindowsCredentialManager().Save(apiToken);
+                }
+
+                // FIXME: Dependency Injection + api key prompt
+                var togglClient = new TogglProxy();
+                togglClient.Configure(apiToken);
+                DataContext = new StatusViewModel(
+                   togglClient, new Common.Configuration.DailyStatusConfiguration());
             };
         }
     }
