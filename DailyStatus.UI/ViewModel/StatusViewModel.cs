@@ -104,8 +104,9 @@ namespace DailyStatus.UI.ViewModel
                 if (TimeDiff < MinimalStaticValueForGauge)
                 {
                     // One more hour to the scale
-                    var hours = ((int)(TimeDiff / 10)) * 10 - 1;
+                    int hours = (int)Math.Ceiling(TimeDiff);
                     // finds first number divisable by X
+                    hours -= 3;
                     while (hours % LabelsDistanceHours != 0) hours--;
 
                     return hours;
@@ -186,7 +187,7 @@ namespace DailyStatus.UI.ViewModel
         {
             try
             {
-                
+
                 var actual = (await _togglClient.GetStatus());
                 IsTimerActive = actual.IsTimerActive;
 
