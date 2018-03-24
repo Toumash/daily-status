@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +14,17 @@ namespace DailyStatus.UI
     /// </summary>
     public partial class App : Application
     {
+        Logger log = NLog.LogManager.GetCurrentClassLogger();
+
+        public App() : base()
+        {
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            log.Info("Application Started");
+        }
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            log.Error(e.ExceptionObject as Exception, "Unhandled exception thrown");
+        }
     }
 }
