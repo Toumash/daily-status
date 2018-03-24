@@ -24,5 +24,14 @@ namespace DailyStatus.CommonTests
             var actual = monday.BusinessDaysUntil(sunday);
             Assert.AreEqual(15, actual);
         }
+
+        [TestMethod()]
+        public void GivenMarchOf2018From1stOfTheMonth_ShouldReturn17OnDay24()
+        {
+            var monday = new DateTime(2018, 03, 1);
+            var sunday = new DateTime(2018, 03, 24);
+            var actual = monday.BusinessDaysUntil(sunday);
+            Assert.AreEqual(17, actual);
+        }
     }
 }
