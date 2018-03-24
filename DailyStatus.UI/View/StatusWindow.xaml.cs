@@ -22,21 +22,32 @@ namespace DailyStatus.UI.View
             };
             Loaded += (s, e) =>
             {
+                TogglProxy togglClient = new TogglProxy();
                 var apiToken = new WindowsCredentialManager().Get();
                 if (string.IsNullOrEmpty(apiToken))
                 {
-                    var apiTokenPrompt = new ApiTokenPrompt
+                    do
                     {
-                        Owner = this
-                    };
-                    apiTokenPrompt.ShowDialog();
-                    apiToken = apiTokenPrompt.ApiToken;
-                    new WindowsCredentialManager().Save(apiToken);
-                }
+                        var apiTokenPrompt = new ApiTokenPrompt
+                        {
+                            Owner = this
+                        };
+                        var result = apiTokenPrompt.ShowDialog();
 
-                // FIXME: Dependency Injection + api key prompt
-                var togglClient = new TogglProxy();
-                togglClient.Configure(apiToken);
+                        if (!result.HasValue || !result.Value)
+                        {
+                            this.Close();
+                            return;
+                        }
+                        apiToken = apiTokenPrompt.ApiToken;
+                        new WindowsCredentialManager().Save(apiToken);
+                        togglClient.Configure(apiToken);
+                    } while (togglClient.TestConnection());
+                }
+                else
+                {
+                    togglClient.Configure(apiToken);
+                }
                 DataContext = new StatusViewModel(
                    togglClient, new Common.Configuration.DailyStatusConfiguration());
             };
