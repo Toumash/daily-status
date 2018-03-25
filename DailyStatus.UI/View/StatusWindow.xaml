@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         Title="Status" Height="211.75" Width="337.75"
         d:DataContext="{d:DesignInstance vm:StatusViewModel, IsDesignTimeCreatable=True}"
-        Background="#FF202F63" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True">
+        Background="#FF202F63" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True" Topmost="True">
     <Window.Triggers>
         <EventTrigger RoutedEvent="Window.Loaded">
             <BeginStoryboard>
@@ -38,9 +38,9 @@
             </lvc:AngularGauge.Sections>
         </lvc:AngularGauge>
         <Button x:Name="btn_Close" Content="X"
-                HorizontalAlignment="Left" Margin="280,0,0,0"
-                VerticalAlignment="Top" Width="58" 
-                Height="32" Background="#FF707070" BorderBrush="{x:Null}"
+                HorizontalAlignment="Left" Margin="309,2,0,0"
+                VerticalAlignment="Top" Width="26" 
+                Height="22" Background="#FF707070" BorderBrush="{x:Null}"
                 Command="{Binding CloseButtonCommand}" Style="{DynamicResource CloseButtonStyle}"/>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" 
                    VerticalAlignment="Top" FontSize="9" 
@@ -72,7 +72,10 @@
                    FontSize="12" FontFamily="Arial" 
                    Margin="160,0,160,26" Width="18" TextAlignment="Center" 
                    Visibility="{Binding IsTimerActive, Converter={StaticResource BoolToVis}}"/>
-
-
+        <Button x:Name="btn_Minimize" Content="_"
+            HorizontalAlignment="Left" Margin="283,2,0,0"
+            VerticalAlignment="Top" Width="26" 
+            Height="22" Background="#FF707070" BorderBrush="{x:Null}"
+            Command="{Binding MinimizeButtonCommand}" Style="{DynamicResource CloseButtonStyle}" FontSize="15" Click="btnMinimize_Click"/>
     </Grid>
 </Window>

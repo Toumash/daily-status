@@ -52,5 +52,10 @@ namespace DailyStatus.UI.View
                    togglClient, new Common.Configuration.DailyStatusConfiguration());
             };
         }
+
+        private void btnMinimize_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
     }
 }
