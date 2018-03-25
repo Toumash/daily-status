@@ -1,4 +1,6 @@
-﻿namespace DailyStatus
+﻿using DailyStatus.Common.Model;
+
+namespace DailyStatus.Configuration
 {
     public class AppConfig
     {

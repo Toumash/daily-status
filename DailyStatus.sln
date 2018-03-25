@@ -5,13 +5,17 @@ VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DailyStatus", "DailyStatus\DailyStatus.csproj", "{3AC0A652-CD16-424D-B2E6-12D3B221109F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DailyStatusTests", "DailyStatusTests\DailyStatusTests.csproj", "{E8A8136A-3B8A-407B-9CEF-F4E7B5E7869E}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dlls", "dlls", "{6F4383CC-D7A8-4978-A60D-3ECD69079414}"
 	ProjectSection(SolutionItems) = preProject
 		dlls\Toggl.Multivac.dll = dlls\Toggl.Multivac.dll
 		dlls\Toggl.Ultrawave.dll = dlls\Toggl.Ultrawave.dll
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DailyStatus.UI", "DailyStatus.UI\DailyStatus.UI.csproj", "{56437626-DCBF-4F9E-8436-17E3AC929027}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DailyStatus.CommonTests", "DailyStatus.CommonTests\DailyStatus.CommonTests.csproj", "{6C2DC63C-FD61-40F9-8A05-CBA037413A0A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DailyStatus.Common", "DailyStatus.Common\DailyStatus.Common.csproj", "{835B2816-E1EF-409A-8B6C-EB6740796F83}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +27,18 @@ Global
 		{3AC0A652-CD16-424D-B2E6-12D3B221109F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AC0A652-CD16-424D-B2E6-12D3B221109F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AC0A652-CD16-424D-B2E6-12D3B221109F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E8A8136A-3B8A-407B-9CEF-F4E7B5E7869E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E8A8136A-3B8A-407B-9CEF-F4E7B5E7869E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E8A8136A-3B8A-407B-9CEF-F4E7B5E7869E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E8A8136A-3B8A-407B-9CEF-F4E7B5E7869E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56437626-DCBF-4F9E-8436-17E3AC929027}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56437626-DCBF-4F9E-8436-17E3AC929027}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56437626-DCBF-4F9E-8436-17E3AC929027}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56437626-DCBF-4F9E-8436-17E3AC929027}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C2DC63C-FD61-40F9-8A05-CBA037413A0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C2DC63C-FD61-40F9-8A05-CBA037413A0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C2DC63C-FD61-40F9-8A05-CBA037413A0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C2DC63C-FD61-40F9-8A05-CBA037413A0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{835B2816-E1EF-409A-8B6C-EB6740796F83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{835B2816-E1EF-409A-8B6C-EB6740796F83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{835B2816-E1EF-409A-8B6C-EB6740796F83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{835B2816-E1EF-409A-8B6C-EB6740796F83}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

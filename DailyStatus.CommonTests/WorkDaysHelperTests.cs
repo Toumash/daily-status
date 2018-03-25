@@ -1,10 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DailyStatus.Common.Extensions;
 
-namespace DailyStatus.Tests
+namespace DailyStatus.CommonTests
 {
-    [TestClass()]
+    [TestClass]
     public class WorkDaysHelperTests
     {
         [TestMethod()]
@@ -23,6 +23,15 @@ namespace DailyStatus.Tests
             var sunday = new DateTime(2018, 03, 21);
             var actual = monday.BusinessDaysUntil(sunday);
             Assert.AreEqual(15, actual);
+        }
+
+        [TestMethod()]
+        public void GivenMarchOf2018From1stOfTheMonth_ShouldReturn17OnDay24()
+        {
+            var monday = new DateTime(2018, 03, 1);
+            var sunday = new DateTime(2018, 03, 24);
+            var actual = monday.BusinessDaysUntil(sunday);
+            Assert.AreEqual(17, actual);
         }
     }
 }

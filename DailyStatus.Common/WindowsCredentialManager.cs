@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using CredentialManagement;
 
-namespace DailyStatus.Security
+namespace DailyStatus.Common
 {
     public class WindowsCredentialManager
     {
