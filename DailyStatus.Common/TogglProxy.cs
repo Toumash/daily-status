@@ -1,6 +1,7 @@
 ﻿using DailyStatus.Common.BLL;
 using DailyStatus.Common.Model;
 using System;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Toggl.Ultrawave;
@@ -45,16 +46,18 @@ namespace DailyStatus.Common
             {
                 var today = DateTime.Today;
                 var offset = new DateTimeOffset(new DateTime(today.Year, today.Month, 1));
-                var sum = await _togglApi.TimeEntries.GetAllSince(offset)
+                var entries = await _togglApi.TimeEntries.GetAllSince(offset)
                     .SelectMany(e => e)
-                    .Where(e => e.Duration.HasValue && !e.ServerDeletedAt.HasValue && e.Start > offset)
-                    .Sum(e => e.Duration.Value)
-                    .Select(e => TimeSpan.FromSeconds(e));
+                    .Where(e => !e.ServerDeletedAt.HasValue && e.Start > offset)
+                    .ToList();
+                var sumSeconds = entries.Where(e => e.Duration.HasValue)
+                    .Sum(e => e.Duration.Value);
 
-                var currentTaskElement = await _togglApi.TimeEntries.GetAllSince(offset)
-                    .SelectMany(e => e)
+                var sum = TimeSpan.FromSeconds(sumSeconds);
+
+                var currentTaskElement = entries
                     .Where(e => !e.Duration.HasValue)
-                    .FirstOrDefaultAsync();
+                    .FirstOrDefault();
 
                 if (currentTaskElement != null)
                 {

@@ -14,7 +14,7 @@ namespace DailyStatus.UI.ViewModel
 {
     public class StatusViewModel : INotifyPropertyChanged
     {
-        private const int RefreshIntervalInSeconds = 1;
+        private const int RefreshIntervalInSeconds = 5;
         public const int LabelsDistanceHours = 4;
         public const int MinimalStaticValueForGauge = -8;
 
@@ -95,7 +95,7 @@ namespace DailyStatus.UI.ViewModel
         }
 
         public double TimeDiff { get => _diff.TotalHours; }
-        public string TbTimeDiff { get => $"{_diff.Hours:0}:{Math.Abs(_diff.Minutes):00} h"; }
+        public string TbTimeDiff { get => $"{_diff.Hours:0}:{Math.Abs(_diff.Minutes):00}"; }
 
         public double GaugeMinimalValue
         {
@@ -166,7 +166,7 @@ namespace DailyStatus.UI.ViewModel
 
             _timer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromSeconds(RefreshIntervalInSeconds)
+                Interval = TimeSpan.FromSeconds(0)
             };
             _timer.Tick += async (s, e) => await RefreshData();
             _timer.Start();
@@ -185,9 +185,9 @@ namespace DailyStatus.UI.ViewModel
 
         private async Task RefreshData()
         {
+            _timer.Interval = TimeSpan.FromSeconds(RefreshIntervalInSeconds);
             try
             {
-
                 var actual = (await _togglClient.GetStatus());
                 IsTimerActive = actual.IsTimerActive;
 
