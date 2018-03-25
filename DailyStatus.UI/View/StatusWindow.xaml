@@ -1,0 +1,81 @@
+﻿<Window x:Class="DailyStatus.UI.View.StatusWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        xmlns:local="clr-namespace:DailyStatus.UI"
+        xmlns:vm="clr-namespace:DailyStatus.UI.ViewModel"
+        mc:Ignorable="d"
+        Title="Status" Height="211.75" Width="337.75"
+        d:DataContext="{d:DesignInstance vm:StatusViewModel, IsDesignTimeCreatable=True}"
+        Background="#FF202F63" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True" Topmost="True">
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Storyboard.TargetName="tb_Playing"
+                                         Storyboard.TargetProperty="Opacity"
+                                         From="0.2" To="1.00" Duration="0:0:1.0"
+                                         AutoReverse="True" RepeatBehavior="Forever"/>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </Window.Triggers>
+
+    <Grid>
+        <lvc:AngularGauge FromValue="{Binding GaugeMinimalValue}" ToValue="16" 
+                          LabelsStep="8" TicksStep="4" Wedge="180"
+                          TicksForeground="White" Foreground="White" 
+                          FontWeight="Bold" FontSize="16"
+                          SectionsInnerRadius=".6" Value="{Binding TimeDiff}" 
+                          Margin="-4,10,0,-81" Name="ag_gauge1"
+                          NeedleFill="{Binding Needle}">
+            <lvc:AngularGauge.Sections>
+                <lvc:AngularSection FromValue="{Binding GaugeMinimalValue}" ToValue="-4" Fill="#F74444"/>
+                <lvc:AngularSection FromValue="-4" ToValue="10" Fill="#A8CA27"/>
+                <lvc:AngularSection FromValue="10" ToValue="16" Fill="#FDAD00"/>
+            </lvc:AngularGauge.Sections>
+        </lvc:AngularGauge>
+        <Button x:Name="btn_Close" Content="X"
+                HorizontalAlignment="Left" Margin="309,2,0,0"
+                VerticalAlignment="Top" Width="26" 
+                Height="22" Background="#FF707070" BorderBrush="{x:Null}"
+                Command="{Binding CloseButtonCommand}" Style="{DynamicResource CloseButtonStyle}"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" 
+                   VerticalAlignment="Top" FontSize="9" 
+                   FontWeight="Normal" Foreground="LightGray"
+                   Margin="5,5,0,0" Text="{Binding LastUpdateTimeString}"/>
+        <TextBlock x:Name="tb_ExpectedTime" Margin="10" 
+                   Text="{Binding TbExpected}" VerticalAlignment="Bottom" 
+                   HorizontalAlignment="Left" Foreground="White" 
+                   FontWeight="Bold" TextWrapping="Wrap"/>
+        <TextBlock x:Name="tb_TimeDifference" Margin="10" 
+                   Text="{Binding TbTimeDiff}" VerticalAlignment="Bottom" 
+                   HorizontalAlignment="Center" Foreground="White" 
+                   FontWeight="Bold" TextWrapping="Wrap"/>
+        <TextBlock x:Name="tb_CurrentTime" Margin="10" 
+                   Text="{Binding TbActual}" VerticalAlignment="Bottom" 
+                   HorizontalAlignment="Right" Foreground="White" 
+                   FontWeight="Bold" TextWrapping="Wrap"/>
+        <Rectangle Fill="Black" HorizontalAlignment="Center"
+                   Height="179" Margin="10,22,0,0" Stroke="Black" 
+                   VerticalAlignment="Center" Width="322" 
+                   Opacity="0.5" Visibility="{Binding OfflineMode, Converter={StaticResource BoolToVis}}"
+                   x:Name="tb_NoInternet"/>
+        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" 
+                   Text="No internet connection" VerticalAlignment="Center"
+                   Visibility="{Binding OfflineMode, Converter={StaticResource BoolToVis}}" Foreground="White" FontWeight="Bold" FontSize="18"/>
+        <TextBlock x:Name="tb_Playing" HorizontalAlignment="Center" 
+                   TextWrapping="Wrap" Text="►" 
+                   VerticalAlignment="Bottom" Foreground="White" 
+                   FontSize="12" FontFamily="Arial" 
+                   Margin="160,0,160,26" Width="18" TextAlignment="Center" 
+                   Visibility="{Binding IsTimerActive, Converter={StaticResource BoolToVis}}"/>
+        <Button x:Name="btn_Minimize" Content="_"
+            HorizontalAlignment="Left" Margin="283,2,0,0"
+            VerticalAlignment="Top" Width="26" 
+            Height="22" Background="#FF707070" BorderBrush="{x:Null}"
+            Command="{Binding MinimizeButtonCommand}" Style="{DynamicResource CloseButtonStyle}" FontSize="15" Click="btnMinimize_Click"/>
+    </Grid>
+</Window>

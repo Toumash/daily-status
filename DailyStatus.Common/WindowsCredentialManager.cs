@@ -1,11 +1,11 @@
-﻿namespace Toumash.DailyStatus
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using CredentialManagement;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using CredentialManagement;
 
-    public class ApiKeyRepository
+namespace DailyStatus.Common
+{
+    public class WindowsCredentialManager
     {
         private const string PasswordName = "toggl-api-key";
 

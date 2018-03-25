@@ -1,27 +1,37 @@
-﻿namespace Toumash.DailyStatus
+﻿namespace DailyStatus
 {
     using System;
-    using System.Runtime.InteropServices;
-    using System.Security;
     using System.Threading;
-    using System.Threading.Tasks;
     using Toggl.Ultrawave;
     using Toggl.Ultrawave.Network;
     using System.Reactive.Linq;
+    using System.Linq;
+    using System.Xml.Serialization;
+    using System.IO;
+    using DailyStatus.Security;
+    using DailyStatus.ConsoleUtils;
+    using DailyStatus.Common;
+    using DailyStatus.Common.BLL;
+    using DailyStatus.Configuration;
+    using DailyStatus.Common.Configuration;
+    using DailyStatus.Common.Model;
+    using DailyStatus.Common.Extensions;
 
     public class Program
     {
-        const int NumberOfWorkingHoursPerDay = 8;
+        private static AppConfig appConfig = null;
 
         public static void Main(string[] args)
         {
             string key = string.Empty;
             bool authorized = false;
-            ITogglApi togglApi = null;
+            var togglClient = new TogglProxy();
+
+            var workDay = new DailyStatusConfiguration().GetWorkDayConfig();
 
             while (!authorized)
             {
-                var repo = new ApiKeyRepository();
+                var repo = new WindowsCredentialManager();
                 if (repo.Get() != string.Empty)
                 {
                     key = repo.Get();
@@ -29,30 +39,31 @@
                 else
                 {
                     Console.WriteLine("Please supply your password");
-                    key = SecureStringToString(Password);
+                    key = ConsolePasswordReader.ReadPassword().ToNormalString();
                 }
 
-                var credentials = Credentials.WithApiToken(key);
-                togglApi = TogglApiWith(credentials);
-                try
+                togglClient.Configure(key);
+
+                if (togglClient.TestConnection())
                 {
-                    var user = togglApi.User.Get().GetAwaiter().Wait();
                     repo.Save(key);
                     authorized = true;
                 }
-                catch (Toggl.Ultrawave.Exceptions.UnauthorizedException)
+                else
                 {
                     Console.WriteLine("Unauthorized");
                     repo.Save("");
                 }
             }
             Console.ResetColor();
-            var expected = ExpectedWorkedDays();
-            Console.WriteLine($"You should worked:\t{WorkingTimeToString(expected)}");
 
             while (true)
             {
-                var sum = GetWorkingTime(togglApi);
+                var expected = new WorkDaysCalculator()
+                    .ExpectedWorkedDays(TimeSpan.FromHours(workDay.WorkDayStartHour),
+                                        workDay.NumberOfWorkingHoursPerDay);
+
+                var sum = togglClient.GetStatus().Result.TimeInMonth;
                 char sign = '-';
 
                 if (sum < expected)
@@ -67,12 +78,14 @@
 
                 var diff = expected - sum;
 
-                Console.Write($"\rYou worked:\t\t{WorkingTimeToString(sum)}\tDiff: {sign}{WorkingTimeToString(diff.Duration()).PadRight(20)}");
+                Console.Clear();
+                Console.WriteLine($"You should worked:\t{expected.ToWorkingTimeString(workDay.NumberOfWorkingHoursPerDay)}");
+                Console.Write($"\rYou worked:\t\t{sum.ToWorkingTimeString(workDay.NumberOfWorkingHoursPerDay)}\tDiff: {sign}{diff.Duration().ToWorkingTimeString(workDay.NumberOfWorkingHoursPerDay).PadRight(20)}");
 
-                using (var progress = new ProgressBar())
+                using (var progress = new ConsoleProgressBar())
                 {
-                    const int max = 5;
-                    for (int i = 0; i <= 5; i++)
+                    const int max = 2;
+                    for (int i = 0; i <= 2; i++)
                     {
                         progress.Report((double)i / max);
                         Thread.Sleep(1000);
@@ -81,92 +94,6 @@
             }
         }
 
-        private static TimeSpan GetWorkingTime(ITogglApi togglApi)
-        {
-            var today = DateTime.Today;
-            var offset = new DateTimeOffset(new DateTime(today.Year, today.Month, 1));
 
-            var sum = togglApi.TimeEntries.GetAllSince(offset)
-                .SelectMany(e => e)
-                .Where(e => e.Duration.HasValue && !e.ServerDeletedAt.HasValue && e.Start > offset)
-                .Sum(e => e.Duration.Value)
-                .Select(e => TimeSpan.FromSeconds(e)).GetAwaiter().Wait();
-
-            var currentTaskElement = togglApi.TimeEntries.GetAllSince(offset)
-                .SelectMany(e => e)
-                .Where(e => !e.Duration.HasValue)
-                .FirstOrDefaultAsync()
-                .GetAwaiter().Wait();
-
-            if (currentTaskElement != null)
-            {
-                var currentTaskDuration = (DateTime.UtcNow - currentTaskElement.Start);
-                sum += currentTaskDuration;
-            }
-            return sum;
-        }
-
-        private static string WorkingTimeToString(TimeSpan workTime, int workingHoursPerDay = NumberOfWorkingHoursPerDay)
-        {
-            return $"{Math.Truncate(workTime.TotalHours / workingHoursPerDay)}.{workTime.Hours % workingHoursPerDay}:{workTime.Minutes}:{workTime.Seconds}";
-        }
-
-        private static TimeSpan ExpectedWorkedDays()
-        {
-            var today = DateTime.Today;
-            var first = new DateTime(today.Year, today.Month, 1);
-
-            return TimeSpan.FromHours(first.BusinessDaysUntil(today) * NumberOfWorkingHoursPerDay);
-        }
-
-        private static ITogglApi TogglApiWith(Credentials credentials)
-            => new TogglApi(ConfigurationFor(credentials));
-
-        private static ApiConfiguration ConfigurationFor(Credentials credentials)
-            => new ApiConfiguration(ApiEnvironment.Production, credentials, new UserAgent("toumash.dailystatus", "1"));
-
-        public static SecureString Password
-        {
-            get
-            {
-                var pwd = new SecureString();
-                while (true)
-                {
-                    ConsoleKeyInfo i = Console.ReadKey(true);
-                    if (i.Key == ConsoleKey.Enter)
-                    {
-                        break;
-                    }
-                    else if (i.Key == ConsoleKey.Backspace)
-                    {
-                        if (pwd.Length > 0)
-                        {
-                            pwd.RemoveAt(pwd.Length - 1);
-                            Console.Write("\b \b");
-                        }
-                    }
-                    else
-                    {
-                        pwd.AppendChar(i.KeyChar);
-                        Console.Write("*");
-                    }
-                }
-                return pwd;
-            }
-        }
-
-        private static string SecureStringToString(SecureString value)
-        {
-            IntPtr valuePtr = IntPtr.Zero;
-            try
-            {
-                valuePtr = Marshal.SecureStringToGlobalAllocUnicode(value);
-                return Marshal.PtrToStringUni(valuePtr);
-            }
-            finally
-            {
-                Marshal.ZeroFreeGlobalAllocUnicode(valuePtr);
-            }
-        }
     }
 }
