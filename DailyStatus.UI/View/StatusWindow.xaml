@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         Title="Status" Height="211.75" Width="337.75"
         d:DataContext="{d:DesignInstance vm:StatusViewModel, IsDesignTimeCreatable=True}"
-        Background="#FF202F63" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True" Topmost="True">
+        Background="#101928" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True" Topmost="True">
     <Window.Triggers>
         <EventTrigger RoutedEvent="Window.Loaded">
             <BeginStoryboard>
@@ -32,9 +32,9 @@
                           Margin="-4,10,0,-81" Name="ag_gauge1"
                           NeedleFill="{Binding Needle}">
             <lvc:AngularGauge.Sections>
-                <lvc:AngularSection FromValue="{Binding GaugeMinimalValue}" ToValue="-4" Fill="#F74444"/>
-                <lvc:AngularSection FromValue="-4" ToValue="10" Fill="#A8CA27"/>
-                <lvc:AngularSection FromValue="10" ToValue="16" Fill="#FDAD00"/>
+                <lvc:AngularSection FromValue="{Binding GaugeMinimalValue}" ToValue="-4" Fill="#E53043"/>
+                <lvc:AngularSection FromValue="-4" ToValue="10" Fill="#059794"/>
+                <lvc:AngularSection FromValue="10" ToValue="16" Fill="#4CB5A6"/>
             </lvc:AngularGauge.Sections>
         </lvc:AngularGauge>
         <Button x:Name="btn_Close" Content="X"
