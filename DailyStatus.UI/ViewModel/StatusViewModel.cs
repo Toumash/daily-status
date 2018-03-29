@@ -15,7 +15,7 @@ namespace DailyStatus.UI.ViewModel
     public class StatusViewModel : INotifyPropertyChanged
     {
         private const int RefreshIntervalInSeconds = 5;
-        public const int LabelsDistanceHours = 4;
+        public const int LabelsDistanceHours = 8;
         public const int MinimalStaticValueForGauge = -8;
 
         TogglProxy _togglClient;
@@ -103,10 +103,7 @@ namespace DailyStatus.UI.ViewModel
             {
                 if (TimeDiff < MinimalStaticValueForGauge)
                 {
-                    // One more hour to the scale
-                    int hours = (int)Math.Ceiling(TimeDiff);
-                    // finds first number divisable by X
-                    hours -= 3;
+                    int hours = (int)Math.Floor(TimeDiff);
                     while (hours % LabelsDistanceHours != 0) hours--;
 
                     return hours;

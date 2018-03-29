@@ -10,7 +10,7 @@ namespace DailyStatus.Common.Extensions
     {
         public static string ToWorkingTimeString(this TimeSpan workTime, int workingHoursPerDay)
         {
-            return $"{Math.Truncate(workTime.TotalHours / workingHoursPerDay)}md {workTime.Hours % workingHoursPerDay}h {workTime.Minutes}m {workTime.Seconds}s";
+            return $"{Math.Truncate(workTime.TotalHours / workingHoursPerDay)}md {workTime.Hours % workingHoursPerDay}h {workTime.Minutes}m";
         }
     }
 }
