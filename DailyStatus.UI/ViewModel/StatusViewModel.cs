@@ -28,6 +28,9 @@ namespace DailyStatus.UI.ViewModel
         private string _tbActual;
         private DateTime? _lastUpdated;
 
+        private TimeSpan _todayHours;
+        private double _todayGaugeMaxValue = 8;
+
         public TimeSpan Diff
         {
             get { return _diff; }
@@ -97,6 +100,27 @@ namespace DailyStatus.UI.ViewModel
         public double TimeDiff { get => _diff.TotalHours; }
         public string TbTimeDiff { get => $"{_diff.Hours:0}:{Math.Abs(_diff.Minutes):00}"; }
 
+        private TimeSpan TodayHours
+        {
+            get => _todayHours;
+            set
+            {
+                _todayHours = value;
+                NotifyPropertyChanged(nameof(TodaysCurrentWork));
+                NotifyPropertyChanged(nameof(TodaysCurrentWorkText));
+            }
+        }
+        public double TodaysCurrentWork { get => Math.Min(TodayHours.TotalHours, _todayGaugeMaxValue); }
+        public string TodaysCurrentWorkText { get => $"{TodayHours.Hours}:{TodayHours.Minutes:00}"; }
+        public double TodayGaugeMaxValue
+        {
+            get => _todayGaugeMaxValue; set
+            {
+                _todayGaugeMaxValue = value;
+                NotifyPropertyChanged(nameof(TodayGaugeMaxValue));
+            }
+        }
+
         public double GaugeMinimalValue
         {
             get
@@ -151,6 +175,8 @@ namespace DailyStatus.UI.ViewModel
                 LastUpdateTime = DateTime.Now;
                 OfflineMode = false;
                 IsTimerActive = true;
+                TodayHours = TimeSpan.FromHours(2);
+                TodayGaugeMaxValue = 8;
             }
         }
 
@@ -171,6 +197,7 @@ namespace DailyStatus.UI.ViewModel
 
         private void Init()
         {
+            TodayGaugeMaxValue = _config.GetWorkDayConfig().NumberOfWorkingHoursPerDay;
             Needle = Brushes.Transparent;
             Diff = TimeSpan.FromHours(0);
             TbExpected = TimeSpan.FromHours(0)
@@ -178,6 +205,8 @@ namespace DailyStatus.UI.ViewModel
             TbActual = TimeSpan.FromHours(0)
                 .ToWorkingTimeString(_config.GetWorkDayConfig().NumberOfWorkingHoursPerDay);
             LastUpdateTime = null;
+            OfflineMode = false;
+            TodayHours = TimeSpan.FromSeconds(0);
         }
 
         private async Task RefreshData()
@@ -186,6 +215,7 @@ namespace DailyStatus.UI.ViewModel
             try
             {
                 var actual = (await _togglClient.GetStatus());
+                TodayHours = actual.TodaysHours;
                 IsTimerActive = actual.IsTimerActive;
 
                 var expected = _togglClient.GetExpectedWorkingTime(_config.GetWorkDayConfig());
