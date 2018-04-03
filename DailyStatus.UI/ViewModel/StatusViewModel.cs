@@ -16,7 +16,7 @@ namespace DailyStatus.UI.ViewModel
     {
         private const int RefreshIntervalInSeconds = 5;
         public const int LabelsDistanceHours = 8;
-        public const int MinimalStaticValueForGauge = -8;
+        public const int MinimalStaticValueForGauge = -16;
 
         TogglProxy _togglClient;
         DailyStatusConfiguration _config;
