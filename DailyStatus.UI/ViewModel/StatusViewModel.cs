@@ -98,7 +98,13 @@ namespace DailyStatus.UI.ViewModel
         }
 
         public double TimeDiff { get => _diff.TotalHours; }
-        public string TbTimeDiff { get => $"{_diff.Hours:0}:{Math.Abs(_diff.Minutes):00}"; }
+        public string TbTimeDiff { get
+            {
+                var sign = '-';
+                sign = _diff.TotalHours < 0 ? sign : ' ';
+                return $"{sign}{Math.Abs(_diff.Hours):0}:{Math.Abs(_diff.Minutes):00}";
+            }
+        }
 
         private TimeSpan TodayHours
         {
