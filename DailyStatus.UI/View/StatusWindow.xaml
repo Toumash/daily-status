@@ -24,13 +24,17 @@
     </Window.Triggers>
 
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="147*"/>
+            <ColumnDefinition Width="191*"/>
+        </Grid.ColumnDefinitions>
         <lvc:AngularGauge FromValue="{Binding GaugeMinimalValue}" ToValue="16" 
                           LabelsStep="8" TicksStep="4" Wedge="180"
                           TicksForeground="White" Foreground="White" 
                           FontWeight="Bold" FontSize="16"
                           SectionsInnerRadius=".6" Value="{Binding TimeDiff}" 
                           Margin="0,36,0,-68" Name="ag_gauge1"
-                          NeedleFill="{Binding Needle}">
+                          NeedleFill="{Binding Needle}" Grid.ColumnSpan="2">
             <lvc:AngularGauge.Sections>
                 <lvc:AngularSection FromValue="{Binding GaugeMinimalValue}" ToValue="-4" Fill="#E53043"/>
                 <lvc:AngularSection FromValue="-4" ToValue="10" Fill="#059794"/>
@@ -38,10 +42,10 @@
             </lvc:AngularGauge.Sections>
         </lvc:AngularGauge>
         <Button x:Name="btn_Close" Content="X"
-                HorizontalAlignment="Left" Margin="309,2,0,0"
+                HorizontalAlignment="Left" Margin="162,2,0,0"
                 VerticalAlignment="Top" Width="26" 
                 Height="22" Background="#FF707070" BorderBrush="{x:Null}"
-                Command="{Binding CloseButtonCommand}" Style="{DynamicResource CloseButtonStyle}"/>
+                Command="{Binding CloseButtonCommand}" Style="{DynamicResource CloseButtonStyle}" Grid.Column="1"/>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" 
                    VerticalAlignment="Top" FontSize="9" 
                    FontWeight="Normal" Foreground="LightGray"
@@ -49,35 +53,35 @@
         <TextBlock x:Name="tb_ExpectedTime" Margin="0,0,0,10" 
                    Text="{Binding TbExpected}" VerticalAlignment="Bottom" 
                    HorizontalAlignment="Left" Foreground="White" 
-                   FontWeight="Bold" TextWrapping="Wrap" TextAlignment="Center" Width="152"/>
-        <TextBlock x:Name="tb_TimeDifference" Margin="10" 
+                   FontWeight="Bold" TextWrapping="Wrap" TextAlignment="Center" Width="152" Grid.ColumnSpan="2"/>
+        <TextBlock x:Name="tb_TimeDifference" Margin="8,0,155,10" 
                    Text="{Binding TbTimeDiff}" VerticalAlignment="Bottom" 
                    HorizontalAlignment="Center" Foreground="White" 
-                   FontWeight="Bold" TextWrapping="Wrap"/>
+                   FontWeight="Bold" TextWrapping="Wrap" Grid.Column="1"/>
         <TextBlock x:Name="tb_CurrentTime" Margin="0,0,3,10" 
                    Text="{Binding TbActual}" VerticalAlignment="Bottom" 
                    HorizontalAlignment="Right" Foreground="White" 
-                   FontWeight="Bold" TextWrapping="Wrap" Width="149" TextAlignment="Center"/>
+                   FontWeight="Bold" TextWrapping="Wrap" Width="149" TextAlignment="Center" Grid.Column="1"/>
         <Rectangle Fill="Black" HorizontalAlignment="Center"
-                   Height="179" Margin="10,22,0,0" Stroke="Black" 
+                   Height="178" Margin="13,28,3,6" Stroke="Black" 
                    VerticalAlignment="Center" Width="322" 
                    Opacity="0.5" Visibility="{Binding OfflineMode, Converter={StaticResource BoolToVis}}"
-                   x:Name="tb_NoInternet"/>
+                   x:Name="tb_NoInternet" Grid.ColumnSpan="2"/>
         <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" 
                    Text="No internet connection" VerticalAlignment="Center"
-                   Visibility="{Binding OfflineMode, Converter={StaticResource BoolToVis}}" Foreground="White" FontWeight="Bold" FontSize="18"/>
+                   Visibility="{Binding OfflineMode, Converter={StaticResource BoolToVis}}" Foreground="White" FontWeight="Bold" FontSize="18" Grid.Column="1" Margin="22,106,169,106"/>
         <TextBlock x:Name="tb_Playing" HorizontalAlignment="Center" 
                    TextWrapping="Wrap" Text="►" 
                    VerticalAlignment="Bottom" Foreground="White" 
                    FontSize="12" FontFamily="Arial" 
-                   Margin="160,0,160,26" Width="18" TextAlignment="Center" 
-                   Visibility="{Binding IsTimerActive, Converter={StaticResource BoolToVis}}"/>
+                   Margin="13,0,160,26" Width="18" TextAlignment="Center" 
+                   Visibility="{Binding IsTimerActive, Converter={StaticResource BoolToVis}}" Grid.Column="1"/>
         <Button x:Name="btn_Minimize" Content="_"
-            HorizontalAlignment="Left" Margin="283,2,0,0"
+            HorizontalAlignment="Left" Margin="136,2,0,0"
             VerticalAlignment="Top" Width="26" 
             Height="22" Background="#FF707070" BorderBrush="{x:Null}"
-            Command="{Binding MinimizeButtonCommand}" Style="{DynamicResource CloseButtonStyle}" FontSize="15" Click="btnMinimize_Click"/>
-        <lvc:Gauge Grid.Column="0" Margin="13,22,275,130"
+            Command="{Binding MinimizeButtonCommand}" Style="{DynamicResource CloseButtonStyle}" FontSize="15" Click="btnMinimize_Click" Grid.Column="1"/>
+        <lvc:Gauge Grid.Column="0" Margin="13,22,84,130"
                    Uses360Mode="True"
                    From="0" To="{Binding TodayGaugeMaxValue}" Value="{Binding TodaysCurrentWork}"
                    HighFontSize="60"
@@ -87,7 +91,8 @@
                    VerticalAlignment="Top" Foreground="White"
                    FontWeight="Bold" Width="50" 
                    TextAlignment="Center" FontSize="8"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="84,22,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <Button Content="Start" HorizontalAlignment="Left" Margin="68,4,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <Button Content="Stop" HorizontalAlignment="Left" Margin="13,2,0,0" VerticalAlignment="Top" Width="75" Grid.Column="1" Click="Button_Click_1"/>
 
     </Grid>
 </Window>

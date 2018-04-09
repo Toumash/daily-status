@@ -65,5 +65,10 @@ namespace DailyStatus.UI.View
         {
             await togglClient.StartTimer();
         }
+
+        private async void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            await togglClient.StopTimer();
+        }
     }
 }

@@ -106,6 +106,9 @@ namespace DailyStatus.Common
 
         public async Task StartTimer()
         {
+            var workspaces = await _togglApi.Workspaces.GetAll();
+
+            var user = await _togglApi.User.Get();
             var timeEntry = await _togglApi.TimeEntries.Create(new TimeEntry()
             {
                 At = DateTime.UtcNow,
@@ -115,6 +118,21 @@ namespace DailyStatus.Common
                 TagIds = new List<long>(),
                 WorkspaceId = user.DefaultWorkspaceId,
             });
+        }
+
+        public async Task StopTimer()
+        {
+            var workspaces = await _togglApi.Workspaces.GetAll();
+
+            var user = await _togglApi.User.Get();
+            var data = await _togglApi.TimeEntries.GetAllSince(DateTime.Now.AddDays(-1)).SelectMany(e => e).ToList();
+            var lastTask = new TimeEntry(await _togglApi.TimeEntries.GetAllSince(DateTime.Now.AddDays(-1)).SelectMany(e => e).Where(e => e.Duration == null).FirstOrDefaultAsync());
+            if (lastTask != null)
+            {
+                // FIXME: Bad Request
+                lastTask.Duration = (long)(DateTime.Now - lastTask.Start).TotalSeconds;
+                await _togglApi.TimeEntries.Update(lastTask);
+            }
         }
 
         public ITogglApi TogglApiWith(Credentials credentials)

@@ -6,6 +6,24 @@ namespace DailyStatus.Common.Model
 {
     public class TimeEntry : ITimeEntry
     {
+        public TimeEntry() { }
+
+        public TimeEntry(ITimeEntry data)
+        {
+            this.WorkspaceId = data.WorkspaceId;
+            this.ProjectId = data.ProjectId;
+            this.TaskId = data.TaskId;
+            this.Billable = data.Billable;
+            this.Start = data.Start;
+            this.Duration = data.Duration;
+            this.Description = data.Description;
+            this.TagIds = data.TagIds;
+            this.At = data.At;
+            this.ServerDeletedAt = data.ServerDeletedAt;
+            this.UserId = data.UserId;
+            this.Id = data.Id;
+        }
+
         public long WorkspaceId { get; set; }
 
         public long? ProjectId { get; set; }
