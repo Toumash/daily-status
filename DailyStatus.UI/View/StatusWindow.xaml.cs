@@ -1,5 +1,6 @@
 ﻿using DailyStatus.Common;
 using DailyStatus.UI.ViewModel;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -11,6 +12,8 @@ namespace DailyStatus.UI.View
     /// </summary>
     public partial class StatusWindow : Window
     {
+
+        private TogglProxy togglClient;
         public StatusWindow()
         {
             InitializeComponent();
@@ -22,7 +25,7 @@ namespace DailyStatus.UI.View
             };
             Loaded += (s, e) =>
             {
-                TogglProxy togglClient = new TogglProxy();
+                togglClient = new TogglProxy();
                 var apiToken = new WindowsCredentialManager().Get();
                 if (string.IsNullOrEmpty(apiToken))
                 {
@@ -56,6 +59,11 @@ namespace DailyStatus.UI.View
         private void btnMinimize_Click(object sender, RoutedEventArgs e)
         {
             this.WindowState = WindowState.Minimized;
+        }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            await togglClient.StartTimer();
         }
     }
 }

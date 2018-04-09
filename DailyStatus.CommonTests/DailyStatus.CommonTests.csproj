@@ -46,9 +46,18 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="Toggl.Multivac, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\dlls\Toggl.Multivac.dll</HintPath>
+    </Reference>
+    <Reference Include="Toggl.Ultrawave, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\dlls\Toggl.Ultrawave.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BLL\WorkDaysCalculatorTests.cs" />
+    <Compile Include="TogglProxyTests.cs" />
     <Compile Include="WorkDaysHelperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -60,6 +69,10 @@
     <ProjectReference Include="..\DailyStatus.Common\DailyStatus.Common.csproj">
       <Project>{835b2816-e1ef-409a-8b6c-eb6740796f83}</Project>
       <Name>DailyStatus.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DailyStatus\DailyStatus.csproj">
+      <Project>{3ac0a652-cd16-424d-b2e6-12d3b221109f}</Project>
+      <Name>DailyStatus</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

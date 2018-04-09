@@ -1,9 +1,11 @@
 ﻿using DailyStatus.Common.BLL;
 using DailyStatus.Common.Model;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Toggl.Multivac.Models;
 using Toggl.Ultrawave;
 using Toggl.Ultrawave.Network;
 
@@ -100,6 +102,19 @@ namespace DailyStatus.Common
             {
                 return false;
             }
+        }
+
+        public async Task StartTimer()
+        {
+            var timeEntry = await _togglApi.TimeEntries.Create(new TimeEntry()
+            {
+                At = DateTime.UtcNow,
+                Description = Guid.NewGuid().ToString(),
+                Start = DateTime.UtcNow,
+                UserId = user.Id,
+                TagIds = new List<long>(),
+                WorkspaceId = user.DefaultWorkspaceId,
+            });
         }
 
         public ITogglApi TogglApiWith(Credentials credentials)
