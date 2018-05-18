@@ -9,7 +9,7 @@ namespace DailyStatus.Common.BLL
     {
         public TimeSpan ExpectedWorkedDays(DateTime todayWithHours, TimeSpan workDayStartHour, double numberOfWorkingHoursPerDay, params DateTime[] holidaysDuringWeek)
         {
-            var today = new DateTime(todayWithHours.Year, todayWithHours.Month, todayWithHours.Day);
+            var today = todayWithHours.Date;
             var first = new DateTime(today.Year, today.Month, 1);
             var workDayStart = today + workDayStartHour;
 
@@ -30,7 +30,7 @@ namespace DailyStatus.Common.BLL
 
         public TimeSpan ExpectedWorkedDays(TimeSpan workDayStartHour, double numberOfWorkingHoursPerDay, params DateTime[] holidaysDuringWeek)
         {
-            return ExpectedWorkedDays(DateTime.Today, workDayStartHour, numberOfWorkingHoursPerDay, holidaysDuringWeek);
+            return ExpectedWorkedDays(DateTime.Now, workDayStartHour, numberOfWorkingHoursPerDay, holidaysDuringWeek);
         }
     }
 

@@ -22,7 +22,7 @@ namespace DailyStatus.Common.BLL.Tests
         [TestMethod()]
         public void Given23OfMarchEndOfDay_ExpWorkDaysShoudReturn17Days_136Hours()
         {
-            var actual = new WorkDaysCalculator().ExpectedWorkedDays(new DateTime(2018, 03, 23, 20, 0, 0),TimeSpan.FromHours(8), 8);
+            var actual = new WorkDaysCalculator().ExpectedWorkedDays(new DateTime(2018, 03, 23, 20, 0, 0), TimeSpan.FromHours(8), 8);
             var expected = TimeSpan.FromHours(136);
             Assert.AreEqual(expected, actual);
         }
@@ -32,6 +32,29 @@ namespace DailyStatus.Common.BLL.Tests
         {
             var actual = new WorkDaysCalculator().ExpectedWorkedDays(new DateTime(2018, 03, 23, 02, 0, 0), TimeSpan.FromHours(10), 8);
             var expected = TimeSpan.FromHours(128);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void Given23OfMarchStartOdDay_ExpWorkDaysShoudReturn17Days_On26March18()
+        {
+            var actual = new WorkDaysCalculator().ExpectedWorkedDays(new DateTime(2018, 03, 26, 8, 0, 0), TimeSpan.FromHours(10), 8);
+            var expected = TimeSpan.FromHours(17 * 8);
+            Assert.AreEqual(expected, actual);
+        }
+        [TestMethod()]
+        public void Given23OfMarchStartOdDay_ExpWorkDaysShoudReturn17AndAHalfDays_On26March18()
+        {
+            var actual = new WorkDaysCalculator().ExpectedWorkedDays(new DateTime(2018, 03, 26, 14, 0, 0), TimeSpan.FromHours(10), 8);
+            var expected = TimeSpan.FromHours(17 * 8 + 4);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void Given23OfMarchStartOdDay_ExpWorkDaysShoudReturn17AndMinutes_On26March18()
+        {
+            var actual = new WorkDaysCalculator().ExpectedWorkedDays(new DateTime(2018, 03, 26, 11, 0, 0), TimeSpan.FromHours(10), 8);
+            var expected = TimeSpan.FromHours(17 * 8 + 1);
             Assert.AreEqual(expected, actual);
         }
     }

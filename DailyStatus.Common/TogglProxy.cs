@@ -38,6 +38,7 @@ namespace DailyStatus.Common
             public TimeSpan TimeInMonth { get; set; }
 
             public bool IsTimerActive { get; set; }
+            public TimeSpan TodaysHours { get; set; }
         }
 
         public async Task<TogglStatus> GetStatus()
@@ -59,15 +60,23 @@ namespace DailyStatus.Common
                     .Where(e => !e.Duration.HasValue)
                     .FirstOrDefault();
 
+                TimeSpan currentTaskDuration = TimeSpan.FromSeconds(0);
                 if (currentTaskElement != null)
                 {
-                    var currentTaskDuration = (DateTime.UtcNow - currentTaskElement.Start);
-                    sum += currentTaskDuration;
+                    currentTaskDuration = (DateTime.UtcNow - currentTaskElement.Start);
                 }
+                sum += currentTaskDuration;
+
+                var todayHoursSum = entries
+                    .Where(e => e.Start > DateTime.Today && e.Duration.HasValue)
+                    .Sum(e => e.Duration.Value);
+                var todaysHours = TimeSpan.FromSeconds(todayHoursSum) + currentTaskDuration;
+
                 return new TogglStatus()
                 {
                     TimeInMonth = sum,
-                    IsTimerActive = currentTaskElement != null
+                    IsTimerActive = currentTaskElement != null,
+                    TodaysHours = todaysHours
                 };
             }
             catch (Toggl.Ultrawave.Exceptions.OfflineException e)
