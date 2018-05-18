@@ -8,6 +8,7 @@ Just write an issue which will reliably show the problem that you faced. If that
 # Contributors
 - [Sawair](https://github.com/Sawair)
 
-
 # Authors
-Application icon made by [Frepik](http://www.freepik.com) from [flaticon.com](https://www.flaticon.com) is licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)
+Icons made by:
+- [Frepik](http://www.freepik.com) from [flaticon.com](https://www.flaticon.com) is licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)
+- [Smashicons](https://www.flaticon.com/authors/smashicons) from [Flaticon](https://www.flaticon.com/) is licensed by [Creative Commons BY 3.0](http://creativecommons.org/licenses/by/3.0/)
