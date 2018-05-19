@@ -13,6 +13,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using DailyStatus.Common.Model;
 using System.Collections.Generic;
+using Toggl.Ultrawave.Exceptions;
 
 namespace DailyStatus.UI.ViewModel
 {
@@ -277,9 +278,14 @@ namespace DailyStatus.UI.ViewModel
                 LastUpdateTime = DateTime.Now;
                 OfflineMode = false;
             }
-            catch (OfflineException ex)
+            catch (OfflineException)
             {
                 OfflineMode = true;
+            }
+            catch (BadRequestException)
+            {
+                // ignore, that is our exception and it happens occasionally
+                // https://github.com/Toumash/daily-status/issues/19
             }
             firstSync = false;
         }

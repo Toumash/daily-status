@@ -110,6 +110,10 @@ namespace DailyStatus.Common
             {
                 throw new OfflineException("No internet connection", e);
             }
+            catch (Toggl.Ultrawave.Exceptions.BadRequestException e)
+            {
+                throw new BadRequestException("bad request", e);
+            }
         }
 
         public bool TestConnection()
@@ -124,6 +128,10 @@ namespace DailyStatus.Common
                 return false;
             }
             catch (Toggl.Ultrawave.Exceptions.OfflineException)
+            {
+                return false;
+            }
+            catch (Toggl.Ultrawave.Exceptions.BadRequestException)
             {
                 return false;
             }
@@ -156,6 +164,18 @@ namespace DailyStatus.Common
         public OfflineException(string message) : base(message) { }
         public OfflineException(string message, Exception inner) : base(message, inner) { }
         protected OfflineException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    }
+
+
+    [Serializable]
+    public class BadRequestException : Exception
+    {
+        public BadRequestException() { }
+        public BadRequestException(string message) : base(message) { }
+        public BadRequestException(string message, Exception inner) : base(message, inner) { }
+        protected BadRequestException(
           System.Runtime.Serialization.SerializationInfo info,
           System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
