@@ -46,7 +46,18 @@ namespace DailyStatus.UI.ViewModel
         public Workspace SelectedWorkspace
         {
             get { return selectedItem; }
-            set { selectedItem = value; NotifyPropertyChanged(nameof(SelectedWorkspace)); }
+            set
+            {
+                if (SelectedWorkspace == value) return;
+                selectedItem = value;
+                NotifyPropertyChanged(nameof(SelectedWorkspace));
+                ScheduleInstantRefresh();
+            }
+        }
+
+        void ScheduleInstantRefresh()
+        {
+            _timer.Interval = TimeSpan.FromMilliseconds(0);
         }
 
         public TimeSpan Diff
@@ -221,10 +232,11 @@ namespace DailyStatus.UI.ViewModel
 
             _timer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromSeconds(0)
+                Interval = TimeSpan.FromSeconds(RefreshIntervalInSeconds)
             };
             _timer.Tick += async (s, e) => await RefreshData();
             _timer.Start();
+            ScheduleInstantRefresh();
         }
 
         void Init()
