@@ -6,6 +6,7 @@
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         xmlns:local="clr-namespace:DailyStatus.UI"
         xmlns:vm="clr-namespace:DailyStatus.UI.ViewModel"
+          xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="Status" Height="211.75" Width="337.75"
         d:DataContext="{d:DesignInstance vm:StatusViewModel, IsDesignTimeCreatable=True}"
@@ -37,15 +38,11 @@
                 <lvc:AngularSection FromValue="10" ToValue="16" Fill="#4CB5A6"/>
             </lvc:AngularGauge.Sections>
         </lvc:AngularGauge>
-        <Button x:Name="btn_Close" Content="X"
-                HorizontalAlignment="Left" Margin="309,2,0,0"
-                VerticalAlignment="Top" Width="26" 
-                Height="22" Background="#FF707070" BorderBrush="{x:Null}"
-                Command="{Binding CloseButtonCommand}" Style="{DynamicResource CloseButtonStyle}"/>
+
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" 
                    VerticalAlignment="Top" FontSize="9" 
                    FontWeight="Normal" Foreground="LightGray"
-                   Margin="13,8,0,0" Text="{Binding LastUpdateTimeString}" Height="14" Width="50" TextAlignment="Center"/>
+                   Margin="288,198,0,0" Text="{Binding LastUpdateTimeString}" Height="14" Width="50" TextAlignment="Center"/>
         <TextBlock x:Name="tb_ExpectedTime" Margin="0,0,0,10" 
                    Text="{Binding TbExpected}" VerticalAlignment="Bottom" 
                    HorizontalAlignment="Left" Foreground="White" 
@@ -76,17 +73,23 @@
             HorizontalAlignment="Left" Margin="283,2,0,0"
             VerticalAlignment="Top" Width="26" 
             Height="22" Background="#FF707070" BorderBrush="{x:Null}"
-            Command="{Binding MinimizeButtonCommand}" Style="{DynamicResource CloseButtonStyle}" FontSize="15" Click="btnMinimize_Click"/>
-        <lvc:Gauge Grid.Column="0" Margin="13,22,275,130"
+            Style="{DynamicResource CloseButtonStyle}" FontSize="15" Click="btnMinimize_Click"/>
+        <Button x:Name="btn_Close" Content="X"
+                HorizontalAlignment="Left" Margin="309,2,0,0"
+                VerticalAlignment="Top" Width="26" 
+                Height="22" Background="#FF707070" BorderBrush="{x:Null}"
+                Style="{DynamicResource CloseButtonStyle}" Click="btnClose_Click"/>
+        <lvc:Gauge Grid.Column="0" Margin="10,41,278,111"
                    Uses360Mode="True"
                    From="0" To="{Binding TodayGaugeMaxValue}" Value="{Binding TodaysCurrentWork}"
                    HighFontSize="60"
                    InnerRadius="0" GaugeBackground="#33FFFFFF" x:Name="xd" Foreground="{x:Null}" GaugeActiveFill="#FF059794"/>
-        <TextBlock HorizontalAlignment="Left" Margin="13,82,0,0" 
+        <TextBlock HorizontalAlignment="Left" Margin="10,101,0,0" 
                    TextWrapping="Wrap" Text="{Binding TodaysCurrentWorkText}"
                    VerticalAlignment="Top" Foreground="White"
                    FontWeight="Bold" Width="50" 
                    TextAlignment="Center" FontSize="8"/>
-
+        <ComboBox Height="27" Margin="10,9,257,176" Foreground="White" 
+                  ItemsSource="{Binding Workspaces}" SelectedItem="{Binding SelectedWorkspace}" DisplayMemberPath="Name" RenderTransformOrigin="0.275,0.533"/>
     </Grid>
 </Window>
