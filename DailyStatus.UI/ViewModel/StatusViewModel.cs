@@ -9,27 +9,56 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using DailyStatus.Common.Extensions;
+using System.Collections.ObjectModel;
+using System.Linq;
+using DailyStatus.Common.Model;
+using System.Collections.Generic;
 
 namespace DailyStatus.UI.ViewModel
 {
     public class StatusViewModel : INotifyPropertyChanged
     {
-        private const int RefreshIntervalInSeconds = 5;
+        const int RefreshIntervalInSeconds = 5;
         public const int LabelsDistanceHours = 8;
         public const int MinimalStaticValueForGauge = -16;
 
-        TogglProxy _togglClient;
+        bool firstSync = true;
+        readonly TogglProxy _togglClient;
         DailyStatusConfiguration _config;
-        DispatcherTimer _timer;
+        readonly DispatcherTimer _timer;
 
-        private TimeSpan _diff;
-        private Brush _gaugeNeedle;
-        private string _tbExpected;
-        private string _tbActual;
-        private DateTime? _lastUpdated;
+        TimeSpan _diff;
+        Brush _gaugeNeedle;
+        string _tbExpected;
+        string _tbActual;
+        DateTime? _lastUpdated;
 
-        private TimeSpan _todayHours;
-        private double _todayGaugeMaxValue = 8;
+        TimeSpan _todayHours;
+        double _todayGaugeMaxValue = 8;
+        ObservableCollection<Workspace> _workspaces = new ObservableCollection<Workspace>();
+
+        public ObservableCollection<Workspace> Workspaces
+        {
+            get { return _workspaces; }
+            set { _workspaces = value; NotifyPropertyChanged(nameof(Workspaces)); }
+        }
+        Workspace selectedItem = new Workspace();
+        public Workspace SelectedWorkspace
+        {
+            get { return selectedItem; }
+            set
+            {
+                if (SelectedWorkspace == value) return;
+                selectedItem = value;
+                NotifyPropertyChanged(nameof(SelectedWorkspace));
+                ScheduleInstantRefresh();
+            }
+        }
+
+        void ScheduleInstantRefresh()
+        {
+            _timer.Interval = TimeSpan.FromMilliseconds(0);
+        }
 
         public TimeSpan Diff
         {
@@ -108,7 +137,7 @@ namespace DailyStatus.UI.ViewModel
             }
         }
 
-        private TimeSpan TodayHours
+        TimeSpan TodayHours
         {
             get => _todayHours;
             set
@@ -120,6 +149,7 @@ namespace DailyStatus.UI.ViewModel
         }
         public double TodaysCurrentWork { get => Math.Min(TodayHours.TotalHours, _todayGaugeMaxValue); }
         public string TodaysCurrentWorkText { get => $"{TodayHours.Hours}:{TodayHours.Minutes:00}"; }
+
         public double TodayGaugeMaxValue
         {
             get => _todayGaugeMaxValue; set
@@ -147,7 +177,8 @@ namespace DailyStatus.UI.ViewModel
             }
         }
 
-        private bool _offline = false;
+        bool _offline;
+
         public bool OfflineMode
         {
             get => _offline;
@@ -157,7 +188,8 @@ namespace DailyStatus.UI.ViewModel
                 NotifyPropertyChanged(nameof(OfflineMode));
             }
         }
-        private bool _currentlyTracking;
+        bool _currentlyTracking;
+
         public bool IsTimerActive
         {
             get => _currentlyTracking;
@@ -167,8 +199,6 @@ namespace DailyStatus.UI.ViewModel
                 NotifyPropertyChanged(nameof(IsTimerActive));
             }
         }
-
-        public ICommand CloseButtonCommand { get; } = new RelayCommand((s) => Environment.Exit(0));
 
         public StatusViewModel()
         {
@@ -185,6 +215,11 @@ namespace DailyStatus.UI.ViewModel
                 IsTimerActive = true;
                 TodayHours = TimeSpan.FromHours(2);
                 TodayGaugeMaxValue = 8;
+                Workspaces = new ObservableCollection<Workspace>()
+                {
+                    new Workspace() { Name ="Nexpertis"}
+                };
+                SelectedWorkspace = Workspaces.First();
             }
         }
 
@@ -197,13 +232,14 @@ namespace DailyStatus.UI.ViewModel
 
             _timer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromSeconds(0)
+                Interval = TimeSpan.FromSeconds(RefreshIntervalInSeconds)
             };
             _timer.Tick += async (s, e) => await RefreshData();
             _timer.Start();
+            ScheduleInstantRefresh();
         }
 
-        private void Init()
+        void Init()
         {
             TodayGaugeMaxValue = _config.GetWorkDayConfig().NumberOfWorkingHoursPerDay;
             Needle = Brushes.Transparent;
@@ -217,11 +253,18 @@ namespace DailyStatus.UI.ViewModel
             TodayHours = TimeSpan.FromSeconds(0);
         }
 
-        private async Task RefreshData()
+        async Task RefreshData()
         {
             _timer.Interval = TimeSpan.FromSeconds(RefreshIntervalInSeconds);
+
             try
             {
+                if (firstSync)
+                {
+                    Workspaces = new ObservableCollection<Workspace>(await _togglClient.GetAllWorkspaces());
+                    SelectedWorkspace = Workspaces.First();
+                }
+                _togglClient.SetWorkspace(SelectedWorkspace);
                 var actual = (await _togglClient.GetStatus());
                 TodayHours = actual.TodaysHours;
                 IsTimerActive = actual.IsTimerActive;
@@ -238,10 +281,11 @@ namespace DailyStatus.UI.ViewModel
             {
                 OfflineMode = true;
             }
+            firstSync = false;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        private void NotifyPropertyChanged(string propertyName)
+        void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

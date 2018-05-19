@@ -1,5 +1,8 @@
 ﻿using DailyStatus.Common;
 using DailyStatus.UI.ViewModel;
+using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -53,9 +56,15 @@ namespace DailyStatus.UI.View
             };
         }
 
-        private void btnMinimize_Click(object sender, RoutedEventArgs e)
+        void btnMinimize_Click(object sender, RoutedEventArgs e)
         {
             this.WindowState = WindowState.Minimized;
+        }
+
+
+        void btnClose_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }
