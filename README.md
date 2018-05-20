@@ -6,7 +6,7 @@ Just write an issue which will reliably show the problem that you faced. If that
 
 
 # Contributors
-- [Sawair](https://github.com/Sawair)
+- [Sawair](https://github.com/Sawair) - configuration & expected time algorithm proposal
 
 # Authors
 Icons made by:
