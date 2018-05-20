@@ -39,14 +39,16 @@ namespace DailyStatus.UI.ViewModel
             get { return _workspaces; }
             set { _workspaces = value; NotifyPropertyChanged(nameof(Workspaces)); }
         }
-        Workspace selectedItem = new Workspace();
+
+        Workspace _selectedWorkspace = new Workspace();
+
         public Workspace SelectedWorkspace
         {
-            get { return selectedItem; }
+            get { return _selectedWorkspace; }
             set
             {
                 if (SelectedWorkspace == value) return;
-                selectedItem = value;
+                _selectedWorkspace = value;
                 NotifyPropertyChanged(nameof(SelectedWorkspace));
                 ScheduleInstantRefresh();
             }
@@ -248,6 +250,10 @@ namespace DailyStatus.UI.ViewModel
             LastUpdateTime = null;
             OfflineMode = false;
             TodayHours = TimeSpan.FromSeconds(0);
+            Workspaces = new ObservableCollection<Workspace>(){
+                new Workspace() { Name =  "Loading..." }
+            };
+            this._selectedWorkspace = Workspaces.First();
         }
 
         async Task RefreshData()
