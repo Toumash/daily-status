@@ -1,18 +1,15 @@
 ﻿using DailyStatus.Common;
 using DailyStatus.Common.Configuration;
-using DailyStatus.UI.WpfExtensions;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using DailyStatus.Common.Extensions;
 using System.Collections.ObjectModel;
 using System.Linq;
 using DailyStatus.Common.Model;
-using System.Collections.Generic;
 
 namespace DailyStatus.UI.ViewModel
 {
