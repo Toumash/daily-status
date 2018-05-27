@@ -8,35 +8,39 @@
         xmlns:vm="clr-namespace:DailyStatus.UI.ViewModel"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="Status" Height="234.25" Width="337.75"
+        Title="Status" Height="263.75" Width="337.75"
         d:DataContext="{d:DesignInstance vm:ConfigurationViewModel, IsDesignTimeCreatable=True}"
         Background="#101928" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True" Topmost="True">
     <Grid Margin="0,0,0,5">
-        <StackPanel HorizontalAlignment="Left" Height="182" Margin="10,10,0,0" VerticalAlignment="Top" Width="318">
+        <StackPanel HorizontalAlignment="Left" Height="210" Margin="10,10,0,0" VerticalAlignment="Top" Width="318">
             <ComboBox Height="27" Foreground="White" 
                       ItemsSource="{Binding Workspaces}" SelectedItem="{Binding SelectedWorkspace}" DisplayMemberPath="Name" RenderTransformOrigin="0.275,0.533"/>
             <StackPanel Height="27" Orientation="Horizontal">
                 <Label Content="Day start hour:" HorizontalAlignment="Right" Width="200"></Label>
-                <TextBox Width="100"></TextBox>
+                <TextBox Width="100" Foreground="White" TextAlignment="Center" Text="{Binding WorkDayStartHour}"></TextBox>
             </StackPanel>
             <StackPanel Height="27" Orientation="Horizontal">
                 <Label Content="Month target:" HorizontalAlignment="Right" Width="200"></Label>
-                <ToggleButton HorizontalAlignment="Left" Width="100"/>
+                <ToggleButton HorizontalAlignment="Left" Width="100" IsChecked="{Binding MonthTargetMode}"/>
             </StackPanel>
             <StackPanel Height="27" Orientation="Horizontal">
                 <Label Content="Month target value:" HorizontalAlignment="Right" Width="200"></Label>
-                <TextBox Width="100"></TextBox>
+                <TextBox Width="100" Foreground="White" TextAlignment="Center" IsEnabled="{Binding MonthTargetMode}" Text="{Binding MonthTarget}"></TextBox>
             </StackPanel>
             <StackPanel Height="27" Orientation="Horizontal">
                 <Label Content="Working hours per day:" HorizontalAlignment="Right" Width="200"></Label>
-                <TextBox Width="100"></TextBox>
+                <TextBox Width="100" Foreground="White" TextAlignment="Center" IsEnabled="{Binding MonthTargetMode, Converter={StaticResource InverseBoolean}}" Text="{Binding NumberOfWorkingHoursPerDay}"></TextBox>
             </StackPanel>
             <StackPanel Height="27" Orientation="Horizontal">
-                <Label Content="Month target:" HorizontalAlignment="Right" Width="200"></Label>
-                <ToggleButton HorizontalAlignment="Left" Width="100"/>
+                <Label Content="Lock scale range:" HorizontalAlignment="Right" Width="200"></Label>
+                <ToggleButton HorizontalAlignment="Left" Width="100" IsChecked="{Binding IsScaleRangeLock}" />
+            </StackPanel>
+            <StackPanel Height="27" Orientation="Horizontal" Visibility="{Binding IsScaleRangeLock}">
+                <Label Content="Scale max value:" HorizontalAlignment="Right" Width="200"></Label>
+                <TextBox Width="100" Foreground="White" TextAlignment="Center" Text="{Binding MaxScaleRange}"></TextBox>
             </StackPanel>
         </StackPanel>
-        <Grid Margin="10,197,179,10">
+        <Grid Margin="10,225,179,10">
             <Button x:Name="btn_Save" Content="Save"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top" Width="72" 
