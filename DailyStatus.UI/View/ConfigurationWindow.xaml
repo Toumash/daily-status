@@ -1,0 +1,52 @@
+﻿<Window x:Class="DailyStatus.UI.View.ConfigurationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        xmlns:local="clr-namespace:DailyStatus.UI"
+        xmlns:vm="clr-namespace:DailyStatus.UI.ViewModel"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="Status" Height="234.25" Width="337.75"
+        d:DataContext="{d:DesignInstance vm:ConfigurationViewModel, IsDesignTimeCreatable=True}"
+        Background="#101928" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True" Topmost="True">
+    <Grid Margin="0,0,0,5">
+        <StackPanel HorizontalAlignment="Left" Height="182" Margin="10,10,0,0" VerticalAlignment="Top" Width="318">
+            <ComboBox Height="27" Foreground="White" 
+                      ItemsSource="{Binding Workspaces}" SelectedItem="{Binding SelectedWorkspace}" DisplayMemberPath="Name" RenderTransformOrigin="0.275,0.533"/>
+            <StackPanel Height="27" Orientation="Horizontal">
+                <Label Content="Day start hour:" HorizontalAlignment="Right" Width="200"></Label>
+                <TextBox Width="100"></TextBox>
+            </StackPanel>
+            <StackPanel Height="27" Orientation="Horizontal">
+                <Label Content="Month target:" HorizontalAlignment="Right" Width="200"></Label>
+                <ToggleButton HorizontalAlignment="Left" Width="100"/>
+            </StackPanel>
+            <StackPanel Height="27" Orientation="Horizontal">
+                <Label Content="Month target value:" HorizontalAlignment="Right" Width="200"></Label>
+                <TextBox Width="100"></TextBox>
+            </StackPanel>
+            <StackPanel Height="27" Orientation="Horizontal">
+                <Label Content="Working hours per day:" HorizontalAlignment="Right" Width="200"></Label>
+                <TextBox Width="100"></TextBox>
+            </StackPanel>
+            <StackPanel Height="27" Orientation="Horizontal">
+                <Label Content="Month target:" HorizontalAlignment="Right" Width="200"></Label>
+                <ToggleButton HorizontalAlignment="Left" Width="100"/>
+            </StackPanel>
+        </StackPanel>
+        <Grid Margin="10,197,179,10">
+            <Button x:Name="btn_Save" Content="Save"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top" Width="72" 
+                Height="22" Background="#FF707070" BorderBrush="{x:Null}"
+                Style="{DynamicResource CloseButtonStyle}" Command="{Binding SaveButtonCommand}"/>
+            <Button x:Name="btn_Cancel" Content="Cancel"
+                HorizontalAlignment="Left" Margin="77,0,0,0"
+                VerticalAlignment="Top" Width="72" 
+                Height="22" Background="#FF707070" BorderBrush="{x:Null}"
+                Style="{DynamicResource CloseButtonStyle}" Command="{Binding CancelButtonCommand}"/>
+        </Grid>
+    </Grid>
+</Window>
