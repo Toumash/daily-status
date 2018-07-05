@@ -150,6 +150,12 @@
             <ColumnDefinition Width="61*"/>
             <ColumnDefinition Width="275*"/>
         </Grid.ColumnDefinitions>
+        <Grid.ContextMenu>
+            <ContextMenu>
+                <MenuItem Header="Minimize" Click="ctxMenuClick_Minimize"/>
+                <MenuItem Header="Close" Click="ctxMenuClick_Close"/>
+            </ContextMenu>
+        </Grid.ContextMenu>
         <TextBlock  Name="tb_timeDiffFullscreen"  VerticalAlignment="Center"
                    Foreground="White" FontWeight="Bold" FontSize="100" Text="{Binding TbTimeDiff}" Margin="0,10,0,20" RenderTransformOrigin="0.5,0.5" TextAlignment="Center" Height="109" Grid.ColumnSpan="2">
             <TextBlock.Style>
@@ -173,18 +179,8 @@
                 </Style>
             </TextBlock.Style>
         </TextBlock>
-        <Button x:Name="btn_Minimize" Content="_"
-            HorizontalAlignment="Left" Margin="222.5,2,0,0"
-            VerticalAlignment="Top" Width="26" 
-            Height="22" Background="#FF707070" BorderBrush="{x:Null}"
-            Style="{DynamicResource CloseButtonStyle}" FontSize="15" Click="btnMinimize_Click" Grid.Column="1"/>
-        <Button x:Name="btn_Close" Content="X"
-                HorizontalAlignment="Left" Margin="248.5,2,0,0"
-                VerticalAlignment="Top" Width="26" 
-                Height="22" Background="#FF707070" BorderBrush="{x:Null}"
-                Style="{DynamicResource CloseButtonStyle}" Click="btnClose_Click" Grid.Column="1"/>
-        <ComboBox Height="28" Margin="7,6,246,105" Foreground="White" 
-                  ItemsSource="{Binding Workspaces}" SelectedItem="{Binding SelectedWorkspace}" DisplayMemberPath="Name" RenderTransformOrigin="0.275,0.533" Grid.ColumnSpan="2" FontSize="10"/>
+        <ComboBox Height="28" Margin="6,5,247,106" Foreground="White" 
+                  ItemsSource="{Binding Workspaces}" SelectedItem="{Binding SelectedWorkspace}" DisplayMemberPath="Name" RenderTransformOrigin="0.275,0.533" FontSize="10" Grid.ColumnSpan="2"/>
         <ProgressBar Value="{Binding TodaysCurrentWork}" Maximum="{Binding TodayGaugeMaxValue}" Height="Auto" Margin="0,130,0,0" Style="{DynamicResource ProgressBarStyle1}" Grid.ColumnSpan="2" />
     </Grid>
 </Window>

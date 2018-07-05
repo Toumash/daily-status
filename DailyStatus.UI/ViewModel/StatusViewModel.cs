@@ -151,6 +151,10 @@ namespace DailyStatus.UI.ViewModel
         public double TodaysCurrentWork { get => Math.Min(TodayHours.TotalHours, _todayGaugeMaxValue); }
         public string TodaysCurrentWorkText { get => $"{TodayHours.Hours}:{TodayHours.Minutes:00}"; }
 
+        public ICommand CloseCommand
+            => new RelayCommand(o => Environment.Exit(0));
+
+
         public double TodayGaugeMaxValue
         {
             get => _todayGaugeMaxValue; set

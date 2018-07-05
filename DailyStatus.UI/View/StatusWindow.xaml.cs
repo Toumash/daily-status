@@ -56,15 +56,15 @@ namespace DailyStatus.UI.View
             };
         }
 
-        void btnMinimize_Click(object sender, RoutedEventArgs e)
-        {
-            this.WindowState = WindowState.Minimized;
-        }
-
-
-        void btnClose_Click(object sender, RoutedEventArgs e)
+        private void ctxMenuClick_Close(object sender, RoutedEventArgs e)
         {
             Close();
+            Environment.Exit(0);
+        }
+
+        private void ctxMenuClick_Minimize(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
         }
     }
 }
