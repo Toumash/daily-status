@@ -211,6 +211,7 @@ namespace DailyStatus.UI.ViewModel
                     .ToWorkingTimeString(8);
                 TbActual = TimeSpan.FromHours(2.5)
                     .ToWorkingTimeString(8);
+                _diff = TimeSpan.FromSeconds(0);
                 LastUpdateTime = DateTime.Now;
                 OfflineMode = false;
                 IsTimerActive = true;
