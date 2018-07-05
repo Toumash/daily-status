@@ -66,5 +66,26 @@ namespace DailyStatus.UI.View
         {
             Close();
         }
+
+        bool panelSwitch;
+
+        void Btn_switch_display_Click(object sender, RoutedEventArgs e)
+        {
+            if (!panelSwitch)
+            {
+                this.ag_gauge1.Visibility = Visibility.Hidden;
+                tb_Playing.Visibility = Visibility.Hidden;
+                tb_TimeDifference.Visibility = Visibility.Hidden;
+                tb_timeDiffFullscreen.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                this.ag_gauge1.Visibility = Visibility.Visible;
+                tb_Playing.Visibility = Visibility.Visible;
+                tb_TimeDifference.Visibility = Visibility.Visible;
+                tb_timeDiffFullscreen.Visibility = Visibility.Hidden;
+            }
+            panelSwitch = !panelSwitch;
+        }
     }
 }

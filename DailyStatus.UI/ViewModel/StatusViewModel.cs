@@ -10,6 +10,8 @@ using DailyStatus.Common.Extensions;
 using System.Collections.ObjectModel;
 using System.Linq;
 using DailyStatus.Common.Model;
+using System.Windows.Input;
+using DailyStatus.UI.WpfExtensions;
 
 namespace DailyStatus.UI.ViewModel
 {

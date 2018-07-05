@@ -1,4 +1,4 @@
-﻿<Window x:Class="DailyStatus.UI.View.StatusWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,12 +7,89 @@
         xmlns:local="clr-namespace:DailyStatus.UI"
         xmlns:vm="clr-namespace:DailyStatus.UI.ViewModel"
           xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:Converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf" x:Class="DailyStatus.UI.View.StatusWindow"
         mc:Ignorable="d"
         Title="Status" Height="211.75" Width="337.75"
-        d:DataContext="{d:DesignInstance vm:StatusViewModel, IsDesignTimeCreatable=True}"
+        d:DataContext="{d:DesignInstance {x:Type vm:StatusViewModel}, IsDesignTimeCreatable=True}"
         Background="#101928" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True" Topmost="True">
+    <Window.Resources>
+        <Style x:Key="ButtonStyle1" TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle">
+                <Setter.Value>
+                    <Style>
+                        <Setter Property="Control.Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <Rectangle Margin="0" SnapsToDevicePixels="True" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Cyan"/>
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidForegroundBrush}"/>
+            <Setter Property="materialDesign:RippleAssist.Feedback" Value="White"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="materialDesign:ShadowAssist.ShadowDepth" Value="Depth1"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1,4"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <AdornerDecorator CacheMode="{Binding (materialDesign:ShadowAssist.CacheMode), RelativeSource={RelativeSource Self}}">
+                                <Grid>
+                                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" CornerRadius="2">
+                                        <Border.Effect>
+                                            <Binding Path="(materialDesign:ShadowAssist.ShadowDepth)" RelativeSource="{RelativeSource TemplatedParent}">
+                                                <Binding.Converter>
+                                                    <Converters:ShadowConverter/>
+                                                </Binding.Converter>
+                                            </Binding>
+                                        </Border.Effect>
+                                    </Border>
+                                    <Border Background="{DynamicResource MaterialDesignBackground}" HorizontalAlignment="Left" Opacity="0.4">
+                                        <Border.Width>
+                                            <MultiBinding UpdateSourceTrigger="Default">
+                                                <MultiBinding.Converter>
+                                                    <Converters:RangeLengthConverter/>
+                                                </MultiBinding.Converter>
+                                                <Binding Path="(materialDesign:ButtonProgressAssist.Minimum)" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                                <Binding Path="(materialDesign:ButtonProgressAssist.Maximum)" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                                <Binding Path="(materialDesign:ButtonProgressAssist.Value)" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                                <Binding Path="ActualWidth" RelativeSource="{RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ButtonBase}}"/>
+                                            </MultiBinding>
+                                        </Border.Width>
+                                    </Border>
+                                </Grid>
+                            </AdornerDecorator>
+                            <materialDesign:Ripple ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Focusable="False" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="materialDesign:ShadowAssist.Darken" TargetName="border" Value="True"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter Property="materialDesign:ShadowAssist.Darken" TargetName="border" Value="True"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.23"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Window.Triggers>
-        <EventTrigger RoutedEvent="Window.Loaded">
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
             <BeginStoryboard>
                 <Storyboard>
                     <DoubleAnimation Storyboard.TargetName="tb_Playing"
@@ -30,7 +107,7 @@
                           TicksForeground="White" Foreground="White" 
                           FontWeight="Bold" FontSize="16"
                           SectionsInnerRadius=".6" Value="{Binding TimeDiff}" 
-                          Margin="0,36,0,-68" Name="ag_gauge1"
+                          Margin="0,36,0,-68" x:Name="ag_gauge1"
                           NeedleFill="{Binding Needle}">
             <lvc:AngularGauge.Sections>
                 <lvc:AngularSection FromValue="{Binding GaugeMinimalValue}" ToValue="-4" Fill="#E53043"/>
@@ -63,6 +140,9 @@
         <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" 
                    Text="No internet connection" VerticalAlignment="Center"
                    Visibility="{Binding OfflineMode, Converter={StaticResource BoolToVis}}" Foreground="White" FontWeight="Bold" FontSize="18"/>
+        <TextBlock  Name="tb_timeDiffFullscreen"
+                    HorizontalAlignment="Center" TextWrapping="Wrap"  VerticalAlignment="Center"
+                   Foreground="White" FontWeight="Bold" FontSize="100" Visibility="Hidden" Text="{Binding TbTimeDiff}"/>
         <TextBlock x:Name="tb_Playing" HorizontalAlignment="Center" 
                    TextWrapping="Wrap" Text="►" 
                    VerticalAlignment="Bottom" Foreground="White" 
@@ -91,5 +171,6 @@
                    TextAlignment="Center" FontSize="8"/>
         <ComboBox Height="27" Margin="10,9,257,176" Foreground="White" 
                   ItemsSource="{Binding Workspaces}" SelectedItem="{Binding SelectedWorkspace}" DisplayMemberPath="Name" RenderTransformOrigin="0.275,0.533"/>
+        <Button x:Name="btn_switch_display" Content="Switch Display" Margin="130,6,130,0" VerticalAlignment="Top" Height="22" FontSize="10" Click="Btn_switch_display_Click" Style="{DynamicResource ButtonStyle1}"/>
     </Grid>
 </Window>
