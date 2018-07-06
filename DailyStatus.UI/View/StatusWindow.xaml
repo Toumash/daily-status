@@ -181,6 +181,6 @@
         </TextBlock>
         <ComboBox Height="28" Margin="6,5,247,106" Foreground="White" 
                   ItemsSource="{Binding Workspaces}" SelectedItem="{Binding SelectedWorkspace}" DisplayMemberPath="Name" RenderTransformOrigin="0.275,0.533" FontSize="10" Grid.ColumnSpan="2"/>
-        <ProgressBar Value="{Binding TodaysCurrentWork}" Maximum="{Binding TodayGaugeMaxValue}" Height="Auto" Margin="0,130,0,0" Style="{DynamicResource ProgressBarStyle1}" Grid.ColumnSpan="2" />
+        <ProgressBar Value="{Binding TodaysCurrentWork}" Maximum="{Binding TodayGaugeMaxValue}" Height="Auto" Margin="0,128,0,0" Style="{DynamicResource ProgressBarStyle1}" Grid.ColumnSpan="2" />
     </Grid>
 </Window>

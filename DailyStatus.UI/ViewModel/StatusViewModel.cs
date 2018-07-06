@@ -148,7 +148,7 @@ namespace DailyStatus.UI.ViewModel
                 NotifyPropertyChanged(nameof(TodaysCurrentWorkText));
             }
         }
-        public double TodaysCurrentWork { get => Math.Min(TodayHours.TotalHours, _todayGaugeMaxValue); }
+        public double TodaysCurrentWork { get => Math.Min(TodayHours.TotalHours, _todayGaugeMaxValue); set { } }
         public string TodaysCurrentWorkText { get => $"{TodayHours.Hours}:{TodayHours.Minutes:00}"; }
 
         public ICommand CloseCommand
