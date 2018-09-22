@@ -188,9 +188,20 @@ namespace DailyStatus.UI.ViewModel
         var items = new List<MenuItem>();
         var workspaceItems = Workspaces.Select(w => new MenuItem() { Header = w.Name, Command = new RelayCommand(obj => SelectWorkSpace(w)) });
         items.AddRange(workspaceItems);
-        items.Add(new MenuItem() { Header = "Minimize", Command = new RelayCommand((obj) => {/**/}) });
+        items.Add(new MenuItem() { Header = "Minimize", Command = new RelayCommand((obj) => WindowState = WindowState.Minimized) });
         items.Add(new MenuItem() { Header = "Close", Command = CloseCommand });
         return items;
+      }
+    }
+
+    private WindowState _windowState = WindowState.Normal;
+    public WindowState WindowState
+    {
+      get { return _windowState; }
+      set
+      {
+        _windowState = value;
+        NotifyPropertyChanged(nameof(WindowState));
       }
     }
 
@@ -216,6 +227,7 @@ namespace DailyStatus.UI.ViewModel
         {
           Workspaces = new ObservableCollection<Workspace>(await _togglClient.GetAllWorkspaces());
           SelectedWorkspace = Workspaces.First();
+          NotifyPropertyChanged(nameof(ContextMenu));
         }
         _togglClient.SetWorkspace(SelectedWorkspace);
         var actual = (await _togglClient.GetStatus());

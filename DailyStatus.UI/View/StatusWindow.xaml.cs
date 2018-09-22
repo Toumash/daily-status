@@ -1,4 +1,4 @@
-﻿using DailyStatus.Common;
+using DailyStatus.Common;
 using DailyStatus.UI.ViewModel;
 using System;
 using System.Linq;
@@ -9,62 +9,57 @@ using System.Windows.Media;
 
 namespace DailyStatus.UI.View
 {
-    /// <summary>
-    /// Interaction logic for StatusWindow.xaml
-    /// </summary>
-    public partial class StatusWindow : Window
+  /// <summary>
+  /// Interaction logic for StatusWindow.xaml
+  /// </summary>
+  public partial class StatusWindow : Window
+  {
+    public StatusWindow()
     {
-        public StatusWindow()
-        {
-            InitializeComponent();
+      InitializeComponent();
 
-            MouseDown += (s, e) =>
+      MouseDown += (s, e) =>
+      {
+        if (e.ChangedButton == MouseButton.Left)
+          DragMove();
+      };
+      Loaded += (s, e) =>
+      {
+        TogglProxy togglClient = new TogglProxy();
+        var apiToken = new WindowsCredentialManager().Get();
+        if (string.IsNullOrEmpty(apiToken))
+        {
+          do
+          {
+            var apiTokenPrompt = new ApiTokenPrompt
             {
-                if (e.ChangedButton == MouseButton.Left)
-                    DragMove();
+              Owner = this
             };
-            Loaded += (s, e) =>
+            var result = apiTokenPrompt.ShowDialog();
+
+            if (!result.HasValue || !result.Value)
             {
-                TogglProxy togglClient = new TogglProxy();
-                var apiToken = new WindowsCredentialManager().Get();
-                if (string.IsNullOrEmpty(apiToken))
-                {
-                    do
-                    {
-                        var apiTokenPrompt = new ApiTokenPrompt
-                        {
-                            Owner = this
-                        };
-                        var result = apiTokenPrompt.ShowDialog();
-
-                        if (!result.HasValue || !result.Value)
-                        {
-                            this.Close();
-                            return;
-                        }
-                        apiToken = apiTokenPrompt.ApiToken;
-                        new WindowsCredentialManager().Save(apiToken);
-                        togglClient.Configure(apiToken);
-                    } while (togglClient.TestConnection());
-                }
-                else
-                {
-                    togglClient.Configure(apiToken);
-                }
-                DataContext = new StatusViewModel(
-                   togglClient, new Common.Configuration.DailyStatusConfiguration());
-            };
+              this.Close();
+              return;
+            }
+            apiToken = apiTokenPrompt.ApiToken;
+            new WindowsCredentialManager().Save(apiToken);
+            togglClient.Configure(apiToken);
+          } while (togglClient.TestConnection());
         }
-
-        private void ctxMenuClick_Close(object sender, RoutedEventArgs e)
+        else
         {
-            Close();
-            Environment.Exit(0);
+          togglClient.Configure(apiToken);
         }
-
-        private void ctxMenuClick_Minimize(object sender, RoutedEventArgs e)
-        {
-            this.WindowState = WindowState.Minimized;
-        }
+        DataContext = new StatusViewModel(
+                 togglClient, new Common.Configuration.DailyStatusConfiguration());
+      };
     }
+
+    private void ctxMenuClick_Close(object sender, RoutedEventArgs e)
+    {
+      Close();
+      Environment.Exit(0);
+    }
+  }
 }
