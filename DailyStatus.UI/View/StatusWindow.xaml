@@ -36,7 +36,7 @@
       </ContextMenu>
     </Grid.ContextMenu>
     <TextBlock  Name="tb_timeDiffFullscreen"
-                   Foreground="White" FontWeight="Bold" FontSize="40" Text="{Binding TbTimeDiff}" Margin="0,1,0,0" RenderTransformOrigin="0.5,0.5" TextAlignment="Center" Grid.ColumnSpan="2">
+                   Foreground="White" FontWeight="Bold" FontSize="40" Text="{Binding Diff, Converter={StaticResource TimespanConverter}}" Margin="0,1,0,0" RenderTransformOrigin="0.5,0.5" TextAlignment="Center" Grid.ColumnSpan="2">
       <TextBlock.Style>
         <Style>
           <Style.Triggers>
