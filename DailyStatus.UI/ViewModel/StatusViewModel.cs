@@ -66,7 +66,6 @@ namespace DailyStatus.UI.ViewModel
         _diff = value;
         NotifyPropertyChanged(nameof(Diff));
         NotifyPropertyChanged(nameof(TimeDiff));
-        NotifyPropertyChanged(nameof(TbTimeDiff));
       }
     }
 
@@ -95,16 +94,6 @@ namespace DailyStatus.UI.ViewModel
     }
 
     public double TimeDiff { get => _diff.TotalHours; }
-    public string TbTimeDiff
-    {
-      get
-      {
-        var sign = "-";
-        sign = _diff.TotalHours < 0 ? sign : "";
-        return $"{sign}{Math.Abs(_diff.TotalHours):0}:{Math.Abs(_diff.Minutes):00}";
-      }
-      set { }
-    }
 
     TimeSpan TodayHours
     {
@@ -147,7 +136,6 @@ namespace DailyStatus.UI.ViewModel
     public StatusViewModel()
     {
       Diff = TimeSpan.FromHours(2);
-      _diff = TimeSpan.FromSeconds(0);
       LastUpdateTime = DateTime.Now;
       OfflineMode = false;
       IsTimerActive = true;
