@@ -11,10 +11,9 @@
         WindowState="{Binding WindowState}"
         mc:Ignorable="d"
         Title="Status" Height="51" Width="153.5"
-  d:DataContext="{d:DesignInstance {x:Type vm:StatusViewModel}, IsDesignTimeCreatable=False}"
+  d:DataContext="{d:DesignInstance {x:Type vm:StatusViewModel}, IsDesignTimeCreatable=True}"
         
         Background="#101928" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True" Topmost="True">
-  <!--d:DataContext="{d:DesignInstance {x:Type vm:StatusViewModel}, IsDesignTimeCreatable=True}"-->
   <Window.Resources>
     <Style x:Key="ProgressBarStyle1" TargetType="{x:Type ProgressBar}">
       <Setter Property="Foreground" Value="{DynamicResource PrimaryHueLightBrush}"/>
@@ -31,8 +30,6 @@
     </Grid.ColumnDefinitions>
     <Grid.ContextMenu>
       <ContextMenu Name="ctxMenu" ItemsSource="{Binding ContextMenu}" FontSize="10">
-        <!--<MenuItem Header="Minimize" Click="ctxMenuClick_Minimize"/>
-                <MenuItem Header="Close" Click="ctxMenuClick_Close"/>-->
       </ContextMenu>
     </Grid.ContextMenu>
     <TextBlock  Name="tb_timeDiffFullscreen"
