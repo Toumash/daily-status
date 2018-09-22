@@ -58,5 +58,6 @@
         </Style>
       </TextBlock.Style>
     </TextBlock>
+    <ProgressBar Value="{Binding TodaysCurrentWork}" Maximum="{Binding TodayGaugeMaxValue}" Height="5" Style="{DynamicResource ProgressBarStyle1}" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
   </Grid>
 </Window>
