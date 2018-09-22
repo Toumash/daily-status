@@ -1,4 +1,4 @@
-﻿<Window x:Class="DailyStatus.UI.View.StatusWindow"
+<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,87 +6,55 @@
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         xmlns:local="clr-namespace:DailyStatus.UI"
         xmlns:vm="clr-namespace:DailyStatus.UI.ViewModel"
+          xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:Converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf" x:Class="DailyStatus.UI.View.StatusWindow"
+        WindowState="{Binding WindowState}"
         mc:Ignorable="d"
-        Title="Status" Height="211.75" Width="337.75"
-        d:DataContext="{d:DesignInstance vm:StatusViewModel, IsDesignTimeCreatable=True}"
+        Title="Status" Height="51" Width="153.5"
+  d:DataContext="{d:DesignInstance {x:Type vm:StatusViewModel}, IsDesignTimeCreatable=True}"
+        
         Background="#101928" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True" Topmost="True">
-    <Window.Triggers>
-        <EventTrigger RoutedEvent="Window.Loaded">
-            <BeginStoryboard>
-                <Storyboard>
-                    <DoubleAnimation Storyboard.TargetName="tb_Playing"
-                                         Storyboard.TargetProperty="Opacity"
-                                         From="0.2" To="1.00" Duration="0:0:1.0"
-                                         AutoReverse="True" RepeatBehavior="Forever"/>
-                </Storyboard>
-            </BeginStoryboard>
-        </EventTrigger>
-    </Window.Triggers>
-
-    <Grid>
-        <lvc:AngularGauge FromValue="{Binding GaugeMinimalValue}" ToValue="16" 
-                          LabelsStep="8" TicksStep="4" Wedge="180"
-                          TicksForeground="White" Foreground="White" 
-                          FontWeight="Bold" FontSize="16"
-                          SectionsInnerRadius=".6" Value="{Binding TimeDiff}" 
-                          Margin="0,36,0,-68" Name="ag_gauge1"
-                          NeedleFill="{Binding Needle}">
-            <lvc:AngularGauge.Sections>
-                <lvc:AngularSection FromValue="{Binding GaugeMinimalValue}" ToValue="-4" Fill="#E53043"/>
-                <lvc:AngularSection FromValue="-4" ToValue="10" Fill="#059794"/>
-                <lvc:AngularSection FromValue="10" ToValue="16" Fill="#4CB5A6"/>
-            </lvc:AngularGauge.Sections>
-        </lvc:AngularGauge>
-        <Button x:Name="btn_Close" Content="X"
-                HorizontalAlignment="Left" Margin="309,2,0,0"
-                VerticalAlignment="Top" Width="26" 
-                Height="22" Background="#FF707070" BorderBrush="{x:Null}"
-                Command="{Binding CloseButtonCommand}" Style="{DynamicResource CloseButtonStyle}"/>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" 
-                   VerticalAlignment="Top" FontSize="9" 
-                   FontWeight="Normal" Foreground="LightGray"
-                   Margin="13,8,0,0" Text="{Binding LastUpdateTimeString}" Height="14" Width="50" TextAlignment="Center"/>
-        <TextBlock x:Name="tb_ExpectedTime" Margin="0,0,0,10" 
-                   Text="{Binding TbExpected}" VerticalAlignment="Bottom" 
-                   HorizontalAlignment="Left" Foreground="White" 
-                   FontWeight="Bold" TextWrapping="Wrap" TextAlignment="Center" Width="152"/>
-        <TextBlock x:Name="tb_TimeDifference" Margin="10" 
-                   Text="{Binding TbTimeDiff}" VerticalAlignment="Bottom" 
-                   HorizontalAlignment="Center" Foreground="White" 
-                   FontWeight="Bold" TextWrapping="Wrap"/>
-        <TextBlock x:Name="tb_CurrentTime" Margin="0,0,3,10" 
-                   Text="{Binding TbActual}" VerticalAlignment="Bottom" 
-                   HorizontalAlignment="Right" Foreground="White" 
-                   FontWeight="Bold" TextWrapping="Wrap" Width="149" TextAlignment="Center"/>
-        <Rectangle Fill="Black" HorizontalAlignment="Center"
-                   Height="179" Margin="10,22,0,0" Stroke="Black" 
-                   VerticalAlignment="Center" Width="322" 
-                   Opacity="0.5" Visibility="{Binding OfflineMode, Converter={StaticResource BoolToVis}}"
-                   x:Name="tb_NoInternet"/>
-        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" 
-                   Text="No internet connection" VerticalAlignment="Center"
-                   Visibility="{Binding OfflineMode, Converter={StaticResource BoolToVis}}" Foreground="White" FontWeight="Bold" FontSize="18"/>
-        <TextBlock x:Name="tb_Playing" HorizontalAlignment="Center" 
-                   TextWrapping="Wrap" Text="►" 
-                   VerticalAlignment="Bottom" Foreground="White" 
-                   FontSize="12" FontFamily="Arial" 
-                   Margin="160,0,160,26" Width="18" TextAlignment="Center" 
-                   Visibility="{Binding IsTimerActive, Converter={StaticResource BoolToVis}}"/>
-        <Button x:Name="btn_Minimize" Content="_"
-            HorizontalAlignment="Left" Margin="283,2,0,0"
-            VerticalAlignment="Top" Width="26" 
-            Height="22" Background="#FF707070" BorderBrush="{x:Null}"
-            Command="{Binding MinimizeButtonCommand}" Style="{DynamicResource CloseButtonStyle}" FontSize="15" Click="btnMinimize_Click"/>
-        <lvc:Gauge Grid.Column="0" Margin="13,22,275,130"
-                   Uses360Mode="True"
-                   From="0" To="{Binding TodayGaugeMaxValue}" Value="{Binding TodaysCurrentWork}"
-                   HighFontSize="60"
-                   InnerRadius="0" GaugeBackground="#33FFFFFF" x:Name="xd" Foreground="{x:Null}" GaugeActiveFill="#FF059794"/>
-        <TextBlock HorizontalAlignment="Left" Margin="13,82,0,0" 
-                   TextWrapping="Wrap" Text="{Binding TodaysCurrentWorkText}"
-                   VerticalAlignment="Top" Foreground="White"
-                   FontWeight="Bold" Width="50" 
-                   TextAlignment="Center" FontSize="8"/>
-
-    </Grid>
+  <Window.Resources>
+    <Style x:Key="ProgressBarStyle1" TargetType="{x:Type ProgressBar}">
+      <Setter Property="Foreground" Value="{DynamicResource PrimaryHueLightBrush}"/>
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="Height" Value="4"/>
+    </Style>
+  </Window.Resources>
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="61*"/>
+      <ColumnDefinition Width="275*"/>
+    </Grid.ColumnDefinitions>
+    <Grid.ContextMenu>
+      <ContextMenu Name="ctxMenu" ItemsSource="{Binding ContextMenu}" FontSize="10">
+      </ContextMenu>
+    </Grid.ContextMenu>
+    <TextBlock  Name="tb_timeDiffFullscreen"
+                   Foreground="White" FontWeight="Bold" FontSize="40" Text="{Binding Diff, Converter={StaticResource TimespanConverter}}" Margin="0,1,0,0" RenderTransformOrigin="0.5,0.5" TextAlignment="Center" Grid.ColumnSpan="2">
+      <TextBlock.Style>
+        <Style>
+          <Style.Triggers>
+            <DataTrigger Binding="{Binding IsTimerActive}" Value="True">
+              <DataTrigger.EnterActions>
+                <BeginStoryboard Name="playingAnimation">
+                  <Storyboard>
+                    <DoubleAnimation  Storyboard.TargetProperty="Opacity"
+                                         From="0.2" To="1.00" Duration="0:0:2.0"
+                                         AutoReverse="True" RepeatBehavior="Forever" />
+                  </Storyboard>
+                </BeginStoryboard>
+              </DataTrigger.EnterActions>
+              <DataTrigger.ExitActions>
+                <StopStoryboard BeginStoryboardName="playingAnimation"/>
+              </DataTrigger.ExitActions>
+            </DataTrigger>
+          </Style.Triggers>
+        </Style>
+      </TextBlock.Style>
+    </TextBlock>
+    <ProgressBar Value="{Binding TodaysCurrentWork}" Maximum="{Binding TodayGaugeMaxValue}" Height="5" Style="{DynamicResource ProgressBarStyle1}" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
+  </Grid>
 </Window>

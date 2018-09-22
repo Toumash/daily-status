@@ -1,6 +1,7 @@
 ﻿using DailyStatus.Common.BLL;
 using DailyStatus.Common.Model;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -11,8 +12,26 @@ namespace DailyStatus.Common
 {
     public class TogglProxy
     {
-        ITogglApi _togglApi = null;
+        ITogglApi _togglApi;
+        Workspace _workspace;
+        List<Workspace> _workspaces;
 
+        public void SetWorkspace(Workspace workspace)
+        {
+            if (_workspaces.Any(w => w.Id == workspace.Id))
+                _workspace = workspace;
+            else
+                throw new ArgumentException("given workspace does not exist on current toggl account");
+        }
+        public async Task<Workspace> GetWorkspace()
+        {
+            if (_workspace == null)
+            {
+                _workspaces = await GetAllWorkspaces();
+                _workspace = _workspaces.First();
+            }
+            return _workspace;
+        }
 
         public TimeSpan GetExpectedWorkingTime(WorkDay dayConfig)
         {
@@ -33,6 +52,12 @@ namespace DailyStatus.Common
             var sum = await GetStatus();
             return GetDifference(expected, sum.TimeInMonth);
         }
+
+        public Workspace GetWorkspaceCached()
+        {
+            return _workspace;
+        }
+
         public class TogglStatus
         {
             public TimeSpan TimeInMonth { get; set; }
@@ -45,11 +70,13 @@ namespace DailyStatus.Common
         {
             try
             {
+                var workspace = await GetWorkspace();
                 var today = DateTime.Today;
                 var offset = new DateTimeOffset(new DateTime(today.Year, today.Month, 1));
                 var entries = await _togglApi.TimeEntries.GetAllSince(offset)
                     .SelectMany(e => e)
                     .Where(e => !e.ServerDeletedAt.HasValue && e.Start > offset)
+                    .Where(e => e.WorkspaceId == workspace.Id)
                     .ToList();
                 var sumSeconds = entries.Where(e => e.Duration.HasValue)
                     .Sum(e => e.Duration.Value);
@@ -83,6 +110,10 @@ namespace DailyStatus.Common
             {
                 throw new OfflineException("No internet connection", e);
             }
+            catch (Toggl.Ultrawave.Exceptions.BadRequestException e)
+            {
+                throw new BadRequestException("bad request", e);
+            }
         }
 
         public bool TestConnection()
@@ -100,6 +131,10 @@ namespace DailyStatus.Common
             {
                 return false;
             }
+            catch (Toggl.Ultrawave.Exceptions.BadRequestException)
+            {
+                return false;
+            }
         }
 
         public ITogglApi TogglApiWith(Credentials credentials)
@@ -113,6 +148,12 @@ namespace DailyStatus.Common
             var credentials = Credentials.WithApiToken(key);
             _togglApi = TogglApiWith(credentials);
         }
+
+        public async Task<List<Workspace>> GetAllWorkspaces()
+        {
+            _workspaces = (await _togglApi.Workspaces.GetAll()).Select(w => new Workspace { Name = w.Name, Id = w.Id }).ToList();
+            return _workspaces;
+        }
     }
 
 
@@ -123,6 +164,18 @@ namespace DailyStatus.Common
         public OfflineException(string message) : base(message) { }
         public OfflineException(string message, Exception inner) : base(message, inner) { }
         protected OfflineException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    }
+
+
+    [Serializable]
+    public class BadRequestException : Exception
+    {
+        public BadRequestException() { }
+        public BadRequestException(string message) : base(message) { }
+        public BadRequestException(string message, Exception inner) : base(message, inner) { }
+        protected BadRequestException(
           System.Runtime.Serialization.SerializationInfo info,
           System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
