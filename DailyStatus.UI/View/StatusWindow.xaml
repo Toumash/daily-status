@@ -9,31 +9,33 @@
           xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:Converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf" x:Class="DailyStatus.UI.View.StatusWindow"
         mc:Ignorable="d"
-        Title="Status" Height="65.25" Width="308.75"
-        d:DataContext="{d:DesignInstance {x:Type vm:StatusViewModel}, IsDesignTimeCreatable=True}"
+        Title="Status" Height="51" Width="153.5"
+  d:DataContext="{d:DesignInstance {x:Type vm:StatusViewModel}, IsDesignTimeCreatable=False}"
+        
         Background="#101928" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True" Topmost="True">
-  <Window.Resources>
-    <Style x:Key="ProgressBarStyle1" TargetType="{x:Type ProgressBar}">
-      <Setter Property="Foreground" Value="{DynamicResource PrimaryHueLightBrush}"/>
-      <Setter Property="Background" Value="Transparent"/>
-      <Setter Property="BorderBrush" Value="Transparent"/>
-      <Setter Property="BorderThickness" Value="1"/>
-      <Setter Property="Height" Value="4"/>
-    </Style>
-  </Window.Resources>
-  <Grid>
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="61*"/>
-      <ColumnDefinition Width="275*"/>
-    </Grid.ColumnDefinitions>
-    <Grid.ContextMenu>
-      <ContextMenu>
-        <MenuItem Header="Minimize" Click="ctxMenuClick_Minimize"/>
-        <MenuItem Header="Close" Click="ctxMenuClick_Close"/>
-      </ContextMenu>
-    </Grid.ContextMenu>
-    <TextBlock  Name="tb_timeDiffFullscreen"  VerticalAlignment="Center"
-                   Foreground="White" FontWeight="Bold" FontSize="100" Text="{Binding TbTimeDiff}" Margin="0,1,0,0" RenderTransformOrigin="0.5,0.5" TextAlignment="Center" Height="64" Grid.ColumnSpan="2" HorizontalAlignment="Right" Width="309">
+  <!--d:DataContext="{d:DesignInstance {x:Type vm:StatusViewModel}, IsDesignTimeCreatable=True}"-->
+    <Window.Resources>
+        <Style x:Key="ProgressBarStyle1" TargetType="{x:Type ProgressBar}">
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryHueLightBrush}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height" Value="4"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="61*"/>
+            <ColumnDefinition Width="275*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.ContextMenu>
+            <ContextMenu Name="ctxMenu" ItemsSource="{Binding ContextMenu}" FontSize="10">
+                <!--<MenuItem Header="Minimize" Click="ctxMenuClick_Minimize"/>
+                <MenuItem Header="Close" Click="ctxMenuClick_Close"/>-->
+            </ContextMenu>
+        </Grid.ContextMenu>
+    <TextBlock  Name="tb_timeDiffFullscreen"
+                   Foreground="White" FontWeight="Bold" FontSize="40" Text="{Binding TbTimeDiff}" Margin="0,1,0,0" RenderTransformOrigin="0.5,0.5" TextAlignment="Center" Grid.ColumnSpan="2">
       <TextBlock.Style>
         <Style>
           <Style.Triggers>
@@ -55,8 +57,5 @@
         </Style>
       </TextBlock.Style>
     </TextBlock>
-    <ComboBox Height="28" Margin="6,5,0,106" Foreground="White" 
-                  ItemsSource="{Binding Workspaces}" SelectedItem="{Binding SelectedWorkspace}" DisplayMemberPath="Name" RenderTransformOrigin="0.275,0.533" FontSize="10" Grid.ColumnSpan="2" HorizontalAlignment="Left" Width="82"/>
-    <ProgressBar Value="{Binding TodaysCurrentWork}" Maximum="{Binding TodayGaugeMaxValue}" Height="Auto" Margin="0,128,0,0" Style="{DynamicResource ProgressBarStyle1}" Grid.ColumnSpan="2" HorizontalAlignment="Left" Width="335" />
   </Grid>
 </Window>

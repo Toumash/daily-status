@@ -12,14 +12,14 @@ using System.Linq;
 using DailyStatus.Common.Model;
 using System.Windows.Input;
 using DailyStatus.UI.WpfExtensions;
+using System.Windows.Controls;
+using System.Collections.Generic;
 
 namespace DailyStatus.UI.ViewModel
 {
   public class StatusViewModel : INotifyPropertyChanged
   {
     const int RefreshIntervalInSeconds = 5;
-    public const int LabelsDistanceHours = 8;
-    public const int MinimalStaticValueForGauge = -16;
 
     bool firstSync = true;
     readonly TogglProxy _togglClient;
@@ -27,9 +27,6 @@ namespace DailyStatus.UI.ViewModel
     readonly DispatcherTimer _timer;
 
     TimeSpan _diff;
-    Brush _gaugeNeedle;
-    string _tbExpected;
-    string _tbActual;
     DateTime? _lastUpdated;
 
     TimeSpan _todayHours;
@@ -70,39 +67,9 @@ namespace DailyStatus.UI.ViewModel
         NotifyPropertyChanged(nameof(Diff));
         NotifyPropertyChanged(nameof(TimeDiff));
         NotifyPropertyChanged(nameof(TbTimeDiff));
-        NotifyPropertyChanged(nameof(GaugeMinimalValue));
       }
     }
 
-    public Brush Needle
-    {
-      get { return _gaugeNeedle; }
-      set
-      {
-        _gaugeNeedle = value;
-        NotifyPropertyChanged(nameof(Needle));
-      }
-    }
-
-    public string TbExpected
-    {
-      get => _tbExpected;
-      set
-      {
-        _tbExpected = value;
-        NotifyPropertyChanged(nameof(TbExpected));
-      }
-    }
-
-    public string TbActual
-    {
-      get => _tbActual;
-      set
-      {
-        _tbActual = value;
-        NotifyPropertyChanged(nameof(TbActual));
-      }
-    }
 
     public DateTime? LastUpdateTime
     {
@@ -136,6 +103,7 @@ namespace DailyStatus.UI.ViewModel
         sign = _diff.TotalHours < 0 ? sign : "";
         return $"{sign}{Math.Abs(_diff.TotalHours):0}:{Math.Abs(_diff.Minutes):00}";
       }
+      set { }
     }
 
     TimeSpan TodayHours
@@ -145,42 +113,13 @@ namespace DailyStatus.UI.ViewModel
       {
         _todayHours = value;
         NotifyPropertyChanged(nameof(TodaysCurrentWork));
-        NotifyPropertyChanged(nameof(TodaysCurrentWorkText));
       }
     }
     public double TodaysCurrentWork { get => Math.Min(TodayHours.TotalHours, _todayGaugeMaxValue); set { } }
-    public string TodaysCurrentWorkText { get => $"{TodayHours.Hours}:{TodayHours.Minutes:00}"; }
 
     public ICommand CloseCommand
         => new RelayCommand(o => Environment.Exit(0));
 
-
-    public double TodayGaugeMaxValue
-    {
-      get => _todayGaugeMaxValue; set
-      {
-        _todayGaugeMaxValue = value;
-        NotifyPropertyChanged(nameof(TodayGaugeMaxValue));
-      }
-    }
-
-    public double GaugeMinimalValue
-    {
-      get
-      {
-        if (TimeDiff < MinimalStaticValueForGauge)
-        {
-          int hours = (int)Math.Floor(TimeDiff);
-          while (hours % LabelsDistanceHours != 0) hours--;
-
-          return hours;
-        }
-        else
-        {
-          return MinimalStaticValueForGauge;
-        }
-      }
-    }
 
     bool _offline;
 
@@ -207,26 +146,17 @@ namespace DailyStatus.UI.ViewModel
 
     public StatusViewModel()
     {
-      if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
-      {
-        Needle = Brushes.Gray;
-        Diff = TimeSpan.FromHours(2);
-        TbExpected = TimeSpan.FromHours(2.5)
-            .ToWorkingTimeString(8);
-        TbActual = TimeSpan.FromHours(2.5)
-            .ToWorkingTimeString(8);
-        _diff = TimeSpan.FromSeconds(0);
-        LastUpdateTime = DateTime.Now;
-        OfflineMode = false;
-        IsTimerActive = true;
-        TodayHours = TimeSpan.FromHours(2);
-        TodayGaugeMaxValue = 8;
-        Workspaces = new ObservableCollection<Workspace>()
+      Diff = TimeSpan.FromHours(2);
+      _diff = TimeSpan.FromSeconds(0);
+      LastUpdateTime = DateTime.Now;
+      OfflineMode = false;
+      IsTimerActive = true;
+      TodayHours = TimeSpan.FromHours(2);
+      Workspaces = new ObservableCollection<Workspace>()
                 {
                     new Workspace() { Name ="Nexpertis"}
                 };
-        SelectedWorkspace = Workspaces.First();
-      }
+      SelectedWorkspace = Workspaces.First();
     }
 
     public StatusViewModel(TogglProxy togglClient, DailyStatusConfiguration configuration)
@@ -245,15 +175,28 @@ namespace DailyStatus.UI.ViewModel
       ScheduleInstantRefresh();
     }
 
+
+    public void SelectWorkSpace(Workspace w)
+    {
+      SelectedWorkspace = w;
+    }
+
+    public List<MenuItem> ContextMenu
+    {
+      get
+      {
+        var items = new List<MenuItem>();
+        var workspaceItems = Workspaces.Select(w => new MenuItem() { Header = w.Name, Command = new RelayCommand(obj => SelectWorkSpace(w)) });
+        items.AddRange(workspaceItems);
+        items.Add(new MenuItem() { Header = "Minimize", Command = new RelayCommand((obj) => {/**/}) });
+        items.Add(new MenuItem() { Header = "Close", Command = CloseCommand });
+        return items;
+      }
+    }
+
     void Init()
     {
-      TodayGaugeMaxValue = _config.GetWorkDayConfig().NumberOfWorkingHoursPerDay;
-      Needle = Brushes.Transparent;
       Diff = TimeSpan.FromHours(0);
-      TbExpected = TimeSpan.FromHours(0)
-             .ToWorkingTimeString(_config.GetWorkDayConfig().NumberOfWorkingHoursPerDay);
-      TbActual = TimeSpan.FromHours(0)
-          .ToWorkingTimeString(_config.GetWorkDayConfig().NumberOfWorkingHoursPerDay);
       LastUpdateTime = null;
       OfflineMode = false;
       TodayHours = TimeSpan.FromSeconds(0);
@@ -280,10 +223,7 @@ namespace DailyStatus.UI.ViewModel
         IsTimerActive = actual.IsTimerActive;
 
         var expected = _togglClient.GetExpectedWorkingTime(_config.GetWorkDayConfig());
-        TbExpected = expected.ToWorkingTimeString(_config.GetWorkDayConfig().NumberOfWorkingHoursPerDay);
-        TbActual = actual.TimeInMonth.ToWorkingTimeString(_config.GetWorkDayConfig().NumberOfWorkingHoursPerDay);
         Diff = _togglClient.GetDifference(expected: expected, sum: actual.TimeInMonth);
-        Needle = Brushes.Gray;
         LastUpdateTime = DateTime.Now;
         OfflineMode = false;
       }
