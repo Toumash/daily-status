@@ -179,6 +179,7 @@ namespace DailyStatus.UI.ViewModel
     public void SelectWorkSpace(Workspace w)
     {
       SelectedWorkspace = w;
+      NotifyPropertyChanged(nameof(ContextMenu));
     }
 
     public List<MenuItem> ContextMenu
@@ -186,7 +187,15 @@ namespace DailyStatus.UI.ViewModel
       get
       {
         var items = new List<MenuItem>();
-        var workspaceItems = Workspaces.Select(w => new MenuItem() { Header = w.Name, Command = new RelayCommand(obj => SelectWorkSpace(w)) });
+        var workspaceItems = Workspaces.Select(w =>
+        {
+          var item = new MenuItem() { Header = w.Name, Command = new RelayCommand(obj => SelectWorkSpace(w)) };
+          if (w == SelectedWorkspace)
+          {
+            item.Background = new SolidColorBrush(Colors.Green);
+          }
+          return item;
+        });
         items.AddRange(workspaceItems);
         items.Add(new MenuItem() { Header = "Minimize", Command = new RelayCommand((obj) => WindowState = WindowState.Minimized) });
         items.Add(new MenuItem() { Header = "Close", Command = CloseCommand });
