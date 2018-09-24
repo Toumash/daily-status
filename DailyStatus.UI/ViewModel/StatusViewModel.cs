@@ -68,7 +68,15 @@ namespace DailyStatus.UI.ViewModel
         NotifyPropertyChanged(nameof(TimeDiff));
       }
     }
-
+    public double TodayGaugeMaxValue
+    {
+      get => _todayGaugeMaxValue;
+      set
+      {
+        _todayGaugeMaxValue = value;
+        NotifyPropertyChanged(nameof(TodayGaugeMaxValue));
+      }
+    }
 
     public DateTime? LastUpdateTime
     {
@@ -212,6 +220,7 @@ namespace DailyStatus.UI.ViewModel
                 new Workspace() { Name =  "Loading..." }
             };
       this._selectedWorkspace = Workspaces.First();
+      _todayGaugeMaxValue = 8;
     }
 
     async Task RefreshData()
