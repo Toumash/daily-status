@@ -10,51 +10,51 @@
         xmlns:Converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf" x:Class="DailyStatus.UI.View.StatusWindow"
         WindowState="{Binding WindowState}"
         mc:Ignorable="d"
-        Title="Status" Height="51" Width="153.5"
+        Title="Status" Height="51" Width="188.833"
   d:DataContext="{d:DesignInstance {x:Type vm:StatusViewModel}, IsDesignTimeCreatable=True}"
         
         Background="#101928" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True" Topmost="True">
-  <Window.Resources>
-    <Style x:Key="ProgressBarStyle1" TargetType="{x:Type ProgressBar}">
-      <Setter Property="Foreground" Value="{DynamicResource PrimaryHueLightBrush}"/>
-      <Setter Property="Background" Value="Transparent"/>
-      <Setter Property="BorderBrush" Value="Transparent"/>
-      <Setter Property="BorderThickness" Value="1"/>
-      <Setter Property="Height" Value="4"/>
-    </Style>
-  </Window.Resources>
-  <Grid>
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="61*"/>
-      <ColumnDefinition Width="275*"/>
-    </Grid.ColumnDefinitions>
-    <Grid.ContextMenu>
-      <ContextMenu Name="ctxMenu" ItemsSource="{Binding ContextMenu}" FontSize="10">
-      </ContextMenu>
-    </Grid.ContextMenu>
-    <TextBlock  Name="tb_timeDiffFullscreen"
+    <Window.Resources>
+        <Style x:Key="ProgressBarStyle1" TargetType="{x:Type ProgressBar}">
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryHueLightBrush}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height" Value="4"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="61*"/>
+            <ColumnDefinition Width="275*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.ContextMenu>
+            <ContextMenu Name="ctxMenu" ItemsSource="{Binding ContextMenu}" FontSize="10">
+            </ContextMenu>
+        </Grid.ContextMenu>
+        <TextBlock  Name="tb_timeDiffFullscreen"
                    Foreground="White" FontWeight="Bold" FontSize="40" Text="{Binding Diff, Converter={StaticResource TimespanConverter}}" Margin="0,1,0,0" RenderTransformOrigin="0.5,0.5" TextAlignment="Center" Grid.ColumnSpan="2">
-      <TextBlock.Style>
-        <Style>
-          <Style.Triggers>
-            <DataTrigger Binding="{Binding IsTimerActive}" Value="True">
-              <DataTrigger.EnterActions>
-                <BeginStoryboard Name="playingAnimation">
-                  <Storyboard>
-                    <DoubleAnimation  Storyboard.TargetProperty="Opacity"
+            <TextBlock.Style>
+                <Style>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsTimerActive}" Value="True">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard Name="playingAnimation">
+                                    <Storyboard>
+                                        <DoubleAnimation  Storyboard.TargetProperty="Opacity"
                                          From="0.2" To="1.00" Duration="0:0:2.0"
                                          AutoReverse="True" RepeatBehavior="Forever" />
-                  </Storyboard>
-                </BeginStoryboard>
-              </DataTrigger.EnterActions>
-              <DataTrigger.ExitActions>
-                <StopStoryboard BeginStoryboardName="playingAnimation"/>
-              </DataTrigger.ExitActions>
-            </DataTrigger>
-          </Style.Triggers>
-        </Style>
-      </TextBlock.Style>
-    </TextBlock>
-    <ProgressBar Value="{Binding TodaysCurrentWork}" Maximum="{Binding TodayGaugeMaxValue}" Height="5" Style="{DynamicResource ProgressBarStyle1}" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
-  </Grid>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                            <DataTrigger.ExitActions>
+                                <StopStoryboard BeginStoryboardName="playingAnimation"/>
+                            </DataTrigger.ExitActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <ProgressBar Value="{Binding TodaysCurrentWork}" Maximum="{Binding TodayGaugeMaxValue}" Height="5" Style="{DynamicResource ProgressBarStyle1}" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
+    </Grid>
 </Window>
