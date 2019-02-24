@@ -66,10 +66,16 @@ namespace DailyStatus.UI.ViewModel
         {
             get
             {
-                var _diff = Diff;
-                var sign = "-";
-                sign = _diff.TotalHours < 0 ? sign : "";
-                return $"{sign}{Math.Abs(_diff.TotalHours):0}:{Math.Abs(_diff.Minutes):00}";
+                if (cfg.DisplayType == DisplayType.Time)
+                {
+                    var sign = "-";
+                    sign = Diff.TotalHours < 0 ? sign : "";
+                    return $"{sign}{Math.Abs(Diff.TotalHours):0}:{Math.Abs(Diff.Minutes):00}";
+                }
+                else
+                {
+                    return $"{(decimal)Diff.TotalHours * (cfg.HourRate):N}";
+                }
             }
         }
 
