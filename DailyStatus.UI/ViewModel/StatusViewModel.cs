@@ -207,6 +207,36 @@ namespace DailyStatus.UI.ViewModel
             SaveSettings();
         }
 
+        public DisplayType DisplayType
+        {
+            get
+            {
+                return cfg.DisplayType;
+            }
+            set
+            {
+                cfg.DisplayType = value;
+                NotifyPropertyChanged(nameof(StatusString));
+                NotifyPropertyChanged(nameof(ContextMenu));
+                SaveSettings();
+            }
+        }
+
+        public decimal HourRate
+        {
+            get
+            {
+                return cfg.HourRate;
+            }
+            set
+            {
+                cfg.HourRate = value;
+                NotifyPropertyChanged(nameof(StatusString));
+                NotifyPropertyChanged(nameof(ContextMenu));
+                SaveSettings();
+            }
+        }
+
         public List<MenuItem> ContextMenu
         {
             get
@@ -222,7 +252,27 @@ namespace DailyStatus.UI.ViewModel
                     return item;
                 });
                 items.AddRange(workspaceItems);
-                items.Add(new MenuItem() { Header = "Minimize", Command = new RelayCommand((obj) => WindowState = WindowState.Minimized) });
+
+                items.Add(new MenuItem()
+                {
+                    Header = "Display:" + DisplayType,
+                    Command = new RelayCommand((_) =>
+                    {
+                        if (DisplayType == DisplayType.Money)
+                            DisplayType = DisplayType.Time;
+                        else DisplayType = DisplayType.Money;
+                    }),
+                    Background = new SolidColorBrush(Colors.DarkSlateBlue)
+                });
+                items.Add(new MenuItem()
+                {
+                    Header = "Hour rate: " + HourRate + "/h",
+                    Command = new RelayCommand((_) =>
+                    {
+                        // todo: change hour rate in a separate window
+                    })
+                });
+                items.Add(new MenuItem() { Header = "Minimize", Command = new RelayCommand((_) => WindowState = WindowState.Minimized) });
                 items.Add(new MenuItem() { Header = "Close", Command = CloseCommand });
                 return items;
             }
