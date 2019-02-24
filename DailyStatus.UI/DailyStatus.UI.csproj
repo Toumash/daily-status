@@ -186,10 +186,6 @@
       <Project>{835b2816-e1ef-409a-8b6c-eb6740796f83}</Project>
       <Name>DailyStatus.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DailyStatus\DailyStatus.csproj">
-      <Project>{3ac0a652-cd16-424d-b2e6-12d3b221109f}</Project>
-      <Name>DailyStatus</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
