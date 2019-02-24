@@ -9,57 +9,57 @@ using System.Windows.Media;
 
 namespace DailyStatus.UI.View
 {
-  /// <summary>
-  /// Interaction logic for StatusWindow.xaml
-  /// </summary>
-  public partial class StatusWindow : Window
-  {
-    public StatusWindow()
+    /// <summary>
+    /// Interaction logic for StatusWindow.xaml
+    /// </summary>
+    public partial class StatusWindow : Window
     {
-      InitializeComponent();
-
-      MouseDown += (s, e) =>
-      {
-        if (e.ChangedButton == MouseButton.Left)
-          DragMove();
-      };
-      Loaded += (s, e) =>
-      {
-        TogglProxy togglClient = new TogglProxy();
-        var apiToken = new WindowsCredentialManager().Get();
-        if (string.IsNullOrEmpty(apiToken))
+        public StatusWindow()
         {
-          do
-          {
-            var apiTokenPrompt = new ApiTokenPrompt
+            InitializeComponent();
+
+            MouseDown += (s, e) =>
             {
-              Owner = this
+                if (e.ChangedButton == MouseButton.Left)
+                    DragMove();
             };
-            var result = apiTokenPrompt.ShowDialog();
-
-            if (!result.HasValue || !result.Value)
+            Loaded += (s, e) =>
             {
-              this.Close();
-              return;
-            }
-            apiToken = apiTokenPrompt.ApiToken;
-            new WindowsCredentialManager().Save(apiToken);
-            togglClient.Configure(apiToken);
-          } while (togglClient.TestConnection());
-        }
-        else
-        {
-          togglClient.Configure(apiToken);
-        }
-        DataContext = new StatusViewModel(
-                 togglClient, new Common.Configuration.DailyStatusConfiguration());
-      };
-    }
+                TogglProxy togglClient = new TogglProxy();
+                var apiToken = new WindowsCredentialManager().Get();
+                if (string.IsNullOrEmpty(apiToken))
+                {
+                    do
+                    {
+                        var apiTokenPrompt = new ApiTokenPrompt
+                        {
+                            Owner = this
+                        };
+                        var result = apiTokenPrompt.ShowDialog();
 
-    private void ctxMenuClick_Close(object sender, RoutedEventArgs e)
-    {
-      Close();
-      Environment.Exit(0);
+                        if (!result.HasValue || !result.Value)
+                        {
+                            this.Close();
+                            return;
+                        }
+                        apiToken = apiTokenPrompt.ApiToken;
+                        new WindowsCredentialManager().Save(apiToken);
+                        togglClient.Configure(apiToken);
+                    } while (togglClient.TestConnection());
+                }
+                else
+                {
+                    togglClient.Configure(apiToken);
+                }
+                DataContext = new StatusViewModel(
+                   togglClient, new Common.Configuration.DailyStatusConfiguration());
+            };
+        }
+
+        private void ctxMenuClick_Close(object sender, RoutedEventArgs e)
+        {
+            Close();
+            Environment.Exit(0);
+        }
     }
-  }
 }
