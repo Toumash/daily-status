@@ -1,33 +1,23 @@
-﻿using DailyStatus.Common.Model;
+using DailyStatus.Common.Model;
 using DailyStatus.Configuration;
 using System.IO;
 using System.Xml.Serialization;
 
 namespace DailyStatus.Common.Configuration
 {
+    public enum DisplayType
+    {
+        Time,
+        Money
+    }
+
     public class DailyStatusConfiguration
     {
-        AppConfig _config = null;
+        public DisplayType DisplayType { get; set; }
+        public decimal HourRate { get; set; }
 
-        public AppConfig Config
-        {
-            get
-            {
-                if (_config == null)
-                {
-                    var serializer = new XmlSerializer(typeof(AppConfig));
-                    using (var fileStream = new FileStream("config.xml", FileMode.Open))
-                    {
-                        _config = (AppConfig)serializer.Deserialize(fileStream);
-                    }
-                }
-                return _config;
-            }
-        }
-
-        public WorkDay GetWorkDayConfig()
-        {
-            return Config.WorkDayConfig;
-        }
+        public int WorkDayStartHour { get; set; }
+        public int HoursADay { get; set; }
+        public long WorkspaceId { get; set; }
     }
 }

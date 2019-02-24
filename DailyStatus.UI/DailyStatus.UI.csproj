@@ -110,11 +110,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Converters\TimeSpanToPlusOrMinusTimeConverter.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="SettingsManager.cs" />
     <Compile Include="ViewModel\StatusViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="View\HourRatePrompt.xaml.cs">
+      <DependentUpon>HourRatePrompt.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ApiTokenPrompt.xaml.cs">
       <DependentUpon>ApiTokenPrompt.xaml</DependentUpon>
@@ -163,6 +167,10 @@
     <Page Include="Resources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\HourRatePrompt.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\ApiTokenPrompt.xaml">
       <SubType>Designer</SubType>
