@@ -14,6 +14,7 @@ using System.Windows.Input;
 using DailyStatus.UI.WpfExtensions;
 using System.Windows.Controls;
 using System.Collections.Generic;
+using DailyStatus.UI.Properties;
 
 namespace DailyStatus.UI.ViewModel
 {
@@ -23,7 +24,7 @@ namespace DailyStatus.UI.ViewModel
 
         bool firstSync = true;
         readonly TogglProxy _togglClient;
-        DailyStatusConfiguration _config;
+        DailyStatusConfiguration cfg;
         readonly DispatcherTimer _timer;
 
         TimeSpan _diff;
@@ -48,9 +49,16 @@ namespace DailyStatus.UI.ViewModel
             {
                 if (SelectedWorkspace == value) return;
                 _selectedWorkspace = value;
+                cfg.WorkspaceId = _selectedWorkspace.Id;
+                SaveSettings();
                 NotifyPropertyChanged(nameof(SelectedWorkspace));
                 ScheduleInstantRefresh();
             }
+        }
+
+        public void SaveSettings()
+        {
+            SettingsManager.SaveSettings(cfg);
         }
 
         // Returns string because we would like to configure the display type
@@ -163,7 +171,7 @@ namespace DailyStatus.UI.ViewModel
             TodayHours = TimeSpan.FromHours(2);
             Workspaces = new ObservableCollection<Workspace>()
                 {
-                    new Workspace() { Name ="Nexpertis"}
+                    new Workspace() { Name ="."}
                 };
             SelectedWorkspace = Workspaces.First();
         }
@@ -171,7 +179,7 @@ namespace DailyStatus.UI.ViewModel
         public StatusViewModel(TogglProxy togglClient, DailyStatusConfiguration configuration)
         {
             _togglClient = togglClient;
-            _config = configuration;
+            cfg = configuration;
 
             Init();
 
@@ -189,6 +197,8 @@ namespace DailyStatus.UI.ViewModel
         {
             SelectedWorkspace = w;
             NotifyPropertyChanged(nameof(ContextMenu));
+            cfg.WorkspaceId = w.Id;
+            SaveSettings();
         }
 
         public List<MenuItem> ContextMenu
@@ -245,7 +255,7 @@ namespace DailyStatus.UI.ViewModel
                 if (firstSync)
                 {
                     Workspaces = new ObservableCollection<Workspace>(await _togglClient.GetAllWorkspaces());
-                    SelectedWorkspace = Workspaces.First();
+                    SelectedWorkspace = Workspaces.FirstOrDefault(w => w.Id == cfg.WorkspaceId) ?? Workspaces.First();
                     NotifyPropertyChanged(nameof(ContextMenu));
                 }
                 _togglClient.SetWorkspace(SelectedWorkspace);
@@ -253,7 +263,8 @@ namespace DailyStatus.UI.ViewModel
                 TodayHours = actual.TodaysHours;
                 IsTimerActive = actual.IsTimerActive;
 
-                var expected = _togglClient.GetExpectedWorkingTime(_config.GetWorkDayConfig());
+                var workday = new WorkDay(cfg.NumberOfWorkingHoursPerDay, cfg.WorkDayStartHour);
+                var expected = _togglClient.GetExpectedWorkingTime(workday);
                 Diff = _togglClient.GetDifference(expected: expected, sum: actual.TimeInMonth);
                 LastUpdateTime = DateTime.Now;
                 OfflineMode = false;

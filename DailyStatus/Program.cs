@@ -1,4 +1,4 @@
-﻿namespace DailyStatus
+namespace DailyStatus
 {
     using System;
     using System.Threading;
@@ -27,7 +27,7 @@
             bool authorized = false;
             var togglClient = new TogglProxy();
 
-            var workDay = new DailyStatusConfiguration().GetWorkDayConfig();
+            var config = new DailyStatusConfiguration();
 
             while (!authorized)
             {
@@ -60,8 +60,8 @@
             while (true)
             {
                 var expected = new WorkDaysCalculator()
-                    .ExpectedWorkedDays(TimeSpan.FromHours(workDay.WorkDayStartHour),
-                                        workDay.NumberOfWorkingHoursPerDay);
+                    .ExpectedWorkedDays(TimeSpan.FromHours(config.WorkDayStartHour),
+                                        config.NumberOfWorkingHoursPerDay);
 
                 var sum = togglClient.GetStatus().Result.TimeInMonth;
                 char sign = '-';
@@ -79,8 +79,8 @@
                 var diff = expected - sum;
 
                 Console.Clear();
-                Console.WriteLine($"You should worked:\t{expected.ToWorkingTimeString(workDay.NumberOfWorkingHoursPerDay)}");
-                Console.Write($"\rYou worked:\t\t{sum.ToWorkingTimeString(workDay.NumberOfWorkingHoursPerDay)}\tDiff: {sign}{diff.Duration().ToWorkingTimeString(workDay.NumberOfWorkingHoursPerDay).PadRight(20)}");
+                Console.WriteLine($"You should worked:\t{expected.ToWorkingTimeString(config.NumberOfWorkingHoursPerDay)}");
+                Console.Write($"\rYou worked:\t\t{sum.ToWorkingTimeString(config.NumberOfWorkingHoursPerDay)}\tDiff: {sign}{diff.Duration().ToWorkingTimeString(config.NumberOfWorkingHoursPerDay).PadRight(20)}");
 
                 using (var progress = new ConsoleProgressBar())
                 {

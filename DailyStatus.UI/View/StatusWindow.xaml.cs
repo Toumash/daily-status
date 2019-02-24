@@ -51,8 +51,8 @@ namespace DailyStatus.UI.View
                 {
                     togglClient.Configure(apiToken);
                 }
-                DataContext = new StatusViewModel(
-                   togglClient, new Common.Configuration.DailyStatusConfiguration());
+                var cfg = SettingsManager.LoadSettings();
+                DataContext = new StatusViewModel(togglClient, cfg);
             };
         }
 
