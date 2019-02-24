@@ -15,6 +15,7 @@ using DailyStatus.UI.WpfExtensions;
 using System.Windows.Controls;
 using System.Collections.Generic;
 using DailyStatus.UI.Properties;
+using DailyStatus.UI.View;
 
 namespace DailyStatus.UI.ViewModel
 {
@@ -182,7 +183,7 @@ namespace DailyStatus.UI.ViewModel
             SelectedWorkspace = Workspaces.First();
         }
 
-        public StatusViewModel(TogglProxy togglClient, DailyStatusConfiguration configuration)
+        public StatusViewModel(TogglProxy togglClient, DailyStatusConfiguration configuration, Window window)
         {
             _togglClient = togglClient;
             cfg = configuration;
@@ -196,6 +197,7 @@ namespace DailyStatus.UI.ViewModel
             _timer.Tick += async (s, e) => await RefreshData();
             _timer.Start();
             ScheduleInstantRefresh();
+            Window = window;
         }
 
 
@@ -269,7 +271,14 @@ namespace DailyStatus.UI.ViewModel
                     Header = "Hour rate: " + HourRate + "/h",
                     Command = new RelayCommand((_) =>
                     {
-                        // todo: change hour rate in a separate window
+
+                        var prompt = new HourRatePrompt
+                        {
+                            Owner = this.Window
+                        };
+                        prompt.ShowDialog();
+                        var newHourRate = prompt.HourRate;
+                        HourRate = newHourRate;
                     })
                 });
                 items.Add(new MenuItem() { Header = "Minimize", Command = new RelayCommand((_) => WindowState = WindowState.Minimized) });
@@ -288,6 +297,8 @@ namespace DailyStatus.UI.ViewModel
                 NotifyPropertyChanged(nameof(WindowState));
             }
         }
+
+        public Window Window { get; }
 
         void Init()
         {

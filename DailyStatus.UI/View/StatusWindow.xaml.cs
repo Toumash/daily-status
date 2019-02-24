@@ -52,7 +52,7 @@ namespace DailyStatus.UI.View
                     togglClient.Configure(apiToken);
                 }
                 var cfg = SettingsManager.LoadSettings();
-                DataContext = new StatusViewModel(togglClient, cfg);
+                DataContext = new StatusViewModel(togglClient, cfg,this);
             };
         }
 
