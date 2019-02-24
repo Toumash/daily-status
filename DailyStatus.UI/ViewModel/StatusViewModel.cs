@@ -239,6 +239,21 @@ namespace DailyStatus.UI.ViewModel
             }
         }
 
+        public int HoursADay
+        {
+            get
+            {
+                return cfg.HoursADay;
+            }
+            set
+            {
+                cfg.HoursADay = value;
+                NotifyPropertyChanged(nameof(StatusString));
+                NotifyPropertyChanged(nameof(ContextMenu));
+                SaveSettings();
+            }
+        }
+
         public List<MenuItem> ContextMenu
         {
             get
@@ -271,14 +286,35 @@ namespace DailyStatus.UI.ViewModel
                     Header = "Hour rate: " + HourRate + "/h",
                     Command = new RelayCommand((_) =>
                     {
-
-                        var prompt = new HourRatePrompt
+                        var prompt = new DecimalPrompt
                         {
-                            Owner = this.Window
+                            Owner = this.Window,
+                            Value = cfg.HourRate,
+                            WindowTitle = "Hour rate",
+                            WindowPrompt = "$$$ / hour: "
                         };
+
                         prompt.ShowDialog();
-                        var newHourRate = prompt.HourRate;
+                        var newHourRate = prompt.Value;
                         HourRate = newHourRate;
+                    })
+                });
+                items.Add(new MenuItem()
+                {
+                    Header = "Hours a day: " + cfg.HoursADay,
+                    Command = new RelayCommand((_) =>
+                    {
+                        var prompt = new DecimalPrompt
+                        {
+                            Owner = this.Window,
+                            Value = HoursADay,
+                            WindowTitle = "Hours a day",
+                            WindowPrompt = "hours / day: "
+                        };
+
+                        prompt.ShowDialog();
+                        var newHoursADayValue = prompt.Value;
+                        HoursADay = (int)newHoursADayValue;
                     })
                 });
                 items.Add(new MenuItem() { Header = "Minimize", Command = new RelayCommand((_) => WindowState = WindowState.Minimized) });
@@ -330,7 +366,7 @@ namespace DailyStatus.UI.ViewModel
                 TodayHours = actual.TodaysHours;
                 IsTimerActive = actual.IsTimerActive;
 
-                var workday = new WorkDay(cfg.NumberOfWorkingHoursPerDay, cfg.WorkDayStartHour);
+                var workday = new WorkDay(cfg.HoursADay, cfg.WorkDayStartHour);
                 var expected = _togglClient.GetExpectedWorkingTime(workday);
                 Diff = _togglClient.GetDifference(expected: expected, sum: actual.TimeInMonth);
                 LastUpdateTime = DateTime.Now;

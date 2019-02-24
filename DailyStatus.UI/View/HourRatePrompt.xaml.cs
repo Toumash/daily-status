@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,17 +15,37 @@ using System.Windows.Shapes;
 
 namespace DailyStatus.UI.View
 {
-    /// <summary>
-    /// Interaction logic for ApiTokenPrompt.xaml
-    /// </summary>
-    public partial class HourRatePrompt : Window
+    public partial class DecimalPrompt : Window, INotifyPropertyChanged
     {
-        public HourRatePrompt()
+        private string _windowTitle;
+        private string _windowPrompt;
+
+        public DecimalPrompt()
         {
             InitializeComponent();
+            DataContext = this;
         }
 
-        public decimal HourRate
+        public string WindowTitle
+        {
+            get { return _windowTitle; }
+            set
+            {
+                _windowTitle = value;
+                NotifyPropertyChanged(nameof(WindowTitle));
+            }
+        }
+        public string WindowPrompt
+        {
+            get { return _windowPrompt; }
+            set
+            {
+                _windowPrompt = value;
+                NotifyPropertyChanged(nameof(WindowPrompt));
+            }
+        }
+
+        public decimal Value
         {
             get
             {
@@ -34,12 +55,19 @@ namespace DailyStatus.UI.View
             set
             {
                 ResponseTextBox.Text = value.ToString();
+                NotifyPropertyChanged(nameof(Value));
             }
         }
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = true;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        void NotifyPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

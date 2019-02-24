@@ -17,7 +17,7 @@ namespace DailyStatus.Common.Configuration
         public decimal HourRate { get; set; }
 
         public int WorkDayStartHour { get; set; }
-        public int NumberOfWorkingHoursPerDay { get; set; }
+        public int HoursADay { get; set; }
         public long WorkspaceId { get; set; }
     }
 }

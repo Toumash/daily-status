@@ -18,7 +18,7 @@ namespace DailyStatus.UI
             cfg.DisplayType = displayType;
             cfg.HourRate = stg.hour_rate;
             cfg.WorkDayStartHour = stg.start_hour;
-            cfg.NumberOfWorkingHoursPerDay = stg.hours_a_day;
+            cfg.HoursADay = stg.hours_a_day;
             cfg.WorkspaceId = stg.api_workspaceid;
             return cfg;
         }
@@ -30,7 +30,7 @@ namespace DailyStatus.UI
             stg.api_workspaceid = cfg.WorkspaceId;
             stg.hour_rate = cfg.HourRate;
             stg.start_hour = cfg.WorkDayStartHour;
-            stg.hours_a_day = cfg.NumberOfWorkingHoursPerDay;
+            stg.hours_a_day = cfg.HoursADay;
             stg.Save();
         }
     }
