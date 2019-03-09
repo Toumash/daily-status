@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DailyStatus.Common.BLL;
 using System;
 using System.Collections.Generic;
@@ -55,6 +55,14 @@ namespace DailyStatus.Common.BLL.Tests
         {
             var actual = new WorkDaysCalculator().ExpectedWorkedDays(new DateTime(2018, 03, 26, 11, 0, 0), TimeSpan.FromHours(10), 8);
             var expected = TimeSpan.FromHours(17 * 8 + 1);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void Given8OfMarchStartOdDay_ExpWorkDaysShoudReturn5Days5Hours_On8March15()
+        {
+            var actual = new WorkDaysCalculator().ExpectedWorkedDays(new DateTime(2019, 03, 8, 15, 0, 0), TimeSpan.FromHours(10), 8);
+            var expected = TimeSpan.FromHours(5 * 8 + 5);
             Assert.AreEqual(expected, actual);
         }
     }

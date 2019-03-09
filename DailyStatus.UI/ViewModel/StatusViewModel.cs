@@ -200,7 +200,6 @@ namespace DailyStatus.UI.ViewModel
             Window = window;
         }
 
-
         public void SelectWorkSpace(Workspace w)
         {
             SelectedWorkspace = w;
