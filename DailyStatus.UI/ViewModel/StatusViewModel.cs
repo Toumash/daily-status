@@ -316,6 +316,24 @@ namespace DailyStatus.UI.ViewModel
                         HoursADay = (int)newHoursADayValue;
                     })
                 });
+                items.Add(new MenuItem()
+                {
+                    Header = "Hour of start: " + cfg.WorkDayStartHour,
+                    Command = new RelayCommand((_) =>
+                    {
+                        var prompt = new DecimalPrompt
+                        {
+                            Owner = this.Window,
+                            Value = cfg.WorkDayStartHour,
+                            WindowTitle = "Day starts at",
+                            WindowPrompt = "Day start at x hour: "
+                        };
+
+                        prompt.ShowDialog();
+                        var newDayStartHour = prompt.Value;
+                        WorkDayStartHour = (int)newDayStartHour;
+                    })
+                });
                 items.Add(new MenuItem() { Header = "Minimize", Command = new RelayCommand((_) => WindowState = WindowState.Minimized) });
                 items.Add(new MenuItem() { Header = "Close", Command = CloseCommand });
                 return items;
@@ -334,6 +352,18 @@ namespace DailyStatus.UI.ViewModel
         }
 
         public Window Window { get; }
+        public int WorkDayStartHour
+        {
+            get { return cfg.WorkDayStartHour; }
+            set
+            {
+                cfg.WorkDayStartHour = value;
+                SaveSettings();
+                this.NotifyPropertyChanged(nameof(WorkDayStartHour));
+                this.NotifyPropertyChanged(nameof(ContextMenu));
+            }
+        }
+
 
         void Init()
         {
