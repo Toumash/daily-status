@@ -1,5 +1,5 @@
 # DailyStatus!
-A Windows .NET Framework application telling you how much work you have to efficiently do today to be 100% full time from your contract (configurble).
+A Windows application telling you how much overtime you do have in the current month based on real-time data from Toggl.com
 
 ![](daily-status-demo.gif)
 
