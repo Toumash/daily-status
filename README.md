@@ -17,15 +17,17 @@ A Windows application telling you how much overtime you do have in the current m
 # Requirements 
 
 - **.NET Framework 4.6.1**  
-- Toggl Free Acccount [toggl.com](https://toggl.com/) **Profile Options** -> On the bottom of the page will be an api key :)
+- Toggl Acccount (any free/paid) [toggl.com](https://toggl.com/) 
+
+# Installation
+Just run the program.
+When you run it for the first time there will be a api key prompt. 
+You will find the api key in toggl.com. Go to the **Profile Options** on  the bottom of the page, and there will be a long string o text 
 
 
 # How to contribute?
-Just write an issue which will reliably show the problem that you faced. If that will be understood and approved you can be sure, that you will be added to the contributors file ;)
+Just write an issue which will reliably show the problem that you faced. If that will be understood and approved you can be sure, that we will take a look :)
 
-
-# Contributors
-- [Sawair](https://github.com/Sawair) - expected time algorithm proposal
 
 # Authors
 Icons made by:
