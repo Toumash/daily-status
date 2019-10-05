@@ -2,6 +2,7 @@ using DailyStatus.Common.Configuration;
 using DailyStatus.UI.Properties;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,7 @@ namespace DailyStatus.UI
             cfg.WorkDayStartHour = stg.start_hour;
             cfg.HoursADay = stg.hours_a_day;
             cfg.WorkspaceId = stg.api_workspaceid;
+            cfg.Holidays = stg.holidays.Split(',').Select(str => DateTime.Parse(str, CultureInfo.InvariantCulture)).ToList();
             return cfg;
         }
 
@@ -31,6 +33,7 @@ namespace DailyStatus.UI
             stg.hour_rate = cfg.HourRate;
             stg.start_hour = cfg.WorkDayStartHour;
             stg.hours_a_day = cfg.HoursADay;
+            stg.holidays = string.Join(",", cfg.Holidays.Select(d => d.ToString(CultureInfo.InvariantCulture)));
             stg.Save();
         }
     }

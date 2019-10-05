@@ -7,15 +7,15 @@ namespace DailyStatus.Common.BLL
 {
     public class WorkDaysCalculator
     {
-        public TimeSpan ExpectedWorkedDays(DateTime todayWithHours, TimeSpan workDayStartHour, double numberOfWorkingHoursPerDay, params DateTime[] holidaysDuringWeek)
+        public TimeSpan MonthExpectedHours(DateTime todayWithHours, TimeSpan workDayStartHour, double numberOfWorkingHoursPerDay, params DateTime[] holidays)
         {
             var today = todayWithHours.Date;
             var first = new DateTime(today.Year, today.Month, 1);
             var workDayStart = today + workDayStartHour;
 
-            var worktime = TimeSpan.FromHours(first.BusinessDaysUntil(today, holidaysDuringWeek) * numberOfWorkingHoursPerDay);
+            var worktime = TimeSpan.FromHours(first.BusinessDaysUntil(today, holidays) * numberOfWorkingHoursPerDay);
 
-            if (today.DayOfWeek != DayOfWeek.Saturday && today.DayOfWeek != DayOfWeek.Sunday && !holidaysDuringWeek.Contains(today))
+            if (today.DayOfWeek != DayOfWeek.Saturday && today.DayOfWeek != DayOfWeek.Sunday && !holidays.Contains(today))
             {
                 worktime -= TimeSpan.FromHours(numberOfWorkingHoursPerDay);
                 var diff = (todayWithHours - workDayStart).TotalHours;
@@ -30,7 +30,7 @@ namespace DailyStatus.Common.BLL
 
         public TimeSpan ExpectedWorkedDays(TimeSpan workDayStartHour, double numberOfWorkingHoursPerDay, params DateTime[] holidaysDuringWeek)
         {
-            return ExpectedWorkedDays(DateTime.Now, workDayStartHour, numberOfWorkingHoursPerDay, holidaysDuringWeek);
+            return MonthExpectedHours(DateTime.Now, workDayStartHour, numberOfWorkingHoursPerDay, holidaysDuringWeek);
         }
     }
 
