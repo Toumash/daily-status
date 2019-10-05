@@ -12,7 +12,7 @@ namespace DailyStatus.UI.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.9.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.4.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -80,6 +80,19 @@ namespace DailyStatus.UI.Properties {
             }
             set {
                 this["hours_a_day"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1/01/2019,01/06/2019,04/21/2019,04/22/2019,05/01/2019,05/03/2019,06/09/2019,06/20" +
+            "/2019,08/15/2019,11/01/2019,11/11/2019,12/25/2019,12/26/2019")]
+        public string holidays {
+            get {
+                return ((string)(this["holidays"]));
+            }
+            set {
+                this["holidays"] = value;
             }
         }
     }

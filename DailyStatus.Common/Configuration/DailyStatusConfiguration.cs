@@ -1,5 +1,7 @@
 using DailyStatus.Common.Model;
 using DailyStatus.Configuration;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 
@@ -19,5 +21,6 @@ namespace DailyStatus.Common.Configuration
         public int WorkDayStartHour { get; set; }
         public int HoursADay { get; set; }
         public long WorkspaceId { get; set; }
+        public List<DateTime> Holidays { get; set; }
     }
 }
