@@ -40,6 +40,13 @@ namespace DailyStatus.Common
                                      dayConfig.NumberOfWorkingHoursPerDay);
         }
 
+        public TimeSpan GetExpectedWorkingTime(WorkDay dayConfig, DateTime since)
+        {
+            return new WorkDaysCalculator()
+                 .ExpectedWorkedDaysSince(since,TimeSpan.FromHours(dayConfig.WorkDayStartHour),
+                                     dayConfig.NumberOfWorkingHoursPerDay);
+        }
+
         public TimeSpan GetDifference(TimeSpan expected, TimeSpan sum)
         {
             var diff = sum - expected;
@@ -68,14 +75,17 @@ namespace DailyStatus.Common
 
         public async Task<TogglStatus> GetStatus()
         {
+            return await GetStatus(new DateTimeOffset(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1)));
+        }
+
+        public async Task<TogglStatus> GetStatus(DateTimeOffset since)
+        {
             try
             {
                 var workspace = await GetWorkspace();
-                var today = DateTime.Today;
-                var offset = new DateTimeOffset(new DateTime(today.Year, today.Month, 1));
-                var entries = await _togglApi.TimeEntries.GetAllSince(offset)
+                var entries = await _togglApi.TimeEntries.GetAllSince(since)
                     .SelectMany(e => e)
-                    .Where(e => !e.ServerDeletedAt.HasValue && e.Start > offset)
+                    .Where(e => !e.ServerDeletedAt.HasValue && e.Start > since)
                     .Where(e => e.WorkspaceId == workspace.Id)
                     .ToList();
                 var sumSeconds = entries.Where(e => e.Duration.HasValue)

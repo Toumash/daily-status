@@ -95,5 +95,17 @@ namespace DailyStatus.UI.Properties {
                 this["holidays"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2019-09-01")]
+        public global::System.DateTime sum_since {
+            get {
+                return ((global::System.DateTime)(this["sum_since"]));
+            }
+            set {
+                this["sum_since"] = value;
+            }
+        }
     }
 }

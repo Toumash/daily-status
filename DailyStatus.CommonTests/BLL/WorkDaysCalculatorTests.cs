@@ -73,7 +73,7 @@ namespace DailyStatus.Common.BLL.Tests
                 todayWithHours: new DateTime(2019, 11, 12),
                 workDayStartHour: TimeSpan.FromHours(10),
                 numberOfWorkingHoursPerDay: 8,
-                new DateTime(2019, 11, 11));
+               new DateTime(2019, 11, 11));
             var expected = TimeSpan.FromHours(6 * 8);
             Assert.AreEqual(expected, actual);
         }

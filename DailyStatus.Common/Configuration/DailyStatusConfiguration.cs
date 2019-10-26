@@ -22,5 +22,6 @@ namespace DailyStatus.Common.Configuration
         public int HoursADay { get; set; }
         public long WorkspaceId { get; set; }
         public List<DateTime> Holidays { get; set; }
+        public DateTime SumSince { get; set; }
     }
 }

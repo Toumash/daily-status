@@ -253,6 +253,21 @@ namespace DailyStatus.UI.ViewModel
             }
         }
 
+        public DateTime SumSince
+        {
+            get
+            {
+                return cfg.SumSince;
+            }
+            set
+            {
+                cfg.SumSince = value;
+                NotifyPropertyChanged(nameof(SumSince));
+                NotifyPropertyChanged(nameof(ContextMenu));
+                SaveSettings();
+            }
+        }
+
         public List<MenuItem> ContextMenu
         {
             get
@@ -334,6 +349,23 @@ namespace DailyStatus.UI.ViewModel
                         WorkDayStartHour = (int)newDayStartHour;
                     })
                 });
+                items.Add(new MenuItem()
+                {
+                    Header = "Sum since: " + cfg.SumSince.ToString("dd.MM.yyyy"),
+                    Command = new RelayCommand((_) =>
+                    {
+                        var prompt = new DateTimeSincePrompt
+                        {
+                            Owner = this.Window,
+                            Date = cfg.SumSince,
+                            WindowTitle = "Sum hours since",
+                            WindowPrompt = "Sum since: "
+                        };
+
+                        prompt.ShowDialog();
+                        SumSince = prompt.Date ?? new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+                    })
+                });
                 items.Add(new MenuItem() { Header = "Minimize", Command = new RelayCommand((_) => WindowState = WindowState.Minimized) });
                 items.Add(new MenuItem() { Header = "Close", Command = CloseCommand });
                 return items;
@@ -391,12 +423,13 @@ namespace DailyStatus.UI.ViewModel
                     NotifyPropertyChanged(nameof(ContextMenu));
                 }
                 _togglClient.SetWorkspace(SelectedWorkspace);
-                var actual = (await _togglClient.GetStatus());
+                var since = SumSince;
+                var actual = (await _togglClient.GetStatus(new DateTimeOffset(since)));
                 TodayHours = actual.TodaysHours;
                 IsTimerActive = actual.IsTimerActive;
 
-                var workday = new WorkDay(cfg.HoursADay, cfg.WorkDayStartHour);
-                var expected = _togglClient.GetExpectedWorkingTime(workday);
+                var workday = new WorkDay(HoursADay, WorkDayStartHour);
+                var expected = _togglClient.GetExpectedWorkingTime(workday, since);
                 Diff = _togglClient.GetDifference(expected: expected, sum: actual.TimeInMonth);
                 LastUpdateTime = DateTime.Now;
                 OfflineMode = false;

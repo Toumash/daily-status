@@ -22,6 +22,7 @@ namespace DailyStatus.UI
             cfg.HoursADay = stg.hours_a_day;
             cfg.WorkspaceId = stg.api_workspaceid;
             cfg.Holidays = stg.holidays.Split(',').Select(str => DateTime.Parse(str, CultureInfo.InvariantCulture)).ToList();
+            cfg.SumSince = stg.sum_since;
             return cfg;
         }
 
@@ -34,6 +35,7 @@ namespace DailyStatus.UI
             stg.start_hour = cfg.WorkDayStartHour;
             stg.hours_a_day = cfg.HoursADay;
             stg.holidays = string.Join(",", cfg.Holidays.Select(d => d.ToString(CultureInfo.InvariantCulture)));
+            stg.sum_since = cfg.SumSince;
             stg.Save();
         }
     }

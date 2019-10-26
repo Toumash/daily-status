@@ -9,8 +9,12 @@ namespace DailyStatus.Common.BLL
     {
         public TimeSpan MonthExpectedHours(DateTime todayWithHours, TimeSpan workDayStartHour, double numberOfWorkingHoursPerDay, params DateTime[] holidays)
         {
+            return TimeExpectedHours(new DateTime(todayWithHours.Year, todayWithHours.Month, 1), todayWithHours, workDayStartHour, numberOfWorkingHoursPerDay, holidays);
+        }
+        public TimeSpan TimeExpectedHours(DateTime since, DateTime todayWithHours, TimeSpan workDayStartHour, double numberOfWorkingHoursPerDay, params DateTime[] holidays)
+        {
             var today = todayWithHours.Date;
-            var first = new DateTime(today.Year, today.Month, 1);
+            var first = since;
             var workDayStart = today + workDayStartHour;
 
             var worktime = TimeSpan.FromHours(first.BusinessDaysUntil(today, holidays) * numberOfWorkingHoursPerDay);
@@ -31,6 +35,11 @@ namespace DailyStatus.Common.BLL
         public TimeSpan ExpectedWorkedDays(TimeSpan workDayStartHour, double numberOfWorkingHoursPerDay, params DateTime[] holidaysDuringWeek)
         {
             return MonthExpectedHours(DateTime.Now, workDayStartHour, numberOfWorkingHoursPerDay, holidaysDuringWeek);
+        }
+
+        internal TimeSpan ExpectedWorkedDaysSince(DateTime since, TimeSpan workDayStartHour, double numberOfWorkingHoursPerDay, params DateTime[] holidaysDuringWeek)
+        {
+            return TimeExpectedHours(since, DateTime.Now, workDayStartHour, numberOfWorkingHoursPerDay, holidaysDuringWeek);
         }
     }
 
