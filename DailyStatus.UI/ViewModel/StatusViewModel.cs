@@ -391,12 +391,13 @@ namespace DailyStatus.UI.ViewModel
                     NotifyPropertyChanged(nameof(ContextMenu));
                 }
                 _togglClient.SetWorkspace(SelectedWorkspace);
-                var actual = (await _togglClient.GetStatus());
+                var since = new DateTime(2019, 9, 1);
+                var actual = (await _togglClient.GetStatus(new DateTimeOffset(since)));
                 TodayHours = actual.TodaysHours;
                 IsTimerActive = actual.IsTimerActive;
 
                 var workday = new WorkDay(cfg.HoursADay, cfg.WorkDayStartHour);
-                var expected = _togglClient.GetExpectedWorkingTime(workday);
+                var expected = _togglClient.GetExpectedWorkingTime(workday,since);
                 Diff = _togglClient.GetDifference(expected: expected, sum: actual.TimeInMonth);
                 LastUpdateTime = DateTime.Now;
                 OfflineMode = false;
