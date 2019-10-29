@@ -16,6 +16,8 @@ using System.Windows.Controls;
 using System.Collections.Generic;
 using DailyStatus.UI.Properties;
 using DailyStatus.UI.View;
+using Onova;
+using Onova.Services;
 
 namespace DailyStatus.UI.ViewModel
 {
@@ -198,6 +200,34 @@ namespace DailyStatus.UI.ViewModel
             _timer.Start();
             ScheduleInstantRefresh();
             Window = window;
+
+            Task.Factory.StartNew(async () =>
+            {
+                await Task.Delay(1000);
+                // Configure to look for packages in specified directory and treat them as zips
+                using (var manager = new UpdateManager(
+                    new GithubPackageResolver("Toumash", "daily-status", "*.zip"),
+                    new ZipPackageExtractor()))
+                {
+                    // Check for updates
+                    var check = await manager.CheckForUpdatesAsync();
+                    // If there are none, notify user and return
+                    if (!check.CanUpdate)
+                    {
+                        return;
+                    }
+
+                    if (MessageBox.Show("Would you like to install an update?", "Update available", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    {
+                        // Prepare the latest update
+                        await manager.PrepareUpdateAsync(check.LastVersion);
+
+                        // Launch updater and exit
+                        manager.LaunchUpdater(check.LastVersion);
+                        Environment.Exit(0);
+                    }
+                }
+            });
         }
 
         public void SelectWorkSpace(Workspace w)
