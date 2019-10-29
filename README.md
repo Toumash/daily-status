@@ -23,6 +23,8 @@ A Windows application telling you how much overtime you do have in the current m
 Just run the program.
 When you run it for the first time there will be a api key prompt. 
 You will find the api key in toggl.com. Go to the **Profile Options** on  the bottom of the page, and there will be a long string o text 
+![image](https://user-images.githubusercontent.com/9840635/67794153-7b1e9000-fa7c-11e9-8a82-e2cacd722e45.png)
+![image](https://user-images.githubusercontent.com/9840635/67794074-575b4a00-fa7c-11e9-8032-0c10ded38288.png)
 
 
 # How to contribute?
