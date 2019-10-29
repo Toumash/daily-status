@@ -18,6 +18,7 @@ using DailyStatus.UI.Properties;
 using DailyStatus.UI.View;
 using Onova;
 using Onova.Services;
+using System.Reflection;
 
 namespace DailyStatus.UI.ViewModel
 {
@@ -217,7 +218,9 @@ namespace DailyStatus.UI.ViewModel
                         return;
                     }
 
-                    if (MessageBox.Show("Would you like to install an update?", "Update available", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    var currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                    var lastVersion = check.LastVersion.ToString();
+                    if (MessageBox.Show($"Would you like to install an update? Current version: {currentVersion}. Available version: {lastVersion}", "Update available", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                     {
                         // Prepare the latest update
                         await manager.PrepareUpdateAsync(check.LastVersion);
