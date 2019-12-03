@@ -399,6 +399,7 @@ namespace DailyStatus.UI.ViewModel
                         SumSince = prompt.Date ?? new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
                     })
                 });
+                items.Add(new MenuItem() { Header = DailyStatusBuildInfo.ShortVersion, Command = new RelayCommand((_)=> { })});
                 items.Add(new MenuItem() { Header = "Minimize", Command = new RelayCommand((_) => WindowState = WindowState.Minimized) });
                 items.Add(new MenuItem() { Header = "Close", Command = CloseCommand });
                 return items;
