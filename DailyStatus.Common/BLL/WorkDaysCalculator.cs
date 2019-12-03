@@ -24,7 +24,7 @@ namespace DailyStatus.Common.BLL
                 worktime -= TimeSpan.FromHours(numberOfWorkingHoursPerDay);
                 var diff = (todayWithHours - workDayStart).TotalHours;
 
-                diff = Math.Min(8d, Math.Max(0d, diff));
+                diff = Math.Min(numberOfWorkingHoursPerDay, Math.Max(0d, diff));
 
                 worktime += TimeSpan.FromHours(diff);
             }

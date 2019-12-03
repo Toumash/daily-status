@@ -89,5 +89,16 @@ namespace DailyStatus.Common.BLL.Tests
             var expected = TimeSpan.FromHours(3 * 8);
             Assert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        public void Given3_12_2019_12_00_With6HoursWeek_ShouldReturn8()
+        {
+            var actual = new WorkDaysCalculator().MonthExpectedHours(
+             todayWithHours: new DateTime(2019, 12, 3, 22, 30, 0),
+             workDayStartHour: TimeSpan.FromHours(10),
+             numberOfWorkingHoursPerDay: 6);
+            var expected = TimeSpan.FromHours(12);
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
