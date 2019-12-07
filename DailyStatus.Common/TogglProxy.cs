@@ -15,6 +15,7 @@ namespace DailyStatus.Common
         ITogglApi _togglApi;
         Workspace _workspace;
         List<Workspace> _workspaces;
+        private TogglReportApi _togglReportApi;
 
         public void SetWorkspace(Workspace workspace)
         {
@@ -43,7 +44,7 @@ namespace DailyStatus.Common
         public TimeSpan GetExpectedWorkingTime(WorkDay dayConfig, DateTime since)
         {
             return new WorkDaysCalculator()
-                 .ExpectedWorkedDaysSince(since,TimeSpan.FromHours(dayConfig.WorkDayStartHour),
+                 .ExpectedWorkedDaysSince(since, TimeSpan.FromHours(dayConfig.WorkDayStartHour),
                                      dayConfig.NumberOfWorkingHoursPerDay);
         }
 
@@ -75,25 +76,27 @@ namespace DailyStatus.Common
 
         public async Task<TogglStatus> GetStatus()
         {
-            return await GetStatus(new DateTimeOffset(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1)));
+            return await GetStatus(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1));
         }
 
-        public async Task<TogglStatus> GetStatus(DateTimeOffset since)
+        public async Task<TogglStatus> GetStatus(DateTime since)
         {
             try
             {
                 var workspace = await GetWorkspace();
-                var entries = await _togglApi.TimeEntries.GetAllSince(since)
+
+
+                var userId = await _togglReportApi.GetUserId();
+                var sum = await _togglReportApi.GetHoursSum(since, DateTime.Now.Date.AddDays(-1), userId, workspace.Id);
+                
+
+                var todayEntries = await _togglApi.TimeEntries.GetAllSince(DateTime.Now.Date)
                     .SelectMany(e => e)
-                    .Where(e => !e.ServerDeletedAt.HasValue && e.Start > since)
+                    .Where(e => !e.ServerDeletedAt.HasValue)
                     .Where(e => e.WorkspaceId == workspace.Id)
                     .ToList();
-                var sumSeconds = entries.Where(e => e.Duration.HasValue)
-                    .Sum(e => e.Duration.Value);
 
-                var sum = TimeSpan.FromSeconds(sumSeconds);
-
-                var currentTaskElement = entries
+                var currentTaskElement = todayEntries
                     .Where(e => !e.Duration.HasValue)
                     .FirstOrDefault();
 
@@ -104,7 +107,7 @@ namespace DailyStatus.Common
                 }
                 sum += currentTaskDuration;
 
-                var todayHoursSum = entries
+                var todayHoursSum = todayEntries
                     .Where(e => e.Start > DateTime.Today && e.Duration.HasValue)
                     .Sum(e => e.Duration.Value);
                 var todaysHours = TimeSpan.FromSeconds(todayHoursSum) + currentTaskDuration;
@@ -155,6 +158,7 @@ namespace DailyStatus.Common
 
         public void Configure(string key)
         {
+            _togglReportApi = new TogglReportApi(key);
             var credentials = Credentials.WithApiToken(key);
             _togglApi = TogglApiWith(credentials);
         }
@@ -168,7 +172,18 @@ namespace DailyStatus.Common
 
 
     [Serializable]
-    public class OfflineException : Exception
+    public class TogglApiException : Exception
+    {
+        public TogglApiException() { }
+        public TogglApiException(string message) : base(message) { }
+        public TogglApiException(string message, Exception inner) : base(message, inner) { }
+        protected TogglApiException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    }
+
+    [Serializable]
+    public class OfflineException : TogglApiException
     {
         public OfflineException() { }
         public OfflineException(string message) : base(message) { }
@@ -180,7 +195,7 @@ namespace DailyStatus.Common
 
 
     [Serializable]
-    public class BadRequestException : Exception
+    public class BadRequestException : TogglApiException
     {
         public BadRequestException() { }
         public BadRequestException(string message) : base(message) { }

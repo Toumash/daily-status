@@ -458,7 +458,7 @@ namespace DailyStatus.UI.ViewModel
                 }
                 _togglClient.SetWorkspace(SelectedWorkspace);
                 var since = SumSince;
-                var actual = (await _togglClient.GetStatus(new DateTimeOffset(since)));
+                var actual = (await _togglClient.GetStatus(since));
                 TodayHours = actual.TodaysHours;
                 IsTimerActive = actual.IsTimerActive;
 
