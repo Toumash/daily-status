@@ -1,0 +1,53 @@
+﻿using DailyStatus.Common.Model;
+using RestSharp;
+using RestSharp.Authenticators;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DailyStatus.Common
+{
+    public class TogglReportApi
+    {
+        private readonly string apiToken;
+
+        public TogglReportApi(string apiToken)
+        {
+            this.apiToken = apiToken;
+        }
+
+        public async Task<TimeSpan> GetHoursSum(DateTime since, DateTime until, long userId, long workspaceId)
+        {
+            var client = new RestClient("https://toggl.com/reports/api/v2/summary");
+            client.Authenticator = new HttpBasicAuthenticator(apiToken, "api_token");
+            var request = new RestRequest(Method.GET);
+            request.AddQueryParameter("user_agent", "toumash.dailystatus");
+            request.AddQueryParameter("workspace_id", workspaceId.ToString());
+            request.AddQueryParameter("since", since.ToString("yyyy-MM-dd"));
+            request.AddQueryParameter("until", until.ToString("yyyy-MM-dd"));
+            request.AddQueryParameter("user_ids", userId.ToString());
+            request.AddQueryParameter("grouping", "users");
+            request.AddQueryParameter("subgrouping", "clients");
+            var response = await client.ExecuteGetTaskAsync<TogglSummaryReportDto>(request);
+
+            var timeMs = response.Data?.Data?.First().Time;
+            if (timeMs == null)
+                throw new TogglApiException("data returned from toggle api was null." + response.Content);
+
+            return TimeSpan.FromMilliseconds(timeMs.Value);
+        }
+
+        public async Task<long> GetUserId()
+        {
+            var client = new RestClient("https://www.toggl.com/api/v8/me");
+            client.Authenticator = new HttpBasicAuthenticator(apiToken, "api_token");
+            var request = new RestRequest(Method.GET);
+            request.AddQueryParameter("user_agent", "toumash.dailystatus");
+            var response = await client.ExecuteGetTaskAsync<TogglMeDto>(request);
+
+            return response.Data.Data.Id;
+        }
+    }
+}
