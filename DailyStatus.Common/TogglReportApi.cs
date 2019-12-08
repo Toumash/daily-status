@@ -32,11 +32,8 @@ namespace DailyStatus.Common
             request.AddQueryParameter("subgrouping", "clients");
             var response = await client.ExecuteGetTaskAsync<TogglSummaryReportDto>(request);
 
-            var timeMs = response.Data?.Data?.First().Time;
-            if (timeMs == null)
-                throw new TogglApiException("data returned from toggle api was null." + response.Content);
-
-            return TimeSpan.FromMilliseconds(timeMs.Value);
+            var timeMs = response.Data?.Data?.FirstOrDefault()?.Time;
+            return TimeSpan.FromMilliseconds(timeMs.HasValue ? timeMs.Value : 0);
         }
 
         public async Task<long> GetUserId()

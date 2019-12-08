@@ -447,7 +447,7 @@ namespace DailyStatus.UI.ViewModel
         async Task RefreshData()
         {
             _timer.Interval = TimeSpan.FromSeconds(RefreshIntervalInSeconds);
-
+            _timer.Stop();
             try
             {
                 if (firstSync)
@@ -458,7 +458,7 @@ namespace DailyStatus.UI.ViewModel
                 }
                 _togglClient.SetWorkspace(SelectedWorkspace);
                 var since = SumSince;
-                var actual = (await _togglClient.GetStatus(since));
+                var actual = await _togglClient.GetStatus(since);
                 TodayHours = actual.TodaysHours;
                 IsTimerActive = actual.IsTimerActive;
 
@@ -476,6 +476,10 @@ namespace DailyStatus.UI.ViewModel
             {
                 // ignore, that is our exception and it happens occasionally
                 // https://github.com/Toumash/daily-status/issues/19
+            }
+            finally
+            {
+                _timer.Start();
             }
             firstSync = false;
         }
