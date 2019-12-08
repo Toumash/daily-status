@@ -5,25 +5,24 @@ A Windows application telling you how much overtime you do have in the current m
 
 # Features 
 
-- Money and Time display types
-- Near real time Toggl updates
-- Paste your toggl api key on first run & youre done!
+- One token setup!
+- Money/time display type
+- Automatic updates
 - Configurable
    - hour rate
    - hours a day
    - toggl workspace id
-   - display type
+
   
 # Requirements 
 
-- **.NET Framework 4.6.1**  
-- Toggl Acccount (any free/paid) [toggl.com](https://toggl.com/) 
+- Windows OS w/ .NET 4.6.1
+- Free Toggl Acccount [toggl.com](https://toggl.com/) 
 
 # Installation
-Just run the program.
+Copy the zip into some documents folder.
 When you run it for the first time there will be a api key prompt. 
-You will find the api key in toggl.com. Go to the **Profile Options** on  the bottom of the page, and there will be a long string o text 
-![image](https://user-images.githubusercontent.com/9840635/67794153-7b1e9000-fa7c-11e9-8a82-e2cacd722e45.png)
+You will find the api key in toggl.com. Go to the toggl [**Profile Options**](https://toggl.com/app/profile) 
 ![image](https://user-images.githubusercontent.com/9840635/67794074-575b4a00-fa7c-11e9-8032-0c10ded38288.png)
 
 
