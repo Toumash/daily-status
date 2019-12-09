@@ -1,5 +1,8 @@
 # DailyStatus!
-A Windows application telling you how much overtime you do have in the current month based on real-time data from Toggl.com
+App that tracks your overtime - free app for toggl.com
+![dailyststus](https://user-images.githubusercontent.com/9840635/70417914-8e048700-1a62-11ea-9a57-0e20db161b7f.png)
+
+Quick Demo:
 
 ![](daily-status-demo.gif)
 
