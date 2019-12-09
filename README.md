@@ -11,11 +11,8 @@ Quick Demo:
 - One token setup!
 - Money/time display type
 - Automatic updates
-- Configurable
-   - hour rate
-   - hours a day
-   - toggl workspace id
-
+- Works with multiple workspaces
+- Change how much hours you work per day
   
 # Requirements 
 
