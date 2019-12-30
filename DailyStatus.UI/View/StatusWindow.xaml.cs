@@ -1,11 +1,9 @@
-using DailyStatus.Common;
+using DailyStatus.Common.Configuration;
+using DailyStatus.Common.Services;
 using DailyStatus.UI.ViewModel;
 using System;
-using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace DailyStatus.UI.View
 {
@@ -25,7 +23,7 @@ namespace DailyStatus.UI.View
             };
             Loaded += (s, e) =>
             {
-                TogglProxy togglClient = new TogglProxy();
+                var togglClient = new TogglProxy();
                 var apiToken = new WindowsCredentialManager().Get();
                 if (string.IsNullOrEmpty(apiToken))
                 {

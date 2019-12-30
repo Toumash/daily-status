@@ -1,11 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DailyStatus.Common.Model
+﻿namespace DailyStatus.Common.Model
 {
     public class TogglMeDto
     {

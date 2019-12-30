@@ -86,20 +86,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\BadRequestException.cs" />
     <Compile Include="BLL\WorkDaysCalculator.cs" />
     <Compile Include="BuildInfo.cs" />
-    <Compile Include="Configuration\AppConfig.cs" />
     <Compile Include="Configuration\DailyStatusConfiguration.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
-    <Compile Include="Extensions\HoursFormatter.cs" />
     <Compile Include="Model\TogglMeDto.cs" />
     <Compile Include="Model\TogglReportSummaryDto.cs" />
     <Compile Include="Model\WorkDay.cs" />
     <Compile Include="Model\Workspace.cs" />
+    <Compile Include="Exceptions\OfflineException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TogglProxy.cs" />
-    <Compile Include="TogglReportApi.cs" />
-    <Compile Include="WindowsCredentialManager.cs" />
+    <Compile Include="Exceptions\TogglApiException.cs" />
+    <Compile Include="Services\TogglProxy.cs" />
+    <Compile Include="Services\TogglReportApi.cs" />
+    <Compile Include="Model\TogglStatus.cs" />
+    <Compile Include="Configuration\WindowsCredentialManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

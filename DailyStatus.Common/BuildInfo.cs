@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DailyStatus.Common
+﻿namespace DailyStatus.Common
 {
     public static class DailyStatusBuildInfo
     {

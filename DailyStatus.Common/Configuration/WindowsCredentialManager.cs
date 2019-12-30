@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CredentialManagement;
+﻿using CredentialManagement;
 
-namespace DailyStatus.Common
+namespace DailyStatus.Common.Configuration
 {
     public class WindowsCredentialManager
     {
