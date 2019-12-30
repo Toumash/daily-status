@@ -38,7 +38,7 @@ namespace DailyStatus.Common.Services
         public TimeSpan GetExpectedWorkingTime(WorkDay dayConfig, DateTime since, List<DateTime> holidays)
         {
             return new WorkDaysCalculator()
-                 .GetExpectedWorkedTime(since, TimeSpan.FromHours(dayConfig.WorkDayStartHour),
+                 .TimeExpectedHours(since, DateTime.Now, TimeSpan.FromHours(dayConfig.WorkDayStartHour),
                                      dayConfig.NumberOfWorkingHoursPerDay, holidays);
         }
 

@@ -89,10 +89,8 @@
     <Compile Include="Exceptions\BadRequestException.cs" />
     <Compile Include="BLL\WorkDaysCalculator.cs" />
     <Compile Include="BuildInfo.cs" />
-    <Compile Include="Configuration\AppConfig.cs" />
     <Compile Include="Configuration\DailyStatusConfiguration.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
-    <Compile Include="Extensions\HoursFormatter.cs" />
     <Compile Include="Model\TogglMeDto.cs" />
     <Compile Include="Model\TogglReportSummaryDto.cs" />
     <Compile Include="Model\WorkDay.cs" />

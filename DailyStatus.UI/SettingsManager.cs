@@ -1,11 +1,8 @@
 using DailyStatus.Common.Configuration;
 using DailyStatus.UI.Properties;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DailyStatus.UI
 {

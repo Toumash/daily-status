@@ -1,9 +1,5 @@
-using DailyStatus.Common.Model;
-using DailyStatus.Configuration;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Xml.Serialization;
 
 namespace DailyStatus.Common.Configuration
 {

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
-using DailyStatus.Common.Extensions;
 using System.Collections.ObjectModel;
 using System.Linq;
 using DailyStatus.Common.Model;
@@ -14,7 +13,6 @@ using System.Windows.Input;
 using DailyStatus.UI.WpfExtensions;
 using System.Windows.Controls;
 using System.Collections.Generic;
-using DailyStatus.UI.Properties;
 using DailyStatus.UI.View;
 using Onova;
 using Onova.Services;
@@ -97,7 +95,6 @@ namespace DailyStatus.UI.ViewModel
             {
                 _diff = value;
                 NotifyPropertyChanged(nameof(Diff));
-                NotifyPropertyChanged(nameof(TimeDiff));
                 NotifyPropertyChanged(nameof(StatusString));
             }
         }
@@ -118,23 +115,8 @@ namespace DailyStatus.UI.ViewModel
             {
                 _lastUpdated = value;
                 NotifyPropertyChanged(nameof(LastUpdateTime));
-                NotifyPropertyChanged(nameof(LastUpdateTimeString));
             }
         }
-
-        public string LastUpdateTimeString
-        {
-            get
-            {
-                if (!_lastUpdated.HasValue)
-                {
-                    return $"n/a";
-                }
-                return $"{_lastUpdated.Value.Hour:00}:{_lastUpdated.Value.Minute:00}:{_lastUpdated.Value.Second:00}";
-            }
-        }
-
-        public double TimeDiff { get => _diff.TotalHours; }
 
         TimeSpan TodayHours
         {
@@ -203,7 +185,11 @@ namespace DailyStatus.UI.ViewModel
             _timer.Start();
             ScheduleInstantRefresh();
             Window = window;
+            CheckForUpdatesAsync();
+        }
 
+        private static void CheckForUpdatesAsync()
+        {
             Task.Factory.StartNew(async () =>
             {
                 await Task.Delay(1000);

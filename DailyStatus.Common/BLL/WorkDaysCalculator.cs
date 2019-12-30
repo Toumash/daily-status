@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using DailyStatus.Common.Extensions;
+
 
 namespace DailyStatus.Common.BLL
 {
     public class WorkDaysCalculator
     {
-        public TimeSpan ThisMonthExpectedHours(DateTime todayWithHours, TimeSpan workDayStartHour, double numberOfWorkingHoursPerDay, List<DateTime> holidays)
-        {
-            return TimeExpectedHours(new DateTime(todayWithHours.Year, todayWithHours.Month, 1), todayWithHours, workDayStartHour, numberOfWorkingHoursPerDay, holidays);
-        }
-
         public TimeSpan TimeExpectedHours(DateTime since, DateTime todayWithHours, TimeSpan workDayStartHour, double numberOfWorkingHoursPerDay, List<DateTime> holidays)
         {
             var today = todayWithHours.Date;
@@ -31,11 +26,6 @@ namespace DailyStatus.Common.BLL
             }
 
             return worktime;
-        }
-
-        internal TimeSpan GetExpectedWorkedTime(DateTime since, TimeSpan workDayStartHour, double numberOfWorkingHoursPerDay, List<DateTime> holidaysDuringWeek)
-        {
-            return TimeExpectedHours(since, DateTime.Now, workDayStartHour, numberOfWorkingHoursPerDay, holidaysDuringWeek);
         }
     }
 
