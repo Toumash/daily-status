@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DailyStatus.Common
+namespace DailyStatus.Common.Services
 {
     public class TogglReportApi
     {

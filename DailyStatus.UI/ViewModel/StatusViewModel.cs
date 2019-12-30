@@ -19,6 +19,8 @@ using DailyStatus.UI.View;
 using Onova;
 using Onova.Services;
 using System.Reflection;
+using DailyStatus.Common.Exceptions;
+using DailyStatus.Common.Services;
 
 namespace DailyStatus.UI.ViewModel
 {
@@ -399,7 +401,7 @@ namespace DailyStatus.UI.ViewModel
                         SumSince = prompt.Date ?? new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
                     })
                 });
-                items.Add(new MenuItem() { Header = DailyStatusBuildInfo.ShortVersion, Command = new RelayCommand((_)=> { })});
+                items.Add(new MenuItem() { Header = DailyStatusBuildInfo.ShortVersion, Command = new RelayCommand((_) => { }) });
                 items.Add(new MenuItem() { Header = "Minimize", Command = new RelayCommand((_) => WindowState = WindowState.Minimized) });
                 items.Add(new MenuItem() { Header = "Close", Command = CloseCommand });
                 return items;
@@ -463,7 +465,7 @@ namespace DailyStatus.UI.ViewModel
                 IsTimerActive = actual.IsTimerActive;
 
                 var workday = new WorkDay(HoursADay, WorkDayStartHour);
-                var expected = _togglClient.GetExpectedWorkingTime(workday, since);
+                var expected = _togglClient.GetExpectedWorkingTime(workday, since, cfg.Holidays);
                 Diff = _togglClient.GetDifference(expected: expected, sum: actual.TimeInMonth);
                 LastUpdateTime = DateTime.Now;
                 OfflineMode = false;

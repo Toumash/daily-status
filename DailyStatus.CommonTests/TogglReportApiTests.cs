@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DailyStatus.Common.Services;
 
 namespace DailyStatus.Common.Tests
 {

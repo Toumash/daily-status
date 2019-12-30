@@ -7,7 +7,7 @@ namespace DailyStatus.Common.Extensions
 {
     public static class DateTimeExtensions
     {
-        public static int BusinessDaysUntil(this DateTime firstDay, DateTime lastDay, params DateTime[] holidaysDuringWeek)
+        public static int BusinessDaysUntil(this DateTime firstDay, DateTime lastDay, List<DateTime> holidaysDuringWeek)
         {
             var countOfWorkDays = GetDateRange(firstDay, lastDay)
                 .Where(day => day.DayOfWeek != DayOfWeek.Saturday && day.DayOfWeek != DayOfWeek.Sunday)

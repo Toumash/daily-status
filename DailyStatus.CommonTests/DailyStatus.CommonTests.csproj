@@ -50,7 +50,7 @@
   <ItemGroup>
     <Compile Include="BLL\WorkDaysCalculatorTests.cs" />
     <Compile Include="TogglReportApiTests.cs" />
-    <Compile Include="WorkDaysHelperTests.cs" />
+    <Compile Include="BusinessDaysCalculatorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

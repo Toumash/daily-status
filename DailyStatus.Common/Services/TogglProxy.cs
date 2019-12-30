@@ -1,4 +1,5 @@
 ﻿using DailyStatus.Common.BLL;
+using DailyStatus.Common.Exceptions;
 using DailyStatus.Common.Model;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,9 @@ using System.Threading.Tasks;
 using Toggl.Ultrawave;
 using Toggl.Ultrawave.Network;
 
-namespace DailyStatus.Common
+namespace DailyStatus.Common.Services
 {
-    public class TogglProxy
+    public partial class TogglProxy
     {
         ITogglApi _togglApi;
         Workspace _workspace;
@@ -34,18 +35,11 @@ namespace DailyStatus.Common
             return _workspace;
         }
 
-        public TimeSpan GetExpectedWorkingTime(WorkDay dayConfig)
+        public TimeSpan GetExpectedWorkingTime(WorkDay dayConfig, DateTime since, List<DateTime> holidays)
         {
             return new WorkDaysCalculator()
-                 .ExpectedWorkedDays(TimeSpan.FromHours(dayConfig.WorkDayStartHour),
-                                     dayConfig.NumberOfWorkingHoursPerDay);
-        }
-
-        public TimeSpan GetExpectedWorkingTime(WorkDay dayConfig, DateTime since)
-        {
-            return new WorkDaysCalculator()
-                 .ExpectedWorkedDaysSince(since, TimeSpan.FromHours(dayConfig.WorkDayStartHour),
-                                     dayConfig.NumberOfWorkingHoursPerDay);
+                 .GetExpectedWorkedTime(since, TimeSpan.FromHours(dayConfig.WorkDayStartHour),
+                                     dayConfig.NumberOfWorkingHoursPerDay, holidays);
         }
 
         public TimeSpan GetDifference(TimeSpan expected, TimeSpan sum)
@@ -54,41 +48,15 @@ namespace DailyStatus.Common
             return diff;
         }
 
-        public async Task<TimeSpan> GetDifference(WorkDay dayConfig)
-        {
-            var expected = GetExpectedWorkingTime(dayConfig);
-            var sum = await GetStatus();
-            return GetDifference(expected, sum.TimeInMonth);
-        }
-
-        public Workspace GetWorkspaceCached()
-        {
-            return _workspace;
-        }
-
-        public class TogglStatus
-        {
-            public TimeSpan TimeInMonth { get; set; }
-
-            public bool IsTimerActive { get; set; }
-            public TimeSpan TodaysHours { get; set; }
-        }
-
-        public async Task<TogglStatus> GetStatus()
-        {
-            return await GetStatus(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1));
-        }
-
         public async Task<TogglStatus> GetStatus(DateTime since)
         {
             try
             {
                 var workspace = await GetWorkspace();
 
-
                 var userId = await _togglReportApi.GetUserId();
                 var sum = await _togglReportApi.GetHoursSum(since, DateTime.Now.Date.AddDays(-1), userId, workspace.Id);
-                
+
 
                 var todayEntries = await _togglApi.TimeEntries.GetAllSince(DateTime.Now.Date)
                     .SelectMany(e => e)
@@ -168,40 +136,5 @@ namespace DailyStatus.Common
             _workspaces = (await _togglApi.Workspaces.GetAll()).Select(w => new Workspace { Name = w.Name, Id = w.Id }).ToList();
             return _workspaces;
         }
-    }
-
-
-    [Serializable]
-    public class TogglApiException : Exception
-    {
-        public TogglApiException() { }
-        public TogglApiException(string message) : base(message) { }
-        public TogglApiException(string message, Exception inner) : base(message, inner) { }
-        protected TogglApiException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
-    }
-
-    [Serializable]
-    public class OfflineException : TogglApiException
-    {
-        public OfflineException() { }
-        public OfflineException(string message) : base(message) { }
-        public OfflineException(string message, Exception inner) : base(message, inner) { }
-        protected OfflineException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
-    }
-
-
-    [Serializable]
-    public class BadRequestException : TogglApiException
-    {
-        public BadRequestException() { }
-        public BadRequestException(string message) : base(message) { }
-        public BadRequestException(string message, Exception inner) : base(message, inner) { }
-        protected BadRequestException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 }
