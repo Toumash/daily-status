@@ -43,7 +43,7 @@ namespace DailyStatus.UI.View
                         apiToken = apiTokenPrompt.ApiToken;
                         new WindowsCredentialManager().Save(apiToken);
                         togglClient.Configure(apiToken);
-                    } while (togglClient.TestConnection());
+                    } while (!togglClient.TestConnection());
                 }
                 else
                 {
