@@ -65,20 +65,22 @@ namespace DailyStatus.Common.Services
                     .ToList();
 
                 var currentTaskElement = todayEntries
-                    .Where(e => !e.Duration.HasValue)
-                    .FirstOrDefault();
+                    .FirstOrDefault(e => !e.Duration.HasValue);
 
-                TimeSpan currentTaskDuration = TimeSpan.FromSeconds(0);
+                var currentTaskDuration = TimeSpan.FromSeconds(0);
                 if (currentTaskElement != null)
                 {
                     currentTaskDuration = (DateTime.UtcNow - currentTaskElement.Start);
                 }
                 sum += currentTaskDuration;
 
-                var todayHoursSum = todayEntries
+                var todayHoursSum = TimeSpan.FromSeconds(todayEntries
                     .Where(e => e.Start > DateTime.Today && e.Duration.HasValue)
-                    .Sum(e => e.Duration.Value);
-                var todaysHours = TimeSpan.FromSeconds(todayHoursSum) + currentTaskDuration;
+                    .Sum(e => e.Duration.Value));
+
+                sum += todayHoursSum;
+
+                var todaysHours = todayHoursSum + currentTaskDuration;
 
                 return new TogglStatus()
                 {
