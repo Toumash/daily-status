@@ -1,4 +1,4 @@
-﻿using DailyStatus.Common.BLL;
+using DailyStatus.Common.BLL;
 using DailyStatus.Common.Exceptions;
 using DailyStatus.Common.Model;
 using System;
@@ -75,10 +75,13 @@ namespace DailyStatus.Common.Services
                 }
                 sum += currentTaskDuration;
 
-                var todayHoursSum = todayEntries
+                var todayHoursSum = TimeSpan.FromSeconds(todayEntries
                     .Where(e => e.Start > DateTime.Today && e.Duration.HasValue)
-                    .Sum(e => e.Duration.Value);
-                var todaysHours = TimeSpan.FromSeconds(todayHoursSum) + currentTaskDuration;
+                    .Sum(e => e.Duration.Value));
+
+                sum += todayHoursSum;
+
+                var todaysHours = todayHoursSum + currentTaskDuration;
 
                 return new TogglStatus()
                 {
