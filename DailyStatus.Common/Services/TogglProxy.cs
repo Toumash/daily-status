@@ -1,4 +1,4 @@
-using DailyStatus.Common.BLL;
+﻿using DailyStatus.Common.BLL;
 using DailyStatus.Common.Exceptions;
 using DailyStatus.Common.Model;
 using System;
@@ -65,10 +65,9 @@ namespace DailyStatus.Common.Services
                     .ToList();
 
                 var currentTaskElement = todayEntries
-                    .Where(e => !e.Duration.HasValue)
-                    .FirstOrDefault();
+                    .FirstOrDefault(e => !e.Duration.HasValue);
 
-                TimeSpan currentTaskDuration = TimeSpan.FromSeconds(0);
+                var currentTaskDuration = TimeSpan.FromSeconds(0);
                 if (currentTaskElement != null)
                 {
                     currentTaskDuration = (DateTime.UtcNow - currentTaskElement.Start);
