@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DailyStatus.Common.Services
 {
-    public class TogglReportApi
+    public class TogglReportApi : ITogglReportApi
     {
         private readonly string apiToken;
 

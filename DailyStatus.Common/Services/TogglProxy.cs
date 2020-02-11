@@ -6,17 +6,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Toggl.Multivac.Models;
 using Toggl.Ultrawave;
 using Toggl.Ultrawave.Network;
 
 namespace DailyStatus.Common.Services
 {
-    public partial class TogglProxy
+    public class TogglProxy
     {
         ITogglApi _togglApi;
         Workspace _workspace;
         List<Workspace> _workspaces;
-        private TogglReportApi _togglReportApi;
+        private ITogglReportApi _togglReportApi;
+
+        public TogglProxy(ITogglReportApi togglReportApi, ITogglApi api)
+        {
+            _togglReportApi = togglReportApi;
+            _togglApi = api;
+        }
 
         public void SetWorkspace(Workspace workspace)
         {
@@ -25,6 +32,7 @@ namespace DailyStatus.Common.Services
             else
                 throw new ArgumentException("given workspace does not exist on current toggl account");
         }
+
         public async Task<Workspace> GetWorkspace()
         {
             if (_workspace == null)
@@ -40,6 +48,32 @@ namespace DailyStatus.Common.Services
             return new WorkDaysCalculator()
                  .TimeExpectedHours(since, DateTime.Now, TimeSpan.FromHours(dayConfig.WorkDayStartHour),
                                      dayConfig.NumberOfWorkingHoursPerDay, holidays);
+        }
+
+        public static TogglProxy Create(string apiToken)
+        {
+            return new TogglProxy(new TogglReportApi(apiToken), TogglApiWith(Credentials.WithApiToken(apiToken)));
+        }
+
+        public static bool TestApiToken(string apiToken)
+        {
+            try
+            {
+                var user = TogglApiWith(Credentials.WithApiToken(apiToken)).User.Get().GetAwaiter().Wait();
+                return true;
+            }
+            catch (Toggl.Ultrawave.Exceptions.UnauthorizedException)
+            {
+                return false;
+            }
+            catch (Toggl.Ultrawave.Exceptions.OfflineException)
+            {
+                return false;
+            }
+            catch (Toggl.Ultrawave.Exceptions.BadRequestException)
+            {
+                return false;
+            }
         }
 
         public TimeSpan GetDifference(TimeSpan expected, TimeSpan sum)
@@ -58,11 +92,7 @@ namespace DailyStatus.Common.Services
                 var sum = await _togglReportApi.GetHoursSum(since, DateTime.Now.Date.AddDays(-1), userId, workspace.Id);
 
 
-                var todayEntries = await _togglApi.TimeEntries.GetAllSince(DateTime.Now.Date)
-                    .SelectMany(e => e)
-                    .Where(e => !e.ServerDeletedAt.HasValue)
-                    .Where(e => e.WorkspaceId == workspace.Id)
-                    .ToList();
+                var todayEntries = await GetTodayEntries(workspace);
 
                 var currentTaskElement = todayEntries
                     .FirstOrDefault(e => !e.Duration.HasValue);
@@ -99,39 +129,21 @@ namespace DailyStatus.Common.Services
             }
         }
 
-        public bool TestConnection()
+        public IObservable<IList<ITimeEntry>> GetTodayEntries(Workspace workspace)
         {
-            try
-            {
-                var user = _togglApi.User.Get().GetAwaiter().Wait();
-                return true;
-            }
-            catch (Toggl.Ultrawave.Exceptions.UnauthorizedException)
-            {
-                return false;
-            }
-            catch (Toggl.Ultrawave.Exceptions.OfflineException)
-            {
-                return false;
-            }
-            catch (Toggl.Ultrawave.Exceptions.BadRequestException)
-            {
-                return false;
-            }
+            return _togglApi.TimeEntries.GetAllSince(DateTime.Now.Date)
+                                .SelectMany(e => e)
+                                .Where(e => !e.ServerDeletedAt.HasValue)
+                                .Where(e => e.WorkspaceId == workspace.Id)
+                                .ToList();
         }
 
-        public ITogglApi TogglApiWith(Credentials credentials)
+        public static ITogglApi TogglApiWith(Credentials credentials)
             => new TogglApi(ConfigurationFor(credentials));
 
-        public ApiConfiguration ConfigurationFor(Credentials credentials)
+        public static ApiConfiguration ConfigurationFor(Credentials credentials)
             => new ApiConfiguration(ApiEnvironment.Production, credentials, new UserAgent("toumash.dailystatus", "1"));
 
-        public void Configure(string key)
-        {
-            _togglReportApi = new TogglReportApi(key);
-            var credentials = Credentials.WithApiToken(key);
-            _togglApi = TogglApiWith(credentials);
-        }
 
         public async Task<List<Workspace>> GetAllWorkspaces()
         {

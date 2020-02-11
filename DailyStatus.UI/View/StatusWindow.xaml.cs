@@ -23,7 +23,6 @@ namespace DailyStatus.UI.View
             };
             Loaded += (s, e) =>
             {
-                var togglClient = new TogglProxy();
                 var apiToken = new WindowsCredentialManager().Get();
                 if (string.IsNullOrEmpty(apiToken))
                 {
@@ -42,15 +41,10 @@ namespace DailyStatus.UI.View
                         }
                         apiToken = apiTokenPrompt.ApiToken;
                         new WindowsCredentialManager().Save(apiToken);
-                        togglClient.Configure(apiToken);
-                    } while (!togglClient.TestConnection());
-                }
-                else
-                {
-                    togglClient.Configure(apiToken);
+                    } while (!TogglProxy.TestApiToken(apiToken));
                 }
                 var cfg = SettingsManager.LoadSettings();
-                DataContext = new StatusViewModel(togglClient, cfg,this);
+                DataContext = new StatusViewModel(TogglProxy.Create(apiToken), cfg,this);
             };
         }
 

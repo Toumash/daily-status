@@ -98,6 +98,7 @@
     <Compile Include="Exceptions\OfflineException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Exceptions\TogglApiException.cs" />
+    <Compile Include="Services\ITogglReportApi.cs" />
     <Compile Include="Services\TogglProxy.cs" />
     <Compile Include="Services\TogglReportApi.cs" />
     <Compile Include="Model\TogglStatus.cs" />
