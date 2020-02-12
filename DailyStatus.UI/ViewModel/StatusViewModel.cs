@@ -74,7 +74,7 @@ namespace DailyStatus.UI.ViewModel
                 {
                     var sign = "-";
                     sign = Diff.TotalHours < 0 ? sign : "";
-                    return $"{sign}{Math.Abs(Diff.TotalHours):0}:{Math.Abs(Diff.Minutes):00}";
+                    return $"{sign}{Math.Abs(Diff.Days * 24 + Diff.Hours):0}:{Math.Abs(Diff.Minutes):00}";
                 }
                 else
                 {
