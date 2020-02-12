@@ -11,8 +11,8 @@ jobs:
     - name: Setup Nuget.exe
       uses: warrenbuckley/Setup-Nuget@v1
     - name: Restore packages
-      run: nuget restore legacyproj\example3.sln
+      run: nuget restore DailyStatus.sln
     - name: Setup MSBuild.exe
       uses: warrenbuckley/Setup-MSBuild@v1
     - name: Build with MSBuild
-      run: msbuild  legacyproj\example3.sln -p:Configuration=Release
+      run: msbuild DailyStatus.sln -p:Configuration=Release
