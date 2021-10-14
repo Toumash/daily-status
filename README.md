@@ -1,5 +1,6 @@
 # DailyStatus!
 > 🚧 This app is not under active development. If you like the idea, we can develop it further, but we need some active users to do so. You can write an issue to vote
+
 App that tracks your overtime - free app for toggl.com
 ![dailyststus](https://user-images.githubusercontent.com/9840635/70417914-8e048700-1a62-11ea-9a57-0e20db161b7f.png)
 
