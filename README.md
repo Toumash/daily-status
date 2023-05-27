@@ -6,7 +6,6 @@ App that tracks your overtime - free app for toggl.com
 
 Quick Demo:
 
-Hourly wage is staged :)  
 ![](daily-status-demo.gif)
 
 # Features 
